@@ -1,10 +1,12 @@
-package com.example.simple_voca;
+package com.example.database;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.example.Items.ListItem;
 
 import java.util.ArrayList;
 
@@ -13,6 +15,9 @@ import androidx.annotation.Nullable;
 public class VocaDatabase extends SQLiteOpenHelper {
 
     final static String tableName = "voca";
+
+    private final int PARENT_VIEW = 0;
+    private final int CHILD_VIEW = 1;
 
     public VocaDatabase(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -60,7 +65,8 @@ public class VocaDatabase extends SQLiteOpenHelper {
     //public void delete(String )
 
 
-    public void makeList(ArrayList<String[]> vocaList){
+    public void makeList(ArrayList<ListItem> vocaList){
+
 
         vocaList.clear();
 
@@ -77,13 +83,13 @@ public class VocaDatabase extends SQLiteOpenHelper {
                         cursor.getString(1), cursor.getString(2), cursor.getString(3),
                         cursor.getString(4), cursor.getString(5), cursor.getString(6)
                 };
-                vocaList.add(data);
+                vocaList.add(new ListItem(data, PARENT_VIEW));
             }
             while(cursor.moveToNext());
         }
     }
 
-    public String[] getWordChangerString(int i, ArrayList<String[]> vocaList){
-        return vocaList.get(i);
+    public String[] getWordChangerString(int i, ArrayList<ListItem> vocaList){
+        return vocaList.get(i).getData();
     }
 }

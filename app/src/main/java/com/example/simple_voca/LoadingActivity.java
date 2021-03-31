@@ -3,6 +3,9 @@ package com.example.simple_voca;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.Items.ListItem;
+import com.example.database.VocaDatabase;
+
 import java.util.ArrayList;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class LoadingActivity extends AppCompatActivity {
 
     public static VocaDatabase vocaDatabase;
-    public static ArrayList<String[]> vocaList = new ArrayList<>();
+    public static ArrayList<ListItem> vocaList = new ArrayList<>();
 
     public static int wordChangedTime = 60;
     public static int LastTime;
