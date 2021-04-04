@@ -1,12 +1,15 @@
-package com.example.simple_voca;
+package com.example.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.simple_voca.ImageSerializer;
+import com.example.simple_voca.R;
 import com.google.android.material.textfield.TextInputEditText;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,7 +23,7 @@ public class AddVocaActivity extends AppCompatActivity {
     private TextInputEditText add_voca_example;
     private TextInputEditText add_voca_example_mean;
     private TextInputEditText add_voca_memo;
-    private ImageButton add_voca_select_picture_button;
+    private ImageView add_voca_select_picture_imageview;
 
     private Button add_voca_save_button;
 
@@ -37,8 +40,18 @@ public class AddVocaActivity extends AppCompatActivity {
         add_voca_example = findViewById(R.id.add_voca_example);
         add_voca_example_mean = findViewById(R.id.add_voca_example_mean);
         add_voca_memo = findViewById(R.id.add_voca_memo);
-        add_voca_select_picture_button = findViewById(R.id.add_voca_select_picture_button);
+        add_voca_select_picture_imageview = findViewById(R.id.add_voca_select_picture_imageview);
 
+        add_voca_select_picture_imageview.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent. setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                startActivityForResult(intent, 200);
+            }
+        });
+
+        // 저장 버튼 클릭
         add_voca_save_button = findViewById(R.id.add_voca_save_button);
         add_voca_save_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,12 +63,32 @@ public class AddVocaActivity extends AppCompatActivity {
                 String example_mean = add_voca_example_mean.getText().toString();
                 String memo = add_voca_memo.getText().toString();
 
-                LoadingActivity.vocaDatabase.insert(word, mean, announce, example, example_mean, memo);
+                // 데이터베이스에 넣기
+                LoadingActivity.vocaDatabase.insert(
+                        word,
+                        mean,
+                        announce,
+                        example,
+                        example_mean,
+                        memo,
+                        ImageSerializer.PackImageToSerialized(add_voca_select_picture_imageview));
+
                 LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
 
                 Intent intent = new Intent(AddVocaActivity.this, MainActivity.class);
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
+        if (requestCode == 200 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+
+            Uri selectedImageUri = data.getData();
+            add_voca_select_picture_imageview.setImageURI(selectedImageUri);
+        }
+
     }
 }

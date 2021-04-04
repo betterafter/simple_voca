@@ -3,6 +3,8 @@ package com.example.simple_voca;
 import android.app.NotificationManager;
 import android.content.Context;
 
+import com.example.activity.LoadingActivity;
+
 import androidx.core.app.NotificationCompat;
 
 public class VocaForegroundServiceUpdater {

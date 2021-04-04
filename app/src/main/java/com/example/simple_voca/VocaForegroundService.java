@@ -10,6 +10,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 
+import com.example.activity.LoadingActivity;
+import com.example.activity.MainActivity;
+
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 

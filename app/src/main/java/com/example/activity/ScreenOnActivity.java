@@ -1,8 +1,10 @@
-package com.example.simple_voca;
+package com.example.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import com.example.simple_voca.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 

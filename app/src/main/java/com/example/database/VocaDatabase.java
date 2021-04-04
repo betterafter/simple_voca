@@ -37,7 +37,8 @@ public class VocaDatabase extends SQLiteOpenHelper {
                 "announce TEXT," +
                 "example TEXT," +
                 "example_mean TEXT," +
-                "memo TEXT)";
+                "memo TEXT," +
+                "image TEXT" + ")";
         sqLiteDatabase.execSQL(sql);
     }
 
@@ -47,7 +48,7 @@ public class VocaDatabase extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public void insert(String word, String mean, String announce, String example, String example_mean, String memo){
+    public void insert(String word, String mean, String announce, String example, String example_mean, String memo, String image){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         String sql = "INSERT INTO " + tableName + " VALUES(null, '"
                 + word +  "', '"
@@ -55,12 +56,14 @@ public class VocaDatabase extends SQLiteOpenHelper {
                 + announce + "', '"
                 + example + "', '"
                 + example_mean + "', '"
-                + memo
+                + memo + "', '"
+                + image
                 + "');";
 
 
         sqLiteDatabase.execSQL(sql);
     }
+
 
     //public void delete(String )
 
@@ -81,7 +84,8 @@ public class VocaDatabase extends SQLiteOpenHelper {
             do {
                 String[] data = new String[]{
                         cursor.getString(1), cursor.getString(2), cursor.getString(3),
-                        cursor.getString(4), cursor.getString(5), cursor.getString(6)
+                        cursor.getString(4), cursor.getString(5), cursor.getString(6),
+                        cursor.getString(7)
                 };
                 vocaList.add(new ListItem(data, PARENT_VIEW));
             }

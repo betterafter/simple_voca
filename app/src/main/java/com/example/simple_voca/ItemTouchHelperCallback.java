@@ -1,10 +1,10 @@
 package com.example.simple_voca;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -33,9 +33,17 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     private static final float buttonWidth = 300;
 
+    private boolean isSwipeFinished = false;
+
+    private Context context;
+
 
     public ItemTouchHelperCallback(){
 
+    }
+
+    public ItemTouchHelperCallback(Context context){
+        this.context = context;
     }
 
 
@@ -49,7 +57,7 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder,
                           @NonNull RecyclerView.ViewHolder target) {
-        return false;
+        return true;
     }
 
     @Override
@@ -65,25 +73,43 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
                             int actionState, boolean isCurrentlyActive) {
 
 
+
+
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
 
-            setTouchListener(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-
-
-            if(dX > 0){
+            if (dX > 0) {
                 System.out.println(dX);
                 drawButtons(c, viewHolder, ButtonsState.LEFT_VISIBLE);
                 rightButton = null;
             }
 
-            if(dX < 0){
+            if (dX < 0) {
                 System.out.println(dX);
                 drawButtons(c, viewHolder, ButtonsState.RIGHT_VISIBLE);
                 leftButton = null;
             }
 
+
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
+        if(isSwipeFinished){
+            if(dX > 500){
+                //Toast.makeText(context, "왼쪽", Toast.LENGTH_SHORT).show();
+            }
+            else if(dX < 500){
+                //Toast.makeText(context, "오른쪽", Toast.LENGTH_SHORT).show();
+            }
+            isSwipeFinished = false;
+        }
+
+
+    }
+
+    @Override
+    public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+        super.clearView(recyclerView, viewHolder);
+        isSwipeFinished = true;
+        // Action finished
     }
 
     @Override
@@ -95,24 +121,15 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
         return super.convertToAbsoluteDirection(flags, layoutDirection);
     }
 
-    private void setTouchListener(final Canvas c,
-                                  final RecyclerView recyclerView,
-                                  final RecyclerView.ViewHolder viewHolder,
-                                  final float dX, final float dY,
-                                  final int actionState, final boolean isCurrentlyActive) {
-        recyclerView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                swipeBack = event.getAction() == MotionEvent.ACTION_CANCEL || event.getAction() == MotionEvent.ACTION_UP;
-                if (swipeBack) {
-                    if (dX < -buttonWidth) buttonShowedState = ButtonsState.RIGHT_VISIBLE;
-                    else if (dX > buttonWidth) buttonShowedState  = ButtonsState.LEFT_VISIBLE;
-                }
-                return false;
-            }
-        });
+    @Override
+    public float getSwipeEscapeVelocity(float defaultValue) {
+        return defaultValue * 10;//10 -> almost insensitive
     }
 
+    @Override
+    public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
+        return 2f;
+    }
 
     private void drawButtons(Canvas c, RecyclerView.ViewHolder viewHolder, ButtonsState buttonShowedState) {
 

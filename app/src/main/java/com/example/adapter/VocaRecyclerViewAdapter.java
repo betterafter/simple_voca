@@ -1,14 +1,18 @@
-package com.example.simple_voca;
+package com.example.adapter;
 
 import android.content.Context;
-import android.util.SparseBooleanArray;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.Items.ListItem;
+import com.example.simple_voca.ImageSerializer;
+import com.example.simple_voca.R;
 
 import java.util.ArrayList;
 
@@ -20,22 +24,30 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     private final int PARENT_VIEW = 0;
     private final int CHILD_VIEW = 1;
 
+    private Context context;
+
+
 
     private ArrayList<ListItem> wordDataList;
-    private SparseBooleanArray selectedId = new SparseBooleanArray();
 
-    public VocaRecyclerViewAdapter(ArrayList<ListItem> wordDataList){
+    public VocaRecyclerViewAdapter(ArrayList<ListItem> wordDataList,  Context context){
         this.wordDataList = wordDataList;
+        this.context = context;
     }
 
 
     // 아이템 뷰 저장
     public class ParentViewHolder extends RecyclerView.ViewHolder{
 
+        private LinearLayout add_voca;
         private TextView add_voca_word;
         private TextView add_voca_mean;
         private TextView add_voca_announce;
-        private LinearLayout expandable_layout;
+
+        private LinearLayout add_voca_editor;
+        private ImageButton add_voca_editor_delete_button;
+        private ImageButton add_voca_editor_edit_button;
+        private ImageButton add_voca_editor_close_button;
 
         public boolean isExpanded = false;
 
@@ -44,9 +56,16 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         public ParentViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            add_voca_word = itemView.findViewById(R.id.item_example);
-            add_voca_mean = itemView.findViewById(R.id.item_memo);
-            add_voca_announce = itemView.findViewById(R.id.item_example_mean);
+            add_voca = itemView.findViewById(R.id.item);
+            add_voca_word = itemView.findViewById(R.id.item_word);
+            add_voca_mean = itemView.findViewById(R.id.item_mean);
+            add_voca_announce = itemView.findViewById(R.id.item_announce);
+
+            add_voca_editor = itemView.findViewById(R.id.item_word_editor);
+            add_voca_editor_delete_button = itemView.findViewById(R.id.word_editor_delete);
+            add_voca_editor_edit_button = itemView.findViewById(R.id.word_editor_edit);
+            add_voca_editor_close_button = itemView.findViewById(R.id.word_editor_close);
+
 
             this.itemView = itemView;
         }
@@ -57,12 +76,14 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         private TextView add_voca_example;
         private TextView add_voca_example_mean;
         private TextView add_voca_memo;
+        private ImageView add_voca_image;
 
         View itemView;
 
         public ChildViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            add_voca_image = itemView.findViewById(R.id.item_image);
             add_voca_example = itemView.findViewById(R.id.item_example);
             add_voca_example_mean = itemView.findViewById(R.id.item_example_mean);
             add_voca_memo = itemView.findViewById(R.id.item_memo);
@@ -119,30 +140,43 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             viewHolder.add_voca_announce.setText(data[2]);
 
 
-
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    System.out.println(getParentPosition(position) + " ---> "  + position);
-                    System.out.println(wordDataList.toString());
-                    System.out.println(viewHolder.getAdapterPosition());
-
                     int currentPosition = viewHolder.getAdapterPosition();
 
-                    if(viewHolder.isExpanded && viewHolder.getItemViewType() == PARENT_VIEW){
+                    if (viewHolder.isExpanded && viewHolder.getItemViewType() == PARENT_VIEW) {
 
                         viewHolder.isExpanded = false;
                         wordDataList.remove(currentPosition + 1);
                         notifyItemRemoved(currentPosition + 1);
-                    }
-
-                    else if(!viewHolder.isExpanded && viewHolder.getItemViewType() == PARENT_VIEW){
+                    } else if (!viewHolder.isExpanded && viewHolder.getItemViewType() == PARENT_VIEW) {
 
                         viewHolder.isExpanded = true;
-                        wordDataList.add(currentPosition + 1, new ListItem(new String[]{"","","","","",""}, CHILD_VIEW));
+                        String[] data = ((ListItem)wordDataList.get(position)).getData();
+                        wordDataList.add(currentPosition + 1, new ListItem(data, CHILD_VIEW));
                         notifyItemInserted(currentPosition + 1);
                     }
+                }
+            });
+
+            viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+
+                    viewHolder.add_voca_editor.setVisibility(View.VISIBLE);
+                    // 여기서 delete button과 edit button에 대해 onClickListener 구현
+
+
+                    viewHolder.add_voca_editor_close_button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            viewHolder.add_voca_editor.setVisibility(View.GONE);
+                        }
+                    });
+
+                    return true;
                 }
             });
         }
@@ -153,20 +187,21 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             viewHolder.add_voca_example.setText(data[3]);
             viewHolder.add_voca_example_mean.setText(data[4]);
             viewHolder.add_voca_memo.setText(data[5]);
+            viewHolder.add_voca_image.setImageDrawable(new BitmapDrawable(
+                    context.getResources(), ImageSerializer.PackSerializedToImage(data[6])));
 
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    System.out.println(getParentPosition(position) + " ---> "  + position);
-                    System.out.println(wordDataList.toString());
+
                 }
             });
-
         }
-
-
     }
+
+
+
 
     private int getParentPosition(int position){
         while(true){

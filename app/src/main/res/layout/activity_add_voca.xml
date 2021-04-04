@@ -25,6 +25,13 @@
                 android:text="Button" />
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/add_voca_select_picture_imageview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@drawable/ic_launcher_foreground" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -98,12 +105,6 @@
                 android:layout_height="wrap_content"
                 android:hint="메모" />
         </com.google.android.material.textfield.TextInputLayout>
-
-        <ImageButton
-            android:id="@+id/add_voca_select_picture_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:srcCompat="@drawable/ic_launcher_foreground" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
