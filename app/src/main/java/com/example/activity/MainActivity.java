@@ -1,12 +1,20 @@
 package com.example.activity;
 
 import android.content.Intent;
+import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import com.example.adapter.VocaGridViewAdapter;
 import com.example.adapter.VocaRecyclerViewAdapter;
@@ -17,20 +25,36 @@ import com.example.simple_voca.VocaForegroundService;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static MainActivity mainActivity;
+
+
+    private final int PARENT_VIEW = 0;
+    private final int CHILD_VIEW = 1;
+
+
     private ImageButton main_add_word_button;
     private ImageButton main_change_list_type_button;
 
-    private RecyclerView main_recyclerView;
+
+
+    public static HorizontalScrollView main_voca_page_list;
+    public static LinearLayout main_voca_page_list_layout;
+    public static RecyclerView main_recyclerView;
     private GridView main_gridView;
+    //private ViewPager2 viewPager2;
 
-    private VocaRecyclerViewAdapter vocaRecyclerViewAdapter;
-    private VocaGridViewAdapter vocaGridViewAdapter;
 
-    private ItemTouchHelper itemTouchHelper;
+
+    public static VocaRecyclerViewAdapter vocaRecyclerViewAdapter;
+    public static VocaGridViewAdapter vocaGridViewAdapter;
+    //private VocaViewPagerAdapter viewPagerAdapter;
+
+
 
 
     public static MediaPlayer player;
@@ -42,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mainActivity = this;
 
         main_change_list_type_button = findViewById(R.id.main_change_style);
 
@@ -55,18 +81,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // FrameLayout에 GridView와 RecyclerView를 같이 넣어서 버튼을 눌렀을 때 전환이 되게 만듬.
-        // 리사이클러뷰 생성
-        main_recyclerView = findViewById(R.id.main_recyclerview);
-        main_recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // 리사이클러뷰 어뎁터 생성
+        main_recyclerView = findViewById(R.id.main_recyclerview);
         vocaRecyclerViewAdapter = new VocaRecyclerViewAdapter(LoadingActivity.vocaList, getApplicationContext());
+        main_recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         main_recyclerView.setAdapter(vocaRecyclerViewAdapter);
 
         ItemTouchHelperCallback itemTouchHelperCallback = new ItemTouchHelperCallback(getApplicationContext());
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(itemTouchHelperCallback);
         itemTouchhelper.attachToRecyclerView(main_recyclerView);
+
+
+        // 리스트 페이지가 몇개인지 만들기
+        main_voca_page_list = findViewById(R.id.main_voca_page_list);
+        main_voca_page_list_layout = findViewById(R.id.main_voca_page_list_layout);
+        MakeListPager();
+
+
+
 
 
 
@@ -78,6 +111,30 @@ public class MainActivity extends AppCompatActivity {
 
         vocaGridViewAdapter = new VocaGridViewAdapter(LoadingActivity.vocaList, getApplicationContext());
         main_gridView.setAdapter(vocaGridViewAdapter);
+
+
+
+
+
+//        viewPager2 = findViewById(R.id.main_index_viewpager);
+//        ArrayList<Button> ButtonList = new ArrayList<>();
+//        for(int i = 0; i <= (double)LoadingActivity.vocaDatabase.getSize() / 4; i++){
+//            Button button = new Button(mainActivity.getApplicationContext());
+//            ButtonList.add(button);
+//        }
+//        viewPagerAdapter = new VocaViewPagerAdapter(getApplicationContext(), ButtonList);
+//        viewPager2.setAdapter(viewPagerAdapter);
+//        viewPager2.setClipToPadding(false);
+//
+//        viewPager2.setPadding(100, 0, 100, 0);
+//        viewPager2.setOffscreenPageLimit(5);
+       // viewPager2.setPageMargin(50);
+       // viewPager2.setPageTransformer();
+        //viewPager2.setPageTransformer();
+
+
+
+
 
 
 
@@ -103,10 +160,67 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
         vocaRecyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    public static void MakeListPager(){
+
+        RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(mainActivity.getApplicationContext()) {
+            @Override protected int getVerticalSnapPreference() {
+                return LinearSmoothScroller.SNAP_TO_START;
+            }
+        };
+
+        Display display = mainActivity.getWindowManager().getDefaultDisplay();  // in Activity
+        /* getActivity().getWindowManager().getDefaultDisplay() */ // in Fragment
+        Point size = new Point();
+        display.getRealSize(size); // or getSize(size)
+        int width = size.x;
+        int height = size.y;
+
+        for(int i = 0; i <= (double)LoadingActivity.vocaDatabase.getSize() / 4; i++){
+
+            final int temp = i;
+            Button button = new Button(mainActivity.getApplicationContext());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    width / 7, width / 7
+            );
+            button.setLayoutParams(params);
+            button.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+//                    ((LinearLayoutManager)main_recyclerView.getLayoutManager())
+//                            .scrollToPositionWithOffset(temp * 4, 0);
+
+                    // 이렇게 하면 smoothScrollToPosition 써서 인덱싱이 제대로 안되는 문제를 신경 안쓰고도 스무스하게 움직이게 할 수 있음
+                    smoothScroller.setTargetPosition(temp * 4);
+                    ((LinearLayoutManager)main_recyclerView.getLayoutManager()).startSmoothScroll(smoothScroller);
+                }
+            });
+
+            main_voca_page_list_layout.addView(button);
+        }
+
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                (width / 7) * 5, ViewGroup.LayoutParams.MATCH_PARENT
+        );
+        main_voca_page_list_layout.setLayoutParams(params);
+
+        LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(
+                (width / 7) * 5, 0
+        );
+        //params2.gravity = Gravity.CENTER;
+        params2.gravity = Gravity.CENTER_HORIZONTAL;
+        params2.weight = 1;
+        main_voca_page_list.setLayoutParams(params2);
     }
 }

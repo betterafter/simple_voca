@@ -1,6 +1,7 @@
 package com.example.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.Items.ListItem;
+import com.example.activity.AddVocaActivity;
+import com.example.activity.LoadingActivity;
+import com.example.activity.MainActivity;
 import com.example.simple_voca.ImageSerializer;
 import com.example.simple_voca.R;
 
@@ -27,8 +31,7 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     private Context context;
 
 
-
-    private ArrayList<ListItem> wordDataList;
+    public ArrayList<ListItem> wordDataList;
 
     public VocaRecyclerViewAdapter(ArrayList<ListItem> wordDataList,  Context context){
         this.wordDataList = wordDataList;
@@ -49,7 +52,8 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         private ImageButton add_voca_editor_edit_button;
         private ImageButton add_voca_editor_close_button;
 
-        public boolean isExpanded = false;
+        private boolean isExpanded = false;
+        private int childPosition = -1;
 
         View itemView;
 
@@ -68,6 +72,30 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
 
             this.itemView = itemView;
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    if (getAdapterPosition() + 1 < wordDataList.size()
+                            && wordDataList.get(getAdapterPosition() + 1).getType() == CHILD_VIEW
+                            && getItemViewType() == PARENT_VIEW) {
+                        wordDataList.remove(getAdapterPosition() + 1);
+                        notifyItemRemoved(getAdapterPosition() + 1);
+                    }
+                    else if ((getAdapterPosition() + 1 >= wordDataList.size()
+                             || wordDataList.get(getAdapterPosition() + 1).getType() != CHILD_VIEW)
+                             && getItemViewType() == PARENT_VIEW) {
+                        String[] data = ((ListItem)wordDataList.get(getAdapterPosition())).getData();
+                        wordDataList.add(getAdapterPosition() + 1, new ListItem(data, CHILD_VIEW));
+                        notifyItemInserted(getAdapterPosition() + 1);
+                    }
+
+                    final int pos = getAdapterPosition();
+                    System.out.println(pos);
+                    MainActivity.main_recyclerView.scrollToPosition(pos);
+                }
+            });
         }
     }
 
@@ -91,6 +119,8 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             this.itemView = itemView;
         }
     }
+
+
 
     @Override
     public int getItemViewType(int position) {
@@ -139,28 +169,6 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             viewHolder.add_voca_mean.setText(data[1]);
             viewHolder.add_voca_announce.setText(data[2]);
 
-
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    int currentPosition = viewHolder.getAdapterPosition();
-
-                    if (viewHolder.isExpanded && viewHolder.getItemViewType() == PARENT_VIEW) {
-
-                        viewHolder.isExpanded = false;
-                        wordDataList.remove(currentPosition + 1);
-                        notifyItemRemoved(currentPosition + 1);
-                    } else if (!viewHolder.isExpanded && viewHolder.getItemViewType() == PARENT_VIEW) {
-
-                        viewHolder.isExpanded = true;
-                        String[] data = ((ListItem)wordDataList.get(position)).getData();
-                        wordDataList.add(currentPosition + 1, new ListItem(data, CHILD_VIEW));
-                        notifyItemInserted(currentPosition + 1);
-                    }
-                }
-            });
-
             viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
@@ -173,6 +181,26 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                         @Override
                         public void onClick(View view) {
                             viewHolder.add_voca_editor.setVisibility(View.GONE);
+                        }
+                    });
+
+                    viewHolder.add_voca_editor_delete_button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            LoadingActivity.vocaDatabase.delete(position);
+                            LoadingActivity.vocaDatabase.makeList(wordDataList);
+                            notifyDataSetChanged();
+                        }
+                    });
+
+                    viewHolder.add_voca_editor_edit_button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(context, AddVocaActivity.class);
+                            intent.putExtra("STATE", "EDIT");
+                            intent.putExtra("POSITION", viewHolder.getAdapterPosition());
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(intent);
                         }
                     });
 
@@ -201,21 +229,12 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
 
-
-
-    private int getParentPosition(int position){
-        while(true){
-            if(wordDataList.get(position).getType() == PARENT_VIEW){
-                break;
-            }
-            else position--;
-        }
-        return position;
-    }
-
     // 전체 데이터 개수 리턴. 수치 변경 안하면 리사이클러뷰에 안나타날 수 있음
     @Override
     public int getItemCount() {
         return wordDataList.size();
     }
+
+    // 진짜 위치 구하는 방법. 나중에 써먹자.
+    //public int getRealPosition(int position) { return position % mCount; }
 }

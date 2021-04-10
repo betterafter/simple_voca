@@ -31,16 +31,10 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     private RecyclerView.ViewHolder currentItemViewHolder = null;
 
-    private static final float buttonWidth = 300;
-
     private boolean isSwipeFinished = false;
 
     private Context context;
 
-
-    public ItemTouchHelperCallback(){
-
-    }
 
     public ItemTouchHelperCallback(Context context){
         this.context = context;
