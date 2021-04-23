@@ -5,18 +5,22 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.simple_voca.ImageSerializer;
 import com.example.simple_voca.R;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.ArrayList;
+
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class AddVocaActivity extends AppCompatActivity {
+public class AddEditVocaActivity extends AppCompatActivity {
 
     private TextView add_voca_select_group;
     private TextInputEditText add_voca_word;
@@ -26,7 +30,9 @@ public class AddVocaActivity extends AppCompatActivity {
     private TextInputEditText add_voca_example_mean;
     private TextInputEditText add_voca_memo;
     private ImageView add_voca_select_picture_imageview;
-    private TextView add_select_group_textview;
+    private Spinner add_select_group_spinner;
+
+
 
     private Button add_voca_save_button;
     private String SAVE_STATE = "SAVE";
@@ -41,7 +47,17 @@ public class AddVocaActivity extends AppCompatActivity {
         SAVE_STATE = "SAVE";
         POSITION = -1;
 
-        add_voca_select_group = findViewById(R.id.add_voca_select_group);
+        ArrayList<String> categoryList = new ArrayList<>();
+        for(int i = 0; i < LoadingActivity.categoryList.size(); i++){
+            categoryList.add(LoadingActivity.categoryList.get(i).getData()[0]);
+        }
+
+
+        ArrayAdapter<String>  arrayAdapter = new ArrayAdapter<>(getApplicationContext(),
+                android.R.layout.simple_spinner_dropdown_item, categoryList);
+        add_select_group_spinner = findViewById(R.id.add_voca_select_group_spinner);
+        add_select_group_spinner.setAdapter(arrayAdapter);
+
         add_voca_word = findViewById(R.id.add_voca_word);
         add_voca_mean = findViewById(R.id.add_voca_mean);
         add_voca_announce = findViewById(R.id.add_voca_announce);
@@ -49,8 +65,6 @@ public class AddVocaActivity extends AppCompatActivity {
         add_voca_example_mean = findViewById(R.id.add_voca_example_mean);
         add_voca_memo = findViewById(R.id.add_voca_memo);
         add_voca_select_picture_imageview = findViewById(R.id.add_voca_select_picture_imageview);
-        add_select_group_textview = findViewById(R.id.add_voca_select_group);
-
         add_voca_select_picture_imageview.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -72,7 +86,7 @@ public class AddVocaActivity extends AppCompatActivity {
                 String example = add_voca_example.getText().toString();
                 String example_mean = add_voca_example_mean.getText().toString();
                 String memo = add_voca_memo.getText().toString();
-                String group = add_voca_select_group.getText().toString();
+                String group = add_select_group_spinner.getSelectedItem().toString();
 
                 if(SAVE_STATE.equals("SAVE")) {
                     // 데이터베이스에 넣기
@@ -105,7 +119,7 @@ public class AddVocaActivity extends AppCompatActivity {
                 }
 
                 SAVE_STATE = "SAVE";
-                Intent intent = new Intent(AddVocaActivity.this, MainActivity.class);
+                Intent intent = new Intent(AddEditVocaActivity.this, MainActivity.class);
                 startActivity(intent);
             }
         });

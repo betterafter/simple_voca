@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/mainBlue">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="12"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <ImageButton
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/baseline_arrow_back_18"
+                android:backgroundTint="@color/mainBlue"
+                />
+
+            <TextView
+                android:id="@+id/test_test_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="false"
+                android:fontFamily="@font/nanum_square_bold"
+                android:gravity="center"
+                android:text="테스트"
+                android:textColor="@color/blueGradient5"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/test_test_category_name"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/nanum_square_regular"
+            android:gravity="center"
+            android:text="우선순위영단어(임시로 넣음)"
+            android:textColor="@color/backgroundBlack"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/test_test_category_number"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:fontFamily="@font/nanum_square_light"
+            android:gravity="center"
+            android:text="여기에 현재 몇번 문제 / 총 문제 수 를 적어야함"
+            android:textColor="@color/backgroundBlack" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginVertical="10dp"
+            android:layout_gravity="center"
+            android:background="@color/white"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/test_test_category_word"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_paddingVertical="50dp"
+                android:gravity="center"
+                android:text="TextView"
+                android:textSize="40sp" />
+
+            <TextView
+                android:id="@+id/test_test_category_announce"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="TextView" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/test_test_number_1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="30dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:text="Button"
+            android:textColor="@color/backgroundBlack" />
+
+        <Button
+            android:id="@+id/test_test_number_2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="30dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:text="Button"
+            android:textColor="@color/backgroundBlack" />
+
+        <Button
+            android:id="@+id/test_test_number_3"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="30dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:text="Button"
+            android:textColor="@color/backgroundBlack" />
+
+        <Button
+            android:id="@+id/test_test_number_4"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="30dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:text="Button"
+            android:textColor="@color/backgroundBlack" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

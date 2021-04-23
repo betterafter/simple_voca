@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.Items.ListItem;
-import com.example.activity.AddVocaActivity;
+import com.example.activity.AddEditVocaActivity;
 import com.example.activity.LoadingActivity;
 import com.example.activity.MainActivity;
 import com.example.simple_voca.ImageSerializer;
@@ -196,7 +196,7 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                     viewHolder.add_voca_editor_edit_button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Intent intent = new Intent(context, AddVocaActivity.class);
+                            Intent intent = new Intent(context, AddEditVocaActivity.class);
                             intent.putExtra("STATE", "EDIT");
                             intent.putExtra("POSITION", viewHolder.getAdapterPosition());
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

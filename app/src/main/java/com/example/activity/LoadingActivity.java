@@ -5,7 +5,9 @@ import android.os.Build;
 import android.os.Bundle;
 
 import com.example.Items.ListItem;
+import com.example.Items.categoryListItem;
 import com.example.database.VocaDatabase;
+import com.example.database.categoryDatabase;
 import com.example.simple_voca.R;
 
 import java.util.ArrayList;
@@ -16,7 +18,10 @@ import androidx.appcompat.app.AppCompatActivity;
 public class LoadingActivity extends AppCompatActivity {
 
     public static VocaDatabase vocaDatabase;
+    public static categoryDatabase categoryDatabase;
+
     public static ArrayList<ListItem> vocaList = new ArrayList<>();
+    public static ArrayList<categoryListItem> categoryList = new ArrayList<>();
 
     public static int wordChangedTime = 60;
     public static int LastTime;
@@ -32,6 +37,8 @@ public class LoadingActivity extends AppCompatActivity {
         vocaDatabase = new VocaDatabase(getApplicationContext(), "voca", null, 2);
         vocaDatabase.makeList(vocaList);
 
+        categoryDatabase = new categoryDatabase(getApplicationContext(), "category", null, 2);
+        categoryDatabase.makeList(categoryList);
 
 
 

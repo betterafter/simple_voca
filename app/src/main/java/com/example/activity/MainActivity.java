@@ -1,7 +1,6 @@
 package com.example.activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -22,24 +21,14 @@ import com.example.adapter.VocaRecyclerViewAdapter;
 import com.example.simple_voca.ItemTouchHelperCallback;
 import com.example.simple_voca.R;
 import com.example.simple_voca.VocaForegroundService;
-import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
+
+import java.util.Collections;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton main_add_word_button;
     private ImageButton main_change_list_type_button;
     private Button main_swap_button;
+    private Button main_category_button;
 
 
     public static HorizontalScrollView main_voca_page_list;
@@ -74,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isRecyclerViewActivated = true;
 
-    private LineChart lineChart;
+    //private LineChart lineChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +73,17 @@ public class MainActivity extends AppCompatActivity {
 
         mainActivity = this;
 
+
+
+        main_category_button = findViewById(R.id.main_category_button);
+        main_category_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Category_MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
         main_change_list_type_button = findViewById(R.id.main_change_style);
 
         // 단어 추가 버튼 기능
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         main_add_word_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AddVocaActivity.class);
+                Intent intent = new Intent(MainActivity.this, AddEditVocaActivity.class);
                 startActivity(intent);
             }
         });
@@ -160,46 +161,46 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        lineChart = (LineChart)findViewById(R.id.chart);
-
-        List<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(1,1));
-        entries.add(new Entry(2,2));
-        entries.add(new Entry(3,0));
-        entries.add(new Entry(4,4));
-        entries.add(new Entry(5,3));
-
-        LineDataSet lineDataSet = new LineDataSet(entries, "속성명1");
-        lineDataSet.setLineWidth(2);
-        lineDataSet.setCircleRadius(6);
-        lineDataSet.setCircleColor(Color.parseColor("#FFA1B4DC"));
-        lineDataSet.setCircleHoleColor(Color.BLUE);
-        lineDataSet.setColor(Color.parseColor("#FFA1B4DC"));
-        lineDataSet.setDrawCircleHole(true);
-        lineDataSet.setDrawCircles(true);
-        lineDataSet.setDrawHorizontalHighlightIndicator(false);
-        lineDataSet.setDrawHighlightIndicators(false);
-        lineDataSet.setDrawValues(false);
-
-        LineData lineData = new LineData(lineDataSet);
-        lineChart.setData(lineData);
-        XAxis xAxis = lineChart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setTextColor(Color.BLACK);
-        xAxis.enableGridDashedLine(8, 24, 0);
-        YAxis yLAxis = lineChart.getAxisLeft();
-        yLAxis.setTextColor(Color.BLACK);
-        YAxis yRAxis = lineChart.getAxisRight();
-        yRAxis.setDrawLabels(false);
-        yRAxis.setDrawAxisLine(false);
-        yRAxis.setDrawGridLines(false);
-        Description description = new Description();
-        description.setText("");
-        lineChart.setDoubleTapToZoomEnabled(false);
-        lineChart.setDrawGridBackground(false);
-        lineChart.setDescription(description);
-        lineChart.animateY(2000, Easing.EaseInCubic);
-        lineChart.invalidate();
+//        lineChart = (LineChart)findViewById(R.id.chart);
+//
+//        List<Entry> entries = new ArrayList<>();
+//        entries.add(new Entry(1,1));
+//        entries.add(new Entry(2,2));
+//        entries.add(new Entry(3,0));
+//        entries.add(new Entry(4,4));
+//        entries.add(new Entry(5,3));
+//
+//        LineDataSet lineDataSet = new LineDataSet(entries, "속성명1");
+//        lineDataSet.setLineWidth(2);
+//        lineDataSet.setCircleRadius(6);
+//        lineDataSet.setCircleColor(Color.parseColor("#FFA1B4DC"));
+//        lineDataSet.setCircleHoleColor(Color.BLUE);
+//        lineDataSet.setColor(Color.parseColor("#FFA1B4DC"));
+//        lineDataSet.setDrawCircleHole(true);
+//        lineDataSet.setDrawCircles(true);
+//        lineDataSet.setDrawHorizontalHighlightIndicator(false);
+//        lineDataSet.setDrawHighlightIndicators(false);
+//        lineDataSet.setDrawValues(false);
+//
+//        LineData lineData = new LineData(lineDataSet);
+//        lineChart.setData(lineData);
+//        XAxis xAxis = lineChart.getXAxis();
+//        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+//        xAxis.setTextColor(Color.BLACK);
+//        xAxis.enableGridDashedLine(8, 24, 0);
+//        YAxis yLAxis = lineChart.getAxisLeft();
+//        yLAxis.setTextColor(Color.BLACK);
+//        YAxis yRAxis = lineChart.getAxisRight();
+//        yRAxis.setDrawLabels(false);
+//        yRAxis.setDrawAxisLine(false);
+//        yRAxis.setDrawGridLines(false);
+//        Description description = new Description();
+//        description.setText("");
+//        lineChart.setDoubleTapToZoomEnabled(false);
+//        lineChart.setDrawGridBackground(false);
+//        lineChart.setDescription(description);
+//        lineChart.animateY(2000, Easing.EaseInCubic);
+//        lineChart.invalidate();
 
 
         // 서비스 인텐트 생성 후 서비스 실행. 이 때 오레오 이전 버전과 이후 버전에서 서비스를 시작하는 방식이 조금 다르다.

@@ -26,10 +26,14 @@
             </intent-filter>
         </activity>
         <activity android:name="com.example.activity.MainActivity"></activity>
-        <activity android:name="com.example.activity.AddVocaActivity"></activity>
+        <activity android:name="com.example.activity.AddEditVocaActivity"></activity>
         <activity android:name="com.example.activity.ScreenOnActivity"></activity>
-
-
+        <activity android:name="com.example.activity.Category_AddActivity"></activity>
+        <activity android:name="com.example.activity.Category_MainActivity"></activity>
+        <activity android:name="com.example.activity.Test_MainActivity"></activity>
+        <activity android:name="com.example.activity.Test_TestActivity"></activity>
+        <activity android:name="com.example.activity.Test_ResultActivity"></activity>
+        <activity android:name="com.example.activity.Test_ResultDetailActivity"></activity>
 
         <service android:name=".VocaForegroundService"></service>
     </application>

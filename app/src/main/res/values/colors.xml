@@ -17,5 +17,7 @@
     <color name="mainBlue">#8ab4f8</color>
     <color name="mainRed">#f88ab4</color>
     <color name="mainYellow">#f8ce8a</color>
+    <color name="mainBlack">#4a4a4a</color>
+    <color name="backgroundBlack">#202124</color>
 
 </resources>

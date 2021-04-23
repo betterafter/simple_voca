@@ -26,7 +26,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="10">
+                android:weightSum="14">
+
+                <Button
+                    android:id="@+id/main_category_button"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:text="카테고리"
+                    android:textColor="@color/blueGradient5" />
 
                 <Space
                     android:layout_width="0dp"
@@ -118,14 +126,5 @@
         </HorizontalScrollView>
 
     </LinearLayout>
-
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/chart"
-        android:layout_width="289dp"
-        android:layout_height="188dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="250dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
