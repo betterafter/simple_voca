@@ -23,6 +23,8 @@ public class LoadingActivity extends AppCompatActivity {
     public static ArrayList<ListItem> vocaList = new ArrayList<>();
     public static ArrayList<categoryListItem> categoryList = new ArrayList<>();
 
+    public static String SELECTED_CATEGORY_NAME = "전체";
+
     public static int wordChangedTime = 60;
     public static int LastTime;
     public static int CurrTime;
@@ -38,9 +40,10 @@ public class LoadingActivity extends AppCompatActivity {
         vocaDatabase.makeList(vocaList);
 
         categoryDatabase = new categoryDatabase(getApplicationContext(), "category", null, 2);
+        if(categoryDatabase.getSize() == 0){
+            LoadingActivity.categoryDatabase.insert("전체", "모든 단어를 가지고 있는 단어장입니다.");
+        }
         categoryDatabase.makeList(categoryList);
-
-
 
 
 

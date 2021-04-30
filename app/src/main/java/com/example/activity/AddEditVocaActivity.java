@@ -100,6 +100,17 @@ public class AddEditVocaActivity extends AppCompatActivity {
                             ImageSerializer.PackImageToSerialized(add_voca_select_picture_imageview),
                             group,
                             "0");
+                    // "전체" 카테고리에도 넣
+                    LoadingActivity.vocaDatabase.insert(
+                            word,
+                            mean,
+                            announce,
+                            example,
+                            example_mean,
+                            memo,
+                            ImageSerializer.PackImageToSerialized(add_voca_select_picture_imageview),
+                            "전체",
+                            "0");
 
                     LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
                 }
@@ -115,6 +126,19 @@ public class AddEditVocaActivity extends AppCompatActivity {
                             ImageSerializer.PackImageToSerialized(add_voca_select_picture_imageview),
                             group,
                             "0");
+                    // 전체 카테고리도 업데이트
+                    LoadingActivity.vocaDatabase.change(
+                            POSITION,
+                            word,
+                            mean,
+                            announce,
+                            example,
+                            example_mean,
+                            memo,
+                            ImageSerializer.PackImageToSerialized(add_voca_select_picture_imageview),
+                            "전체",
+                            "0");
+
                     LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
                 }
 

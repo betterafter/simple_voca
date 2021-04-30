@@ -145,6 +145,25 @@ public class categoryDatabase extends SQLiteOpenHelper {
         }
     }
 
+    public String getCategoryName(int index){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String sql = "SELECT * FROM " + tableName;
+
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
+        cursor.moveToPosition(index);
+
+        return cursor.getString(1);
+    }
+
+    public String getCategorySubTitle(int index){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String sql = "SELECT * FROM " + tableName;
+
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
+        cursor.moveToPosition(index);
+
+        return cursor.getString(2);
+    }
 
 
     public int getSize(){

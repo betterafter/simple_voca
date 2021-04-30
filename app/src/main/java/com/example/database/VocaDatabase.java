@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.Items.ListItem;
+import com.example.activity.LoadingActivity;
 
 import java.util.ArrayList;
 
@@ -28,6 +29,7 @@ public class VocaDatabase extends SQLiteOpenHelper {
         super(context, name, factory, version, errorHandler);
     }
 
+    // flag = NULL / REMIND / IMPORTANT
     public void forceInit(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("DROP TABLE " + tableName);
         String sql = "CREATE TABLE " + tableName + " (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -179,7 +181,8 @@ public class VocaDatabase extends SQLiteOpenHelper {
         vocaList.clear();
 
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        String sql = "SELECT * FROM " + tableName;
+        String sql = "SELECT * FROM " + tableName
+                + " where sort = " + "\"" + LoadingActivity.SELECTED_CATEGORY_NAME + "\"";
 
         Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
         cursor.moveToFirst();
@@ -212,4 +215,41 @@ public class VocaDatabase extends SQLiteOpenHelper {
 
         return cursor.getCount();
     }
+
+    public int getCategoryAllWordSize(String categoryName){
+
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String sql =
+                "select * " +
+                "from " + tableName + " " +
+                "where sort = " + "\"" + categoryName + "\"";
+
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
+        return cursor.getCount();
+    }
+
+    public int getCategoryRemindedWordSize(String categoryName){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String sql =
+                "select * " +
+                        "from " + tableName + " " +
+                        "where sort = " + "\"" + categoryName + "\" " +
+                        "and flags = " + "\"REMIND\"" ;
+
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
+        return cursor.getCount();
+    }
+
+    public int getCategoryImportantWordSize(String categoryName){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String sql =
+                "select * " +
+                        "from " + tableName + " " +
+                        "where sort = " + "\"" + categoryName + "\" " +
+                        "and flags = " + "\"IMPORTANT\"" ;
+
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
+        return cursor.getCount();
+    }
 }
+
