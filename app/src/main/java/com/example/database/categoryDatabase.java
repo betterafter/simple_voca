@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.Items.categoryListItem;
+import com.example.activity.LoadingActivity;
 
 import java.util.ArrayList;
 
@@ -163,6 +164,24 @@ public class categoryDatabase extends SQLiteOpenHelper {
         cursor.moveToPosition(index);
 
         return cursor.getString(2);
+    }
+
+    public String getCategorySubTitle(String title){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String sql = "SELECT * FROM " + tableName;
+
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
+        cursor.moveToFirst();
+
+        String res = "";
+        do{
+            if(cursor.getString(1).equals(LoadingActivity.SELECTED_CATEGORY_NAME)){
+                res = cursor.getString(2); break;
+            }
+        }
+        while(cursor.moveToNext());
+
+        return res;
     }
 
 

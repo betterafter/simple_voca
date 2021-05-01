@@ -15,6 +15,7 @@ import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.adapter.VocaGridViewAdapter;
 import com.example.adapter.VocaRecyclerViewAdapter;
@@ -42,7 +43,10 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton main_add_word_button;
     private ImageButton main_change_list_type_button;
     private Button main_swap_button;
-    private Button main_category_button;
+    private ImageButton main_category_button;
+
+    private TextView CategoryTitle;
+    private TextView CategorySubTitle;
 
 
     public static HorizontalScrollView main_voca_page_list;
@@ -73,7 +77,8 @@ public class MainActivity extends AppCompatActivity {
 
         mainActivity = this;
 
-
+        CategoryTitle = findViewById(R.id.main_category_name);
+        CategorySubTitle = findViewById(R.id.main_category_subtitle);
 
         main_category_button = findViewById(R.id.main_category_button);
         main_category_button.setOnClickListener(new View.OnClickListener() {
@@ -122,11 +127,6 @@ public class MainActivity extends AppCompatActivity {
         main_voca_page_list = findViewById(R.id.main_voca_page_list);
         main_voca_page_list_layout = findViewById(R.id.main_voca_page_list_layout);
         MakeListPager();
-
-
-
-
-
 
 
         // 그리드뷰 생성
@@ -234,6 +234,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         vocaRecyclerViewAdapter.notifyDataSetChanged();
+
+        CategoryTitle.setText(LoadingActivity.SELECTED_CATEGORY_NAME);
+        CategorySubTitle.setText(LoadingActivity.SELECTED_CATEGORY_SUBTITLE);
     }
 
     public static void MakeListPager(){

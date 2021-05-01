@@ -83,6 +83,8 @@ public class Category_MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     LoadingActivity.SELECTED_CATEGORY_NAME = categoryName;
+                    LoadingActivity.SELECTED_CATEGORY_SUBTITLE =
+                            LoadingActivity.categoryDatabase.getCategorySubTitle(LoadingActivity.SELECTED_CATEGORY_NAME);
                     LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
 
                     Intent intent = new Intent(Category_MainActivity.this, MainActivity.class);

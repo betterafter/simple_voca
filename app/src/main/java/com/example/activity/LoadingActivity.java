@@ -24,6 +24,7 @@ public class LoadingActivity extends AppCompatActivity {
     public static ArrayList<categoryListItem> categoryList = new ArrayList<>();
 
     public static String SELECTED_CATEGORY_NAME = "전체";
+    public static String SELECTED_CATEGORY_SUBTITLE;
 
     public static int wordChangedTime = 60;
     public static int LastTime;
@@ -44,6 +45,7 @@ public class LoadingActivity extends AppCompatActivity {
             LoadingActivity.categoryDatabase.insert("전체", "모든 단어를 가지고 있는 단어장입니다.");
         }
         categoryDatabase.makeList(categoryList);
+        SELECTED_CATEGORY_SUBTITLE = categoryDatabase.getCategorySubTitle(SELECTED_CATEGORY_NAME);
 
 
 

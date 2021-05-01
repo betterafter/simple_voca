@@ -28,30 +28,33 @@
                 android:orientation="horizontal"
                 android:weightSum="14">
 
-                <Button
+                <ImageButton
                     android:id="@+id/main_category_button"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="4"
-                    android:text="카테고리"
-                    android:textColor="@color/blueGradient5" />
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_weight="1.5"
+                    android:background="@color/mainBlue"
+                    android:tint="@color/white"
+                    android:src="@drawable/outline_folder_24"/>
 
                 <Space
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="6" />
+                    android:layout_weight="8" />
 
                 <Button
                     android:id="@+id/main_swap_button"
                     android:layout_width="56dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="1.5"
                     android:text="Button" />
 
                 <ImageButton
                     android:id="@+id/main_change_style"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
                     android:layout_weight="1.5"
                     android:background="@android:color/transparent"
                     android:onClick="onFrameLayoutChangedClick"
@@ -63,6 +66,7 @@
                     android:id="@+id/main_add_word_button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
                     android:layout_weight="1.5"
                     android:background="@android:color/transparent"
                     android:src="@drawable/baseline_add_20"
@@ -72,14 +76,25 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/main_category_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/nanum_square_extra_bold"
-                android:text=""
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/nanum_square_bold"
+                android:text="우선순위 영단어"
+                android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="36sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/main_category_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/nanum_square_bold"
+                android:text="TextView"
+                android:textAlignment="center" />
         </LinearLayout>
 
         <FrameLayout
