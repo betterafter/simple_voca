@@ -41,6 +41,14 @@ public class Category_MainActivity extends AppCompatActivity {
         makeCategoryList();
     }
 
+    /////////////////////////////////////// 공유 기능과 테스트 기능 구현하시는 분들은 이쪽으로 //////////////////////////////////////////
+    // 1. 각각 share button 과 test button을 이용해서 화면 전환을 해주세요.
+    // 2. 각 기능을 사용할 카테고리명은 onClick 안의 categoryName으로 해주시면 됩니다. (필요 없다면 안써도 됨)
+    // 3. intent를 이용해서 각각 필요한 화면으로 전환을 하거나 필요한 기능을 불러보세요.
+    // 4. 궁금한게 있다면 바로 문의해주세요.
+
+
+
     public void makeCategoryList(){
 
         LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -59,6 +67,8 @@ public class Category_MainActivity extends AppCompatActivity {
             TextView category_remind_word = view.findViewById(R.id.category_main_category_remind_word);
             TextView category_important_word = view.findViewById(R.id.category_main_category_important_word);
             ImageButton select_button = view.findViewById(R.id.category_main_category_select_button);
+            ImageButton share_button = view.findViewById(R.id.category_main_category_share_button);
+            ImageButton test_button = view.findViewById(R.id.category_main_category_test_button);
 
             String categoryName = LoadingActivity.categoryDatabase.getCategoryName(i);
 
@@ -83,6 +93,36 @@ public class Category_MainActivity extends AppCompatActivity {
             category_all_word.setText(Integer.toString(LoadingActivity.vocaDatabase.getCategoryAllWordSize(categoryName)) + "개");
             category_remind_word.setText(Integer.toString(LoadingActivity.vocaDatabase.getCategoryRemindedWordSize(categoryName)) + "개");
             category_important_word.setText(Integer.toString(LoadingActivity.vocaDatabase.getCategoryImportantWordSize(categoryName)) + "개");
+
+
+
+
+            final String cn = categoryName;
+            // 공유 기능 버튼 클릭
+            share_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    String categoryName = cn;
+
+
+
+                }
+            });
+
+
+            // 테스트 기능 버튼 클릭
+            test_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    String categoryName = cn;
+                }
+            });
+
+
+
+
 
             linearLayout.addView(view);
         }
