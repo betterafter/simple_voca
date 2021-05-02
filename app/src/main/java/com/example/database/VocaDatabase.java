@@ -201,6 +201,31 @@ public class VocaDatabase extends SQLiteOpenHelper {
         }
     }
 
+    public void makeEmptyMeanList(ArrayList<ListItem> vocaList){
+
+        vocaList.clear();
+
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String sql = "SELECT * FROM " + tableName
+                + " where sort = " + "\"" + LoadingActivity.SELECTED_CATEGORY_NAME + "\"";
+
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
+        cursor.moveToFirst();
+
+
+        if(cursor.getCount() > 0){
+            do {
+                String[] data = new String[]{
+                        cursor.getString(1), "", cursor.getString(3),
+                        cursor.getString(4), cursor.getString(5), cursor.getString(6),
+                        cursor.getString(7), cursor.getString(8), cursor.getString(9),
+                };
+                vocaList.add(new ListItem(data, PARENT_VIEW));
+            }
+            while(cursor.moveToNext());
+        }
+    }
+
 
     public String[] getWordChangerString(int i, ArrayList<ListItem> vocaList){
         return vocaList.get(i).getData();

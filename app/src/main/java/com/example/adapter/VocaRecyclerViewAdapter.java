@@ -3,6 +3,7 @@ package com.example.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,20 +73,31 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
 
             this.itemView = itemView;
+            final LinearLayout layout = itemView.findViewById(R.id.item);
+            final Drawable drawable = layout.getBackground();
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
+                    // 뷰 축소
                     if (getAdapterPosition() + 1 < wordDataList.size()
                             && wordDataList.get(getAdapterPosition() + 1).getType() == CHILD_VIEW
                             && getItemViewType() == PARENT_VIEW) {
+
+                        layout.setBackground(drawable);
+
                         wordDataList.remove(getAdapterPosition() + 1);
                         notifyItemRemoved(getAdapterPosition() + 1);
                     }
+
+                    // 뷰 확장
                     else if ((getAdapterPosition() + 1 >= wordDataList.size()
-                             || wordDataList.get(getAdapterPosition() + 1).getType() != CHILD_VIEW)
-                             && getItemViewType() == PARENT_VIEW) {
+                            || wordDataList.get(getAdapterPosition() + 1).getType() != CHILD_VIEW)
+                            && getItemViewType() == PARENT_VIEW) {
+
+                        layout.setBackground(null);
+
                         String[] data = ((ListItem)wordDataList.get(getAdapterPosition())).getData();
                         wordDataList.add(getAdapterPosition() + 1, new ListItem(data, CHILD_VIEW));
                         notifyItemInserted(getAdapterPosition() + 1);

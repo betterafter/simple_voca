@@ -1,8 +1,7 @@
 package com.example.simple_voca;
 
 import android.content.Context;
-import android.media.MediaPlayer;
-import android.net.Uri;
+import android.speech.tts.TextToSpeech;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,16 +18,19 @@ public class GridItemView extends LinearLayout {
     TextView word;
     TextView announce;
     TextView mean;
+    Context context;
+
     String url = "https://blog.kakaocdn.net/dn/bo3KaK/btquRMFtTMq/aqjWG83rTIrEXWKpCEjFgK/%EB%9D%A0%EB%A7%81.mp3?attach=1&knm=tfile.mp3";
 
     public GridItemView(Context context) {
         super(context);
+        this.context = context;
         init(context);
     }
 
     public GridItemView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-
+        this.context = context;
         init(context);
     }
 
@@ -46,8 +48,10 @@ public class GridItemView extends LinearLayout {
             @Override
             public void onClick(View v) {
                 try {
-                    MainActivity.player = MediaPlayer.create(context, Uri.parse(url));
-                    MainActivity.player.start();
+//                    MainActivity.player = MediaPlayer.create(context, Uri.parse(url));
+//                    MainActivity.player.start();
+
+                    MainActivity.tts.speak(word.getText().toString(),TextToSpeech.QUEUE_FLUSH, null);
                 }catch(Exception e){
                     e.printStackTrace();
                 }

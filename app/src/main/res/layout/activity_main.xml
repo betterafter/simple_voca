@@ -7,6 +7,7 @@
     android:background="@color/white"
     tools:context="com.example.activity.MainActivity">
 
+
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
@@ -29,47 +30,59 @@
                 android:weightSum="14">
 
                 <ImageButton
+                    android:id="@+id/imageButton2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:layout_marginLeft="10dp"
+                    android:background="@color/mainBlue"
+                    android:tint="@color/white"
+                    android:src="@drawable/outline_settings_24"/>
+
+                <ImageButton
                     android:id="@+id/main_category_button"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginHorizontal="10dp"
                     android:layout_weight="1.5"
                     android:background="@color/mainBlue"
-                    android:tint="@color/white"
-                    android:src="@drawable/outline_folder_24"/>
+                    android:src="@drawable/outline_folder_24"
+                    android:tint="@color/white" />
 
                 <Space
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="8" />
+                    android:layout_weight="6.5" />
 
-                <Button
-                    android:id="@+id/main_swap_button"
-                    android:layout_width="56dp"
-                    android:layout_height="match_parent"
+                <ImageButton
+                    android:id="@+id/main_mean_visible_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1.5"
-                    android:text="Button" />
+                    android:background="@color/mainBlue"
+                    android:tint="@color/white"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/outline_visibility_24"/>
 
                 <ImageButton
                     android:id="@+id/main_change_style"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
                     android:layout_weight="1.5"
                     android:background="@android:color/transparent"
                     android:onClick="onFrameLayoutChangedClick"
-                    android:src="@drawable/baseline_view_module_20"
+                    android:src="@drawable/baseline_view_module_24"
                     android:text="Button"
                     android:tint="@color/blueGradient1" />
+
 
                 <ImageButton
                     android:id="@+id/main_add_word_button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_weight="1.5"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/baseline_add_20"
+                    android:src="@drawable/baseline_add_24"
                     android:text="Button"
                     android:tint="@color/white" />
 
@@ -95,19 +108,19 @@
                 android:fontFamily="@font/nanum_square_bold"
                 android:text="TextView"
                 android:textAlignment="center" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+            </LinearLayout>
         </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="7">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/main_recyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:visibility="visible" />
+            android:layout_weight="6.5">
 
             <GridView
                 android:id="@+id/gridView"
@@ -116,7 +129,30 @@
                 android:numColumns="2"
                 android:visibility="gone" />
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/main_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:visibility="visible" />
+
         </FrameLayout>
+
+        <HorizontalScrollView
+            android:id="@+id/main_voca_page_list"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="0.5">
+
+            <LinearLayout
+                android:id="@+id/main_voca_page_list_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:gravity="center|bottom"
+                android:orientation="horizontal" />
+        </HorizontalScrollView>
 
         <!--        <androidx.viewpager2.widget.ViewPager2-->
         <!--            android:id="@+id/main_index_viewpager"-->
@@ -124,22 +160,9 @@
         <!--            android:layout_height="wrap_content"-->
         <!--            android:layout_gravity="center" />-->
 
-        <HorizontalScrollView
-            android:id="@+id/main_voca_page_list"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_gravity="center"
-            android:layout_weight="1">
-
-            <LinearLayout
-                android:id="@+id/main_voca_page_list_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="horizontal" />
-        </HorizontalScrollView>
-
     </LinearLayout>
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

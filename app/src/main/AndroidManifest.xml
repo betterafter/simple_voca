@@ -3,15 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.simple_voca">
 
-    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
-        tools:ignore="ProtectedPermissions"/>
-    <!-- 서비스 권한 설정 -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -22,20 +13,28 @@
         <activity android:name="com.example.activity.LoadingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.activity.MainActivity"></activity>
-        <activity android:name="com.example.activity.AddEditVocaActivity"></activity>
-        <activity android:name="com.example.activity.ScreenOnActivity"></activity>
-        <activity android:name="com.example.activity.Category_AddActivity"></activity>
-        <activity android:name="com.example.activity.Category_MainActivity"></activity>
-        <activity android:name="com.example.activity.Test_MainActivity"></activity>
-        <activity android:name="com.example.activity.Test_TestActivity"></activity>
-        <activity android:name="com.example.activity.Test_ResultActivity"></activity>
-        <activity android:name="com.example.activity.Test_ResultDetailActivity"></activity>
+        <activity android:name="com.example.activity.MainActivity" />
+        <activity android:name="com.example.activity.AddEditVocaActivity" />
+        <activity android:name="com.example.activity.ScreenOnActivity" />
+        <activity android:name="com.example.activity.Category_AddActivity" />
+        <activity android:name="com.example.activity.Category_MainActivity" />
+        <activity android:name="com.example.activity.Test_MainActivity" />
+        <activity android:name="com.example.activity.Test_TestActivity" />
+        <activity android:name="com.example.activity.Test_ResultActivity" />
+        <activity android:name="com.example.activity.Test_ResultDetailActivity" />
 
-        <service android:name=".VocaForegroundService"></service>
-    </application>
+        <service android:name=".VocaForegroundService" />
+    </application> <!-- 서비스 권한 설정 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
 
 </manifest>

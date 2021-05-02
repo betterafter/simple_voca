@@ -3,16 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:padding="8dp">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/category_main_category_cardview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"
+        android:layout_marginHorizontal="10dp"
         app:cardElevation="5dp"
         app:cardCornerRadius="25dp"
-        app:cardUseCompatPadding="true"
         android:layout_weight="1">
 
         <LinearLayout
@@ -34,7 +36,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
-                    android:fontFamily="@font/nanum_square_bold"
+                    android:fontFamily="@font/nanum_square_extra_bold"
                     android:text="전체"
                     android:textColor="@color/mainBlue_hard"
                     android:textSize="24sp" />
@@ -73,11 +75,12 @@
                 android:id="@+id/category_main_category_subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginBottom="15dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/nanum_square_bold"
                 android:text="전체 단어를 담고 있는 단어장입니다."
+                android:textColor="@color/backgroundBlack"
                 android:textSize="12sp" />
 
             <LinearLayout
@@ -98,6 +101,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/shape_rectangle_with_round_radius"
                     android:backgroundTint="@color/mainBlue_hard"
+                    android:fontFamily="@font/nanum_square_bold"
                     android:padding="5dp"
                     android:text="전체 단어"
                     android:textAlignment="center"
@@ -113,6 +117,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/shape_rectangle_with_round_radius"
                     android:backgroundTint="@color/mainBlue_hard"
+                    android:fontFamily="@font/nanum_square_bold"
                     android:padding="5dp"
                     android:text="중요 단어"
                     android:textAlignment="center"
@@ -128,6 +133,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/shape_rectangle_with_round_radius"
                     android:backgroundTint="@color/mainBlue_hard"
+                    android:fontFamily="@font/nanum_square_bold"
                     android:padding="5dp"
                     android:text="외운 단어"
                     android:textAlignment="center"
@@ -150,6 +156,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="20dp"
                     android:layout_weight="1"
+                    android:fontFamily="@font/nanum_square_bold"
                     android:text="1001개"
                     android:textAlignment="center"
                     android:textColor="@color/black"
@@ -161,6 +168,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="20dp"
                     android:layout_weight="1"
+                    android:fontFamily="@font/nanum_square_bold"
                     android:text="387개"
                     android:textAlignment="center"
                     android:textColor="@color/black"
@@ -172,6 +180,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="20dp"
                     android:layout_weight="1"
+                    android:fontFamily="@font/nanum_square_bold"
                     android:text="650개"
                     android:textAlignment="center"
                     android:textColor="@color/black"

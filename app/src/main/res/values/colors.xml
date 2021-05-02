@@ -20,5 +20,6 @@
     <color name="mainYellow">#f8ce8a</color>
     <color name="mainBlack">#4a4a4a</color>
     <color name="backgroundBlack">#202124</color>
+    <color name="mainGray">#f4f4f4</color>
 
 </resources>

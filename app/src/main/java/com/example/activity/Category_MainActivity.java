@@ -17,7 +17,10 @@ import androidx.cardview.widget.CardView;
 
 public class Category_MainActivity extends AppCompatActivity {
 
+    LinearLayout category_main_add_button_layout;
     ImageButton category_main_add_button;
+    ImageButton category_main_delete_button;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,14 +31,20 @@ public class Category_MainActivity extends AppCompatActivity {
 
 
         // 카테고리 추가 버튼
-        category_main_add_button = findViewById(R.id.category_main_add_button);
-        category_main_add_button.setOnClickListener(new View.OnClickListener() {
+        category_main_add_button_layout = findViewById(R.id.category_main_add_button_layout);
+        category_main_add_button_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Category_MainActivity.this, Category_AddActivity.class);
                 startActivity(intent);
             }
         });
+        category_main_add_button = findViewById(R.id.category_main_add_button);
+        category_main_add_button.setClickable(false);
+
+
+        category_main_delete_button = findViewById(R.id.category_main_delete_button);
+
 
 
         makeCategoryList();

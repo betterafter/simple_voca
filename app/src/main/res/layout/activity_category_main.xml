@@ -14,54 +14,118 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/mainBlue"
             android:layout_weight="1"
+            android:layout_marginBottom="40dp"
             android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/category_main_back_button"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/baseline_arrow_back_18"
-                android:backgroundTint="@color/mainBlue"/>
 
             <TextView
                 android:id="@+id/category_main_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clickable="false"
-                android:fontFamily="@font/nanum_square_regular"
+                android:fontFamily="@font/opensans_extrabold"
                 android:gravity="center"
                 android:text="카테고리"
-                android:textColor="@color/blueGradient5"
+                android:textColor="@color/backgroundBlack"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <ImageButton
-                android:id="@+id/category_main_add_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:layout_gravity="center_vertical|right"
-                android:backgroundTint="@color/mainBlue"
-                android:tint="@color/white"
-                android:src="@drawable/baseline_add_20" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:weightSum="10"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/category_main_back_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:backgroundTint="@color/white"
+                    android:tint="@color/mainBlue"
+                    android:src="@drawable/baseline_arrow_back_18" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7" />
+
+                <ImageButton
+                    android:id="@+id/category_main_delete_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:tint="@color/mainBlue"
+                    android:src="@drawable/outline_delete_24" />
+
+            </LinearLayout>
+
         </FrameLayout>
 
 
-        <ScrollView
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="9">
 
-            <LinearLayout
-                android:id="@+id/category_main_category_list"
+            <ScrollView
                 android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/category_main_category_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"></LinearLayout>
+            </ScrollView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"></LinearLayout>
-        </ScrollView>
+                app:cardElevation="10dp"
+                app:cardCornerRadius="20dp"
+                android:layout_marginBottom="30dp"
+                app:cardBackgroundColor="@color/mainBlue"
+                android:layout_margin="30dp"
+                android:layout_gravity="bottom|center">
+
+                <LinearLayout
+                    android:id="@+id/category_main_add_button_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingVertical="5dp"
+                    android:paddingHorizontal="5dp">
+
+                    <ImageButton
+                        android:id="@+id/category_main_add_button"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center_vertical|left"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/mainBlue"
+                        android:src="@drawable/baseline_add_20"
+                        android:tint="@color/white" />
+
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/nanum_square_extra_bold"
+                        android:text="카테고리 추가"
+                        android:textColor="@color/blueGradient5"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </FrameLayout>
 
     </LinearLayout>
 

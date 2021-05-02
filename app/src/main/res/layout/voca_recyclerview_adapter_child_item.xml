@@ -9,8 +9,8 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:orientation="vertical"
+        android:background="@drawable/recyclerview_item"
         android:weightSum="2"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="15dp">
@@ -19,7 +19,21 @@
             android:id="@+id/item_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
             tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/shape_rectangle_with_round_radius"
+            android:backgroundTint="@color/mainBlue"
+            android:paddingHorizontal="7dp"
+            android:text="예문"
+            android:textColor="@color/blueGradient5"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/item_example"
@@ -30,7 +44,7 @@
             android:text="apple"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="36sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
@@ -39,25 +53,37 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
             android:layout_marginVertical="5dp"
-            android:fontFamily="@font/nanum_square_bold"
+            android:fontFamily="@font/nanum_square_light"
             android:text="[apple]"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/shape_rectangle_with_round_radius"
+            android:backgroundTint="@color/mainBlue"
+            android:paddingHorizontal="7dp"
+            android:text="메모"
+            android:textColor="@color/blueGradient5"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/item_memo"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
+            android:layout_marginBottom="20dp"
             android:layout_weight="1"
-            android:fontFamily="@font/nanum_square_bold"
-            android:gravity="center"
-            android:text="사과"
-            android:textAlignment="center"
+            android:fontFamily="@font/nanum_square_regular"
+            android:text="sdfafsdfdsasdfsafasfs"
             android:textColor="@color/black"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:textSize="18sp" />
 
 
     </LinearLayout>

@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -100,17 +102,19 @@ public class AddEditVocaActivity extends AppCompatActivity {
                             ImageSerializer.PackImageToSerialized(add_voca_select_picture_imageview),
                             group,
                             "0");
-                    // "전체" 카테고리에도 넣
-                    LoadingActivity.vocaDatabase.insert(
-                            word,
-                            mean,
-                            announce,
-                            example,
-                            example_mean,
-                            memo,
-                            ImageSerializer.PackImageToSerialized(add_voca_select_picture_imageview),
-                            "전체",
-                            "0");
+                    // "전체" 카테고리에도 넣기
+                    if(!group.equals("전체")) {
+                        LoadingActivity.vocaDatabase.insert(
+                                word,
+                                mean,
+                                announce,
+                                example,
+                                example_mean,
+                                memo,
+                                ImageSerializer.PackImageToSerialized(add_voca_select_picture_imageview),
+                                "전체",
+                                "0");
+                    }
 
                     LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
                 }
@@ -127,19 +131,22 @@ public class AddEditVocaActivity extends AppCompatActivity {
                             group,
                             "0");
                     // 전체 카테고리도 업데이트
-                    LoadingActivity.vocaDatabase.change(
-                            POSITION,
-                            word,
-                            mean,
-                            announce,
-                            example,
-                            example_mean,
-                            memo,
-                            ImageSerializer.PackImageToSerialized(add_voca_select_picture_imageview),
-                            "전체",
-                            "0");
+                    if(!group.equals("전체")) {
+                        LoadingActivity.vocaDatabase.change(
+                                POSITION,
+                                word,
+                                mean,
+                                announce,
+                                example,
+                                example_mean,
+                                memo,
+                                ImageSerializer.PackImageToSerialized(add_voca_select_picture_imageview),
+                                "전체",
+                                "0");
+                    }
 
                     LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
+                    MainActivity.vocaRecyclerViewAdapter.notifyDataSetChanged();
                 }
 
                 SAVE_STATE = "SAVE";
@@ -165,7 +172,23 @@ public class AddEditVocaActivity extends AppCompatActivity {
         if (requestCode == 200 && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
             Uri selectedImageUri = data.getData();
+            TextView picture_text = findViewById(R.id.picture_text);
+            picture_text.setText("");
+            int width = ((LinearLayout)add_voca_select_picture_imageview.getParent()).getWidth();
+            int height = ((LinearLayout)add_voca_select_picture_imageview.getParent()).getHeight();
+            System.out.println(width);
+            System.out.println(height);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    300, 300
+            );
+            params.gravity = Gravity.CENTER;
+            add_voca_select_picture_imageview.getLayoutParams().width = width / 2;
+            add_voca_select_picture_imageview.getLayoutParams().height = width / 2;
+            //add_voca_select_picture_imageview.setLayoutParams(params);
             add_voca_select_picture_imageview.setImageURI(selectedImageUri);
+
+            System.out.println(add_voca_select_picture_imageview.getWidth());
+            System.out.println(add_voca_select_picture_imageview.getHeight());
         }
 
     }

@@ -20,48 +20,71 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
                 android:background="@drawable/recyclerview_item"
-                android:gravity="center"
                 android:orientation="vertical"
-                android:paddingVertical="10dp">
+                android:paddingVertical="5dp"
+                android:weightSum="2">
 
                 <TextView
                     android:id="@+id/item_word"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginHorizontal="10dp"
-                    android:layout_marginTop="3dp"
-                    android:fontFamily="@font/nanum_square_extra_bold"
-                    android:text="apple"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
-                    android:textSize="36sp"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="assignment"
+                    android:textColor="@color/mainBlue_hard"
+                    android:textSize="24sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/item_announce"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:layout_marginHorizontal="10dp"
-                    android:fontFamily="@font/nanum_square_bold"
+                    android:fontFamily="@font/poppins_regular"
+                    android:gravity="center"
                     android:text="[apple]"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
+                    android:textColor="@color/backgroundBlack"
                     android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/item_mean"
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/item_mean"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="10dp"
+                        android:fontFamily="@font/nanum_square_bold"
+                        android:gravity="center"
+                        android:text="사과"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <ImageButton
+                        android:id="@+id/item_word_announce_button"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center|right"
+                        android:background="@drawable/shape_circle"
+                        android:backgroundTint="@color/mainBlue"
+                        android:src="@drawable/outline_volume_up_24"
+                        android:tint="@color/white" />
+                </FrameLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginVertical="10dp"
+                    android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:fontFamily="@font/nanum_square_bold"
-                    android:gravity="center"
-                    android:text="사과"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
+                    android:orientation="vertical">
+
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout

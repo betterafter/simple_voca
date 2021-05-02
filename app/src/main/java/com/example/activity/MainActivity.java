@@ -2,9 +2,11 @@ package com.example.activity;
 
 import android.content.Intent;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
@@ -23,17 +25,26 @@ import com.example.simple_voca.ItemTouchHelperCallback;
 import com.example.simple_voca.R;
 import com.example.simple_voca.VocaForegroundService;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Locale;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static android.speech.tts.TextToSpeech.ERROR;
+
 public class MainActivity extends AppCompatActivity {
 
     public static MainActivity mainActivity;
+    public static boolean WORD_MEAN_VISIBLE = true;
+
+    public static ArrayList<Button> selectedButtons = new ArrayList<>();
+    public static int selectedNumber = 0;
+    private static boolean isNavigationButtonTouched = true;
 
 
     private final int PARENT_VIEW = 0;
@@ -44,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton main_change_list_type_button;
     private Button main_swap_button;
     private ImageButton main_category_button;
+    private HorizontalScrollView navigationScrollView;
 
     private TextView CategoryTitle;
     private TextView CategorySubTitle;
@@ -61,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     public static VocaGridViewAdapter vocaGridViewAdapter;
     //private VocaViewPagerAdapter viewPagerAdapter;
 
-
+    public static TextToSpeech tts;
 
 
     public static MediaPlayer player;
@@ -74,6 +86,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
+
+
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != ERROR) {
+                    // 언어를 선택한다.
+                    tts.setLanguage(Locale.ENGLISH);
+                }
+            }
+        });
+
+
+
 
         mainActivity = this;
 
@@ -101,15 +130,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        main_swap_button = findViewById(R.id.main_swap_button);
-        main_swap_button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                Collections.shuffle(LoadingActivity.vocaList);
-                vocaGridViewAdapter.notifyDataSetChanged();
-                vocaRecyclerViewAdapter.notifyDataSetChanged();
-            }
-        });
+
+        // 셔플 기능
+//        main_swap_button = findViewById(R.id.main_swap_button);
+//        main_swap_button.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View view){
+//                Collections.shuffle(LoadingActivity.vocaList);
+//                vocaGridViewAdapter.notifyDataSetChanged();
+//                vocaRecyclerViewAdapter.notifyDataSetChanged();
+//            }
+//        });
 
 
         // 리사이클러뷰 어뎁터 생성
@@ -126,7 +157,6 @@ public class MainActivity extends AppCompatActivity {
         // 리스트 페이지가 몇개인지 만들기
         main_voca_page_list = findViewById(R.id.main_voca_page_list);
         main_voca_page_list_layout = findViewById(R.id.main_voca_page_list_layout);
-        MakeListPager();
 
 
         // 그리드뷰 생성
@@ -139,24 +169,29 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+        ImageButton visible_button = findViewById(R.id.main_mean_visible_button);
+        visible_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(WORD_MEAN_VISIBLE){
+                    WORD_MEAN_VISIBLE = false;
+                    visible_button.setImageDrawable(getResources().getDrawable(R.drawable.outline_visibility_off_24));
+                    LoadingActivity.vocaDatabase.makeEmptyMeanList(LoadingActivity.vocaList);
+                    vocaRecyclerViewAdapter.notifyDataSetChanged();
+                }
+                else{
+                    WORD_MEAN_VISIBLE = true;
+                    visible_button.setImageDrawable(getResources().getDrawable(R.drawable.outline_visibility_24));
+                    LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
+                    vocaRecyclerViewAdapter.notifyDataSetChanged();
+                }
+            }
+        });
 
 
+        onRecyclerViewScrollListener(main_recyclerView);
+        navigationScrollView = findViewById(R.id.main_voca_page_list);
 
-//        viewPager2 = findViewById(R.id.main_index_viewpager);
-//        ArrayList<Button> ButtonList = new ArrayList<>();
-//        for(int i = 0; i <= (double)LoadingActivity.vocaDatabase.getSize() / 4; i++){
-//            Button button = new Button(mainActivity.getApplicationContext());
-//            ButtonList.add(button);
-//        }
-//        viewPagerAdapter = new VocaViewPagerAdapter(getApplicationContext(), ButtonList);
-//        viewPager2.setAdapter(viewPagerAdapter);
-//        viewPager2.setClipToPadding(false);
-//
-//        viewPager2.setPadding(100, 0, 100, 0);
-//        viewPager2.setOffscreenPageLimit(5);
-       // viewPager2.setPageMargin(50);
-       // viewPager2.setPageTransformer();
-        //viewPager2.setPageTransformer();
 
 
 
@@ -221,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
             main_recyclerView.setVisibility(View.VISIBLE);
             main_gridView.setVisibility(View.GONE);
             isRecyclerViewActivated = true;
-            main_change_list_type_button.setImageDrawable(getResources().getDrawable(R.drawable.baseline_view_module_20));
+            main_change_list_type_button.setImageDrawable(getResources().getDrawable(R.drawable.baseline_view_module_24));
         }
     }
 
@@ -234,12 +269,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         vocaRecyclerViewAdapter.notifyDataSetChanged();
-
+        selectedNumber = 0;
         CategoryTitle.setText(LoadingActivity.SELECTED_CATEGORY_NAME);
         CategorySubTitle.setText(LoadingActivity.SELECTED_CATEGORY_SUBTITLE);
+
+        MakeListPager();
     }
 
+
+
+
+
+    // 리사이클러뷰일 때 navigation list (목차)
     public static void MakeListPager(){
+
+        main_voca_page_list_layout.removeAllViews();
+        selectedButtons.clear();
 
         RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(mainActivity.getApplicationContext()) {
             @Override protected int getVerticalSnapPreference() {
@@ -254,27 +299,78 @@ public class MainActivity extends AppCompatActivity {
         int width = size.x;
         int height = size.y;
 
-        for(int i = 0; i <= (double)LoadingActivity.vocaDatabase.getSize() / 4; i++){
+        for(int i = 0; i < (double)LoadingActivity.vocaList.size() / 4; i++){
 
             final int temp = i;
             Button button = new Button(mainActivity.getApplicationContext());
+            button.setText(Integer.toString(i + 1));
+
+            if(i == 0){
+                button.setTextColor(mainActivity.getResources().getColor(R.color.white));
+                button.getBackground().setColorFilter(mainActivity.getResources().getColor(R.color.mainBlue),
+                        PorterDuff.Mode.SRC_IN);
+
+
+            }
+            else{
+                button.setTextColor(mainActivity.getResources().getColor(R.color.backgroundBlack));
+                button.getBackground().setColorFilter(mainActivity.getResources().getColor(R.color.white),
+                        PorterDuff.Mode.SRC_IN);
+            }
+
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     width / 7, width / 7
             );
             button.setLayoutParams(params);
-            button.setOnClickListener(new View.OnClickListener() {
 
+            // 버튼 클릭 이벤트
+            button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    ((LinearLayoutManager)main_recyclerView.getLayoutManager())
-//                            .scrollToPositionWithOffset(temp * 4, 0);
+
+                    isNavigationButtonTouched = true;
+
+                    LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
+                    vocaRecyclerViewAdapter.notifyDataSetChanged();
+
+                    // 네비게이션 목차 버튼 색 바꾸기 -----------------------------------------------------
+
+                    // 이전 선택 버튼 색 바꾸기
+                    selectedButtons.get(selectedNumber)
+                            .setTextColor(mainActivity.getResources().getColor(R.color.backgroundBlack));
+                    selectedButtons.get(selectedNumber)
+                            .getBackground().setColorFilter(mainActivity.getResources().getColor(R.color.white),
+                            PorterDuff.Mode.SRC_IN);
+
+                    int prevSelectedNumber = selectedNumber;
+                    // 선택 버튼 포지션 저장
+                    for(int i = 0; i < selectedButtons.size(); i++){
+                        if(button == selectedButtons.get(i)){
+                            selectedNumber = i; break;
+                        }
+                    }
+
+                    // 선택 버튼 색 바꾸기
+                    selectedButtons.get(selectedNumber).setTextColor(mainActivity.getResources().getColor(R.color.white));
+                    selectedButtons
+                            .get(selectedNumber).getBackground().setColorFilter(mainActivity.getResources().getColor(R.color.mainBlue),
+                            PorterDuff.Mode.SRC_IN);
+                    ///////////////////////////////////////////////////////////////////////////////
+
+
 
                     // 이렇게 하면 smoothScrollToPosition 써서 인덱싱이 제대로 안되는 문제를 신경 안쓰고도 스무스하게 움직이게 할 수 있음
-                    smoothScroller.setTargetPosition(temp * 4);
-                    ((LinearLayoutManager)main_recyclerView.getLayoutManager()).startSmoothScroll(smoothScroller);
+                    if(Math.abs(prevSelectedNumber - selectedNumber) <= 5) {
+                        smoothScroller.setTargetPosition(temp * 4);
+                        ((LinearLayoutManager) main_recyclerView.getLayoutManager()).startSmoothScroll(smoothScroller);
+                    }
+                    else
+                        ((LinearLayoutManager)main_recyclerView.getLayoutManager()).
+                                scrollToPositionWithOffset(temp * 4, 0);
                 }
             });
 
+            selectedButtons.add(button);
             main_voca_page_list_layout.addView(button);
         }
 
@@ -290,5 +386,91 @@ public class MainActivity extends AppCompatActivity {
         params2.gravity = Gravity.CENTER_HORIZONTAL;
         params2.weight = 1;
         main_voca_page_list.setLayoutParams(params2);
+    }
+
+
+
+
+
+    public void onRecyclerViewScrollListener(RecyclerView recyclerView){
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState == recyclerView.SCROLL_STATE_IDLE){
+                    isNavigationButtonTouched = false;
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (!isNavigationButtonTouched) {
+
+                    int firstVisibleItemPosition
+                            = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+
+                    int lastVisibleItemPosition
+                            = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
+
+
+                    // 이전 선택 버튼 색 바꾸기
+                    selectedButtons.get(selectedNumber)
+                            .setTextColor(mainActivity.getResources().getColor(R.color.backgroundBlack));
+                    selectedButtons.get(selectedNumber)
+                            .getBackground().setColorFilter(mainActivity.getResources().getColor(R.color.white),
+                            PorterDuff.Mode.SRC_IN);
+
+                    selectedNumber = firstVisibleItemPosition / 4;
+
+                    // 선택 버튼 색 바꾸기
+                    selectedButtons.get(selectedNumber).setTextColor(mainActivity.getResources().getColor(R.color.white));
+                    selectedButtons.get(selectedNumber).getBackground().
+                            setColorFilter(mainActivity.getResources().getColor(R.color.mainBlue), PorterDuff.Mode.SRC_IN);
+
+
+                    if (lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1) {
+
+                        // 이전 선택 버튼 색 바꾸기
+                        selectedButtons.get(selectedNumber)
+                                .setTextColor(mainActivity.getResources().getColor(R.color.backgroundBlack));
+                        selectedButtons.get(selectedNumber)
+                                .getBackground().setColorFilter(mainActivity.getResources().getColor(R.color.white),
+                                PorterDuff.Mode.SRC_IN);
+
+                        selectedNumber = ((LinearLayout) navigationScrollView.getChildAt(0)).getChildCount() - 1;
+
+                        // 선택 버튼 색 바꾸기
+                        selectedButtons.get(selectedNumber).setTextColor(mainActivity.getResources().getColor(R.color.white));
+                        selectedButtons.get(selectedNumber).getBackground().
+                                setColorFilter(mainActivity.getResources().getColor(R.color.mainBlue), PorterDuff.Mode.SRC_IN);
+
+                    }
+
+                    if (selectedNumber % 5 == 0) {
+                        float position = ((LinearLayout) navigationScrollView.getChildAt(0)).getChildAt(selectedNumber).getX();
+                        navigationScrollView.scrollTo((int) position, 0);
+                    }
+                }
+            }
+        });
+    }
+
+
+
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // TTS 객체가 남아있다면 실행을 중지하고 메모리에서 제거한다.
+        if(tts != null){
+            tts.stop();
+            tts.shutdown();
+            tts = null;
+        }
     }
 }
