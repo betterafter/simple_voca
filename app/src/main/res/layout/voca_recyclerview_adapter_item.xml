@@ -11,6 +11,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <FrameLayout
+            android:id="@+id/main_item"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -24,17 +25,32 @@
                 android:paddingVertical="5dp"
                 android:weightSum="2">
 
-                <TextView
-                    android:id="@+id/item_word"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginHorizontal="10dp"
-                    android:fontFamily="@font/poppins_regular"
-                    android:text="assignment"
-                    android:textColor="@color/mainBlue_hard"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/item_bookmark"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/baseline_bookmark_24"
+                        android:visibility="invisible"
+                        app:tint="@color/mainYellow" />
+
+                    <TextView
+                        android:id="@+id/item_word"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="10dp"
+                        android:fontFamily="@font/poppins_regular"
+                        android:text="assignment"
+                        android:textAlignment="center"
+                        android:textColor="@color/mainBlue_hard"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                </FrameLayout>
 
                 <TextView
                     android:id="@+id/item_announce"
@@ -45,6 +61,7 @@
                     android:fontFamily="@font/poppins_regular"
                     android:gravity="center"
                     android:text="[apple]"
+                    android:textAlignment="center"
                     android:textColor="@color/backgroundBlack"
                     android:textSize="12sp" />
 
@@ -62,6 +79,7 @@
                         android:fontFamily="@font/nanum_square_bold"
                         android:gravity="center"
                         android:text="사과"
+                        android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -101,35 +119,30 @@
                     android:id="@+id/word_editor_delete"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:background="@drawable/shape_circle"
                     android:backgroundTint="@color/mainRed"
                     android:layout_marginHorizontal="15dp"
                     android:clickable="false"
-                    android:layout_weight="1"
                     android:src="@drawable/baseline_delete_20" />
 
                 <ImageButton
                     android:id="@+id/word_editor_edit"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:background="@drawable/shape_circle"
                     android:backgroundTint="@color/mainBlue"
                     android:layout_marginHorizontal="15dp"
                     android:clickable="false"
-                    android:layout_weight="1"
                     android:src="@drawable/baseline_edit_24"/>
 
                 <ImageButton
                     android:id="@+id/word_editor_close"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:background="@drawable/shape_circle"
-                    android:backgroundTint="@color/mainYellow"
                     android:layout_marginHorizontal="15dp"
                     android:clickable="false"
-                    android:layout_weight="1"
+                    android:tint="@color/white"
                     android:src="@drawable/baseline_close_36"/>
             </LinearLayout>
+
         </FrameLayout>
 
     </androidx.cardview.widget.CardView>

@@ -23,70 +23,75 @@
             android:orientation="vertical"
             android:paddingVertical="20dp">
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="14">
+                android:layout_height="wrap_content">
 
-                <ImageButton
-                    android:id="@+id/imageButton2"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:layout_marginLeft="10dp"
-                    android:background="@color/mainBlue"
-                    android:tint="@color/white"
-                    android:src="@drawable/outline_settings_24"/>
+                    android:orientation="horizontal"
+                    android:weightSum="14">
 
-                <ImageButton
-                    android:id="@+id/main_category_button"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1.5"
-                    android:background="@color/mainBlue"
-                    android:src="@drawable/outline_folder_24"
-                    android:tint="@color/white" />
+                    <ImageButton
+                        android:id="@+id/imageButton2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1.5"
+                        android:background="@color/mainBlue"
+                        android:src="@drawable/outline_settings_24"
+                        android:tint="@color/white" />
 
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="6.5" />
+                    <ImageButton
+                        android:id="@+id/main_category_button"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.5"
+                        android:background="@color/mainBlue"
+                        android:src="@drawable/outline_folder_24"
+                        android:tint="@color/white" />
 
-                <ImageButton
-                    android:id="@+id/main_mean_visible_button"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:background="@color/mainBlue"
-                    android:tint="@color/white"
-                    android:layout_marginLeft="10dp"
-                    android:src="@drawable/outline_visibility_24"/>
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="6.5" />
 
-                <ImageButton
-                    android:id="@+id/main_change_style"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:background="@android:color/transparent"
-                    android:onClick="onFrameLayoutChangedClick"
-                    android:src="@drawable/baseline_view_module_24"
-                    android:text="Button"
-                    android:tint="@color/blueGradient1" />
+                    <ImageButton
+                        android:id="@+id/main_mean_visible_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1.5"
+                        android:background="@color/mainBlue"
+                        android:src="@drawable/outline_visibility_24"
+                        android:tint="@color/white" />
+
+                    <ImageButton
+                        android:id="@+id/main_change_style"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:background="@android:color/transparent"
+                        android:onClick="onFrameLayoutChangedClick"
+                        android:src="@drawable/baseline_view_module_24"
+                        android:text="Button"
+                        android:tint="@color/blueGradient1" />
+
+                    <ImageButton
+                        android:id="@+id/main_add_word_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1.5"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/baseline_add_24"
+                        android:text="Button"
+                        android:tint="@color/white" />
 
 
-                <ImageButton
-                    android:id="@+id/main_add_word_button"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1.5"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/baseline_add_24"
-                    android:text="Button"
-                    android:tint="@color/white" />
-
-            </LinearLayout>
+                </LinearLayout>
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/main_category_name"

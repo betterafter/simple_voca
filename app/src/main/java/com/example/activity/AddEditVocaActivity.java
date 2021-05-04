@@ -1,6 +1,7 @@
 package com.example.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -67,6 +68,10 @@ public class AddEditVocaActivity extends AppCompatActivity {
         add_voca_example_mean = findViewById(R.id.add_voca_example_mean);
         add_voca_memo = findViewById(R.id.add_voca_memo);
         add_voca_select_picture_imageview = findViewById(R.id.add_voca_select_picture_imageview);
+
+
+
+
         add_voca_select_picture_imageview.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -163,6 +168,20 @@ public class AddEditVocaActivity extends AppCompatActivity {
         if(intent.getStringExtra("STATE") != null) {
             SAVE_STATE = intent.getStringExtra("STATE");
             POSITION = intent.getIntExtra("POSITION", -1);
+        }
+
+        if(SAVE_STATE.equals("EDIT")){
+            String[] data = LoadingActivity.vocaList.get(POSITION).getData();
+
+            add_voca_word.setText(data[0]);
+            add_voca_mean.setText(data[1]);
+            add_voca_announce.setText(data[2]);
+            add_voca_example.setText(data[3]);
+            add_voca_example_mean.setText(data[4]);
+            add_voca_memo.setText(data[5]);
+            add_voca_select_picture_imageview.setImageDrawable(new BitmapDrawable(
+                    getApplicationContext().getResources(), ImageSerializer.PackSerializedToImage(data[6])));
+
         }
     }
 

@@ -30,6 +30,7 @@ import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
@@ -169,24 +170,37 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+        // 단어 뜻 가리기 버튼 기능 구현 ..................................................................
         ImageButton visible_button = findViewById(R.id.main_mean_visible_button);
         visible_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                // 눈 클릭 할 때 각 아이템 메뉴 옵션들 보이는거 전부 없애기
+                if(ItemTouchHelperCallback.viewHolders.size() > 0) {
+                    ItemTouchHelperCallback.viewHolders.remove(0);
+                }
+
+                // 단어 뜻 안보이기
                 if(WORD_MEAN_VISIBLE){
                     WORD_MEAN_VISIBLE = false;
-                    visible_button.setImageDrawable(getResources().getDrawable(R.drawable.outline_visibility_off_24));
+                    visible_button.setImageDrawable(
+                            ContextCompat.getDrawable(getApplicationContext(), R.drawable.outline_visibility_off_24)
+                    );
                     LoadingActivity.vocaDatabase.makeEmptyMeanList(LoadingActivity.vocaList);
-                    vocaRecyclerViewAdapter.notifyDataSetChanged();
                 }
+                // 단어 뜻 보이기
                 else{
                     WORD_MEAN_VISIBLE = true;
-                    visible_button.setImageDrawable(getResources().getDrawable(R.drawable.outline_visibility_24));
+                    visible_button.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.outline_visibility_24));
                     LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
-                    vocaRecyclerViewAdapter.notifyDataSetChanged();
                 }
+
+                //vocaRecyclerViewAdapter.notifyDataSetChanged();
+                vocaRecyclerViewAdapter.notifyItemRangeChanged(0, LoadingActivity.vocaList.size());
             }
         });
+        //..........................................................................................
 
 
         onRecyclerViewScrollListener(main_recyclerView);
@@ -260,10 +274,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
+
     @Override
     protected void onStart() {
         super.onStart();
     }
+
+
+
+
 
     @Override
     protected void onResume() {
@@ -272,6 +293,13 @@ public class MainActivity extends AppCompatActivity {
         selectedNumber = 0;
         CategoryTitle.setText(LoadingActivity.SELECTED_CATEGORY_NAME);
         CategorySubTitle.setText(LoadingActivity.SELECTED_CATEGORY_SUBTITLE);
+
+        // 각 아이템 메뉴 옵션들 보이는거 전부 없애기
+        if(ItemTouchHelperCallback.viewHolders.size() > 0) {
+            vocaRecyclerViewAdapter.
+                    notifyItemChanged(ItemTouchHelperCallback.viewHolders.get(0).getViewHolder().getAdapterPosition());
+            ItemTouchHelperCallback.viewHolders.remove(0);
+        }
 
         MakeListPager();
     }
@@ -407,6 +435,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+
+                // 스크롤 할 때 각 아이템 메뉴 옵션들 보이는거 전부 없애기
+                if(ItemTouchHelperCallback.viewHolders.size() > 0) {
+                    recyclerView.getAdapter().
+                            notifyItemChanged(ItemTouchHelperCallback.viewHolders.get(0).getViewHolder().getAdapterPosition());
+                    ItemTouchHelperCallback.viewHolders.remove(0);
+                }
 
                 if (!isNavigationButtonTouched) {
 

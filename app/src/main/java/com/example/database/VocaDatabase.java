@@ -20,6 +20,9 @@ public class VocaDatabase extends SQLiteOpenHelper {
     private final int PARENT_VIEW = 0;
     private final int CHILD_VIEW = 1;
     private final int LOADING_VIEW = 2;
+    public static String remindFlag = "REMIND";
+    public static String importantFlag = "IMPORTANT";
+    public static String nullFlag = "0";
 
     public VocaDatabase(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -122,8 +125,13 @@ public class VocaDatabase extends SQLiteOpenHelper {
                     updatedTableColumns.get(i).getData()[8]);
         }
         db.execSQL("DROP TABLE " + tableName + "_old;");
-
     }
+
+
+
+
+
+
 
     public void change(int index, String word, String mean, String announce, String example,
                        String example_mean, String memo, String image, String sort, String flag){
@@ -171,6 +179,25 @@ public class VocaDatabase extends SQLiteOpenHelper {
         }
 
         db.execSQL("DROP TABLE " + tableName + "_old;");
+    }
+
+
+    public void update(String[] prev, String[] after){
+        SQLiteDatabase db = getWritableDatabase();
+        String sql
+                = "update " + tableName +
+                " set word = " + "\"" + after[0] + "\"" + "," +
+                " mean = " + "\"" + after[1] + "\"" + "," +
+                " announce = " + "\"" + after[2] + "\"" + "," +
+                " example = " + "\"" + after[3] + "\"" + "," +
+                " example_mean = " + "\"" + after[4] + "\"" + "," +
+                " memo = " + "\"" + after[5] + "\"" + "," +
+                " image = " + "\"" + after[6] + "\"" + "," +
+                " sort = " + "\"" + after[7] + "\"" + "," +
+                " flags = " + "\"" + after[8] + "\"" +
+                " where word = " + "\"" + prev[0] + "\"" +
+                " and mean = " + "\"" + prev[1] + "\"";
+        db.execSQL(sql);
     }
 
 
@@ -276,5 +303,7 @@ public class VocaDatabase extends SQLiteOpenHelper {
         Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
         return cursor.getCount();
     }
+
+
 }
 
