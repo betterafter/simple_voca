@@ -1,26 +1,44 @@
 package com.example.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.Items.ListItem;
+import com.example.simple_voca.CSVBuilder;
+import com.example.simple_voca.FileIOManager;
 import com.example.simple_voca.R;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.FileProvider;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Category_MainActivity extends AppCompatActivity {
 
     LinearLayout category_main_add_button_layout;
     ImageButton category_main_add_button;
     ImageButton category_main_delete_button;
-
+    private static final int PICKFILE_REQUEST_CODE = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -115,7 +133,7 @@ public class Category_MainActivity extends AppCompatActivity {
                 public void onClick(View view) {
 
                     String categoryName = cn;
-
+                    fileShare(cn);
 
 
                 }
@@ -128,6 +146,7 @@ public class Category_MainActivity extends AppCompatActivity {
                 public void onClick(View view) {
 
                     String categoryName = cn;
+                    fileSelectIntent();
                 }
             });
 
@@ -141,4 +160,49 @@ public class Category_MainActivity extends AppCompatActivity {
 
     }
 
+
+    private void fileShare(String category){
+        CSVBuilder csvBuilder = new CSVBuilder();
+        FileIOManager fileIOManager = new FileIOManager();
+        ArrayList<ListItem> list = new ArrayList<ListItem>();
+        LoadingActivity.vocaDatabase.makeCategoryList(list, category);
+
+
+        File xlsFile = fileIOManager.writeCategoryFile(category,csvBuilder.getCSVString(list));;
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("application/*");    // 엑셀파일 공유 시
+        Uri contentUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".fileprovider", xlsFile);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+        startActivity(Intent.createChooser(shareIntent,"엑셀 공유"));
+    }
+
+    private void fileSelectIntent(){
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        startActivityForResult(intent, PICKFILE_REQUEST_CODE);
+    }
+
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Uri uri = data.getData();
+        String file;
+        CSVBuilder csvBuilder = new CSVBuilder();
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            byte[] buffer = new byte[inputStream.available() + 2];
+            inputStream.read(buffer);
+            file = new String(buffer);
+            Log.i( "PoohReum" , "read" + file );
+            csvBuilder.StringToDatabase(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+    private void readFile(){
+
+    }
 }

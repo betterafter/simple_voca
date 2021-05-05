@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.Items.ListItem;
 import com.example.activity.LoadingActivity;
@@ -227,6 +228,46 @@ public class VocaDatabase extends SQLiteOpenHelper {
             while(cursor.moveToNext());
         }
     }
+
+
+    public void makeCategoryList(ArrayList<ListItem> vocaList, String category){
+        int cnt = 0;
+        vocaList.clear();
+
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String sql = "SELECT * FROM " + tableName;
+
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
+        cursor.moveToFirst();
+
+
+        if(cursor.getCount() > 0){
+            do {
+                cnt ++;
+                if(cursor.getString(8).equals(category)) {
+                    String[] data = new String[]{
+                            cursor.getString(1), cursor.getString(2), cursor.getString(3),
+                            cursor.getString(4), cursor.getString(5), cursor.getString(6),
+                            cursor.getString(7), cursor.getString(8), cursor.getString(9),
+                    };
+                    vocaList.add(new ListItem(data, PARENT_VIEW));
+
+                }
+            }
+            while(cursor.moveToNext());
+        }
+    }
+
+    public void listToDatabase(ArrayList<ListItem> updatedTableColumns){
+        for(int i = 0; i < updatedTableColumns.size(); i ++){
+            insert(updatedTableColumns.get(i).getData()[0], updatedTableColumns.get(i).getData()[1],
+                    updatedTableColumns.get(i).getData()[2],updatedTableColumns.get(i).getData()[3],
+                    updatedTableColumns.get(i).getData()[4],updatedTableColumns.get(i).getData()[5],
+                    updatedTableColumns.get(i).getData()[6],updatedTableColumns.get(i).getData()[7],
+                    updatedTableColumns.get(i).getData()[8]);
+        }
+    }
+
 
     public void makeEmptyMeanList(ArrayList<ListItem> vocaList){
 
