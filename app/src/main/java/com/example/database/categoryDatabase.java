@@ -194,4 +194,16 @@ public class categoryDatabase extends SQLiteOpenHelper {
 
         return cursor.getCount();
     }
+
+    public boolean contains(String category){
+        ArrayList<categoryListItem> list = new ArrayList<categoryListItem>();
+        makeList(list);
+        for (categoryListItem item:
+             list) {
+            if(item.data[0].equals(category)){
+                return true;
+            }
+        }
+        return false;
+    }
 }
