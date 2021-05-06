@@ -52,6 +52,7 @@ public class Test_TestActivity extends AppCompatActivity {
         problem_word = findViewById(R.id.test_test_category_word);
         problem_announce = findViewById(R.id.test_test_category_announce);
 
+
         problem_answer[0] = findViewById(R.id.test_test_number_1);
         problem_answer[1] = findViewById(R.id.test_test_number_2);
         problem_answer[2] = findViewById(R.id.test_test_number_3);
