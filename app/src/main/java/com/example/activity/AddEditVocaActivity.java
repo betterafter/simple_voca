@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -34,6 +35,7 @@ public class AddEditVocaActivity extends AppCompatActivity {
     private TextInputEditText add_voca_memo;
     private ImageView add_voca_select_picture_imageview;
     private Spinner add_select_group_spinner;
+    private ImageButton add_voca_word_search_button;
 
 
 
@@ -68,7 +70,7 @@ public class AddEditVocaActivity extends AppCompatActivity {
         add_voca_example_mean = findViewById(R.id.add_voca_example_mean);
         add_voca_memo = findViewById(R.id.add_voca_memo);
         add_voca_select_picture_imageview = findViewById(R.id.add_voca_select_picture_imageview);
-
+        add_voca_word_search_button = findViewById(R.id.add_voca_word_search_button);
 
 
 
@@ -156,6 +158,14 @@ public class AddEditVocaActivity extends AppCompatActivity {
 
                 SAVE_STATE = "SAVE";
                 Intent intent = new Intent(AddEditVocaActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        add_voca_word_search_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://en.dict.naver.com/#/search?range=all&query="+add_voca_word.getText()));
                 startActivity(intent);
             }
         });
