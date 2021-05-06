@@ -146,10 +146,15 @@ public class Category_MainActivity extends AppCompatActivity {
             test_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    String categoryName = cn;
+                    
+                    // 푸름이 코드
+                    //String categoryName = cn;
                     //fileSelectIntent();
-             
+
+                    // 여기부터 준우가 적은거임..
+                    Intent intent = new Intent(Category_MainActivity.this, Test_MainActivity.class);
+                    startActivity(intent);
+
                 }
             });
 
