@@ -1,10 +1,7 @@
 package com.example.activity;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,18 +17,17 @@ import com.example.simple_voca.CSVBuilder;
 import com.example.simple_voca.FileIOManager;
 import com.example.simple_voca.R;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.FileProvider;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.FileProvider;
 
 public class Category_MainActivity extends AppCompatActivity {
 
@@ -129,11 +125,17 @@ public class Category_MainActivity extends AppCompatActivity {
             final String cn = categoryName;
             // 공유 기능 버튼 클릭
             share_button.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.M)
                 @Override
                 public void onClick(View view) {
 
                     String categoryName = cn;
-                    fileShare(cn);
+                    try {
+                        fileShare(categoryName);
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
 
 
                 }
@@ -146,7 +148,8 @@ public class Category_MainActivity extends AppCompatActivity {
                 public void onClick(View view) {
 
                     String categoryName = cn;
-                    fileSelectIntent();
+                    //fileSelectIntent();
+             
                 }
             });
 
@@ -161,7 +164,8 @@ public class Category_MainActivity extends AppCompatActivity {
     }
 
 
-    private void fileShare(String category){
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void fileShare(String category) throws Exception {
         CSVBuilder csvBuilder = new CSVBuilder();
         FileIOManager fileIOManager = new FileIOManager();
         ArrayList<ListItem> list = new ArrayList<ListItem>();
@@ -171,7 +175,9 @@ public class Category_MainActivity extends AppCompatActivity {
         File xlsFile = fileIOManager.writeCategoryFile(category,csvBuilder.getCSVString(list));;
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("application/*");    // 엑셀파일 공유 시
-        Uri contentUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".fileprovider", xlsFile);
+
+        Uri contentUri = FileProvider.getUriForFile(getApplicationContext(),
+                getApplicationContext().getPackageName() + ".fileprovider", xlsFile);
         shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
         startActivity(Intent.createChooser(shareIntent,"엑셀 공유"));
     }

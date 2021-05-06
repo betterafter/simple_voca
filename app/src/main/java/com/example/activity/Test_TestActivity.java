@@ -20,7 +20,10 @@ public class Test_TestActivity extends AppCompatActivity {
         Intent intent = getIntent();
         ArrayList<String[]> TestList = (ArrayList<String[]>) intent.getSerializableExtra("list");
 
+        for(int i = 0; i < TestList.size(); i++){
+            System.out.println(TestList.get(i)[0] + " , " + TestList.get(i)[1] + " , " + TestList.get(i)[2]);
 
+        }
 
 
 

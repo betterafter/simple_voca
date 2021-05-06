@@ -1,7 +1,12 @@
 package com.example.simple_voca;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
+
+import com.example.activity.MainActivity;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,23 +14,33 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import androidx.annotation.RequiresApi;
+
 public class FileIOManager {
     public static final String STRSAVEPATH = Environment.getExternalStorageDirectory().getAbsolutePath()+"/WordBackup/";
     public static final String TAG = "[PoohReum]";
     public static final String RESERVED_FILE = "ALL";
     private File rootDir;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public FileIOManager(){
         // Create path, if not exist
-        rootDir = makeDirectory(STRSAVEPATH);
+        try {
+            rootDir = makeDirectory(STRSAVEPATH);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
         Log.i( TAG , STRSAVEPATH );
     }
 
 
-    public File writeCategoryFile(String category, String content){
+    public File writeCategoryFile(String category, String content) throws IOException {
         // make file
+
         File file = makeFile(rootDir, (STRSAVEPATH+"simpleVoca_"+category+".csv"), true);
         writeFile(file , content.getBytes());
+
         return file;
     }
 
@@ -34,9 +49,17 @@ public class FileIOManager {
     }
 
 
-    private File makeDirectory(String dir_path){
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private File makeDirectory(String dir_path) throws IOException {
+
+        if (MainActivity.mainActivity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                MainActivity.mainActivity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (MainActivity.mainActivity.shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) { }
+            MainActivity.mainActivity.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+        }
+
         File dir = new File(dir_path);
-        if (!dir.exists())
+        if (!dir.exists() || !dir.isDirectory())
         {
             dir.mkdirs();
             Log.i( TAG , "!dir.exists" );
@@ -47,7 +70,7 @@ public class FileIOManager {
         return dir;
     }
 
-    private File makeFile(File dir , String file_path, boolean overwrite){
+    private File makeFile(File dir , String file_path, boolean overwrite) throws IOException {
         File file = null;
         boolean isSuccess = false;
         if(dir.isDirectory()){
@@ -64,6 +87,9 @@ public class FileIOManager {
             }else{
                 Log.i( TAG , "file.exists" );
             }
+        }
+        else{
+            System.out.println("dir is not directory");
         }
         return file;
     }
