@@ -6,24 +6,26 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-
 import com.example.simple_voca.R;
 import com.example.simple_voca.TestAnswer;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.Stack;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.util.Random;
-import java.util.Stack;
-import java.util.AbstractMap;
 
 public class Test_TestActivity extends AppCompatActivity {
 
     private TextView problem_number;
     private TextView problem_word;
     private TextView problem_announce;
+    private TextView category_name;
+    private String Category_name;
+
+    private String test_type;
 
     private Button[] problem_answer = new Button[4];
 
@@ -45,8 +47,13 @@ public class Test_TestActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         ArrayList<String[]> TestList = (ArrayList<String[]>) intent.getSerializableExtra("list");
+        test_type = intent.getStringExtra("test_type");
+        Category_name = intent.getStringExtra("category_name");
 
         r = new Random(System.currentTimeMillis()); // Seed 설정
+
+        category_name = findViewById(R.id.test_test_category_name);
+        category_name.setText(Category_name);
 
         problem_number = findViewById(R.id.test_test_category_number);
         problem_word = findViewById(R.id.test_test_category_word);
@@ -70,7 +77,7 @@ public class Test_TestActivity extends AppCompatActivity {
 
         problem_number.setText((problemNum+1)+" / "+TestList.size());
         problem_word.setText(TestList.get(problemNum)[0]);
-        problem_announce.setText(TestList.get(problemNum)[2]);
+        problem_announce.setText("["  + TestList.get(problemNum)[2] +  "]");
 
         problemAnswer.setProblem(new String[]{TestList.get(problemNum)[0], TestList.get(problemNum)[2]});
         problemAnswer.setAnswer(answerNum);
@@ -94,15 +101,17 @@ public class Test_TestActivity extends AppCompatActivity {
                     myAnswers.get(problemNum).setCorrect(true);
 
                     // 디버그용
-                    for(int i=0;i<myAnswers.size();i++){
-                        TestAnswer t = myAnswers.get(i);
-                        if(!myAnswers.get(i).isCorrect()){
-                            System.out.println(i+" "+t.getProblem()[0]+" : "+t.getSelects()[t.getWrongAnswer()]+"아니고, "+t.getSelects()[t.getAnswer()]);
-                        }
-                    }
+//                    for(int i=0;i<myAnswers.size();i++){
+//                        TestAnswer t = myAnswers.get(i);
+//                        if(!myAnswers.get(i).isCorrect()){
+//                            System.out.println(i+" "+t.getProblem()[0]+" : "+t.getSelects()[t.getWrongAnswer()]+"아니고, "+t.getSelects()[t.getAnswer()]);
+//                        }
+//                    }
                     // 화면전환
                     Intent intent = new Intent(Test_TestActivity.this, Test_ResultActivity.class);
                     intent.putExtra("answers", myAnswers);
+                    intent.putExtra("category_name", Category_name);
+                    intent.putExtra("test_type", test_type);
                     startActivity(intent);
                 }
             });
@@ -175,15 +184,17 @@ public class Test_TestActivity extends AppCompatActivity {
             myAnswers.get(problemNum).setWrongAnswer(selectionNum);
 
             // 디버그용
-            for(int i=0;i<myAnswers.size();i++){
-                TestAnswer t = myAnswers.get(i);
-                if(!myAnswers.get(i).isCorrect()){
-                    System.out.println(i+" "+t.getProblem()[0]+" : "+t.getSelects()[t.getWrongAnswer()]+"아니고, "+t.getSelects()[t.getAnswer()]);
-                }
-            }
+//            for(int i=0;i<myAnswers.size();i++){
+//                TestAnswer t = myAnswers.get(i);
+//                if(!myAnswers.get(i).isCorrect()){
+//                    System.out.println(i+" "+t.getProblem()[0]+" : "+t.getSelects()[t.getWrongAnswer()]+"아니고, "+t.getSelects()[t.getAnswer()]);
+//                }
+//            }
             // 화면전환
             Intent intent = new Intent(Test_TestActivity.this, Test_ResultActivity.class);
             intent.putExtra("answers", myAnswers);
+            intent.putExtra("category_name", Category_name);
+            intent.putExtra("test_type", test_type);
             startActivity(intent);
         }
     }

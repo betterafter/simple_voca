@@ -53,8 +53,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private ImageButton main_add_word_button;
-    private ImageButton main_change_list_type_button;
-    private Button main_swap_button;
     private ImageButton main_category_button;
     private HorizontalScrollView navigationScrollView;
 
@@ -118,8 +116,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        main_change_list_type_button = findViewById(R.id.main_change_style);
 
         // 단어 추가 버튼 기능
         main_add_word_button = findViewById(R.id.main_add_word_button);
@@ -207,51 +203,6 @@ public class MainActivity extends AppCompatActivity {
         navigationScrollView = findViewById(R.id.main_voca_page_list);
 
 
-
-
-
-//        lineChart = (LineChart)findViewById(R.id.chart);
-//
-//        List<Entry> entries = new ArrayList<>();
-//        entries.add(new Entry(1,1));
-//        entries.add(new Entry(2,2));
-//        entries.add(new Entry(3,0));
-//        entries.add(new Entry(4,4));
-//        entries.add(new Entry(5,3));
-//
-//        LineDataSet lineDataSet = new LineDataSet(entries, "속성명1");
-//        lineDataSet.setLineWidth(2);
-//        lineDataSet.setCircleRadius(6);
-//        lineDataSet.setCircleColor(Color.parseColor("#FFA1B4DC"));
-//        lineDataSet.setCircleHoleColor(Color.BLUE);
-//        lineDataSet.setColor(Color.parseColor("#FFA1B4DC"));
-//        lineDataSet.setDrawCircleHole(true);
-//        lineDataSet.setDrawCircles(true);
-//        lineDataSet.setDrawHorizontalHighlightIndicator(false);
-//        lineDataSet.setDrawHighlightIndicators(false);
-//        lineDataSet.setDrawValues(false);
-//
-//        LineData lineData = new LineData(lineDataSet);
-//        lineChart.setData(lineData);
-//        XAxis xAxis = lineChart.getXAxis();
-//        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-//        xAxis.setTextColor(Color.BLACK);
-//        xAxis.enableGridDashedLine(8, 24, 0);
-//        YAxis yLAxis = lineChart.getAxisLeft();
-//        yLAxis.setTextColor(Color.BLACK);
-//        YAxis yRAxis = lineChart.getAxisRight();
-//        yRAxis.setDrawLabels(false);
-//        yRAxis.setDrawAxisLine(false);
-//        yRAxis.setDrawGridLines(false);
-//        Description description = new Description();
-//        description.setText("");
-//        lineChart.setDoubleTapToZoomEnabled(false);
-//        lineChart.setDrawGridBackground(false);
-//        lineChart.setDescription(description);
-//        lineChart.animateY(2000, Easing.EaseInCubic);
-//        lineChart.invalidate();
-
-
         // 서비스 인텐트 생성 후 서비스 실행. 이 때 오레오 이전 버전과 이후 버전에서 서비스를 시작하는 방식이 조금 다르다.
         Intent serviceIntent = new Intent(MainActivity.this, VocaForegroundService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
@@ -259,20 +210,7 @@ public class MainActivity extends AppCompatActivity {
         else startService(serviceIntent);
     }
 
-    public void onFrameLayoutChangedClick(View view){
-        if(isRecyclerViewActivated){
-            main_recyclerView.setVisibility(View.GONE);
-            main_gridView.setVisibility(View.VISIBLE);
-            isRecyclerViewActivated = false;
-            main_change_list_type_button.setImageDrawable(getResources().getDrawable(R.drawable.baseline_view_list_24));
-        }
-        else {
-            main_recyclerView.setVisibility(View.VISIBLE);
-            main_gridView.setVisibility(View.GONE);
-            isRecyclerViewActivated = true;
-            main_change_list_type_button.setImageDrawable(getResources().getDrawable(R.drawable.baseline_view_module_24));
-        }
-    }
+
 
 
 

@@ -55,7 +55,7 @@
                     <Space
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="6.5" />
+                        android:layout_weight="8" />
 
                     <ImageButton
                         android:id="@+id/main_mean_visible_button"
@@ -67,16 +67,6 @@
                         android:src="@drawable/outline_visibility_24"
                         android:tint="@color/white" />
 
-                    <ImageButton
-                        android:id="@+id/main_change_style"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1.5"
-                        android:background="@android:color/transparent"
-                        android:onClick="onFrameLayoutChangedClick"
-                        android:src="@drawable/baseline_view_module_24"
-                        android:text="Button"
-                        android:tint="@color/blueGradient1" />
 
                     <ImageButton
                         android:id="@+id/main_add_word_button"

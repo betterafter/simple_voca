@@ -44,22 +44,23 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_margin="30dp"
+            android:layout_weight="3"
             android:weightSum="2"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/important_word_test_button"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"
                 android:background="@drawable/shape_rectangle_with_round_radius"
                 android:backgroundTint="@color/mainBlue"
                 android:orientation="vertical"
                 android:paddingHorizontal="20dp"
-                android:paddingVertical="40dp">
+                android:paddingVertical="30dp">
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -83,6 +84,7 @@
                     android:fontFamily="@font/nanum_square_regular"
                     android:gravity="center"
                     android:text="중요 표시를 한 단어만 테스트를 해보세요."
+                    android:layout_marginBottom="10dp"
                     android:textColor="@color/blueGradient5"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -90,14 +92,14 @@
             <LinearLayout
                 android:id="@+id/all_word_test_button"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/shape_rectangle_with_round_radius"
                 android:backgroundTint="@color/mainBlack"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="20dp"
+                android:paddingHorizontal="20dp"
                 android:paddingVertical="30dp">
 
                 <ImageView
@@ -119,12 +121,53 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nanum_square_regular"
                     android:text="모든 단어에 대해서 테스트를 해보세요."
+                    android:layout_marginBottom="10dp"
                     android:textAlignment="center"
                     android:textColor="@color/blueGradient5"
                     android:textSize="12sp" />
             </LinearLayout>
 
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginBottom="30dp"
+            android:layout_weight="6">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/test_main_category_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:fontFamily="@font/nanum_square_regular"
+                    android:text="전체"
+                    android:textAlignment="center"
+                    android:textColor="@color/mainBlue_hard"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textView8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nanum_square_regular"
+                    android:text=" 카테고리 최근 10개 테스트 결과"
+                    android:textAlignment="center"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/test_main_chart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
         </LinearLayout>
 
     </LinearLayout>

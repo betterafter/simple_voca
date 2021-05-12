@@ -34,14 +34,16 @@ public class Category_MainActivity extends AppCompatActivity {
     LinearLayout category_main_add_button_layout;
     ImageButton category_main_add_button;
     ImageButton category_main_delete_button;
+    TextView category_main_title;
     private static final int PICKFILE_REQUEST_CODE = 0;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_main);
 
-
+        category_main_title = findViewById(R.id.category_main_title);
 
 
         // 카테고리 추가 버튼
@@ -74,15 +76,23 @@ public class Category_MainActivity extends AppCompatActivity {
 
     public void makeCategoryList(){
 
+        LoadingActivity.categoryDatabase.makeList(LoadingActivity.categoryList);
+
         LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.activity_category_main_item, null);
 
         LinearLayout linearLayout = findViewById(R.id.category_main_category_list);
+        linearLayout.removeAllViews();
 
         for(int i = 0; i < LoadingActivity.categoryList.size(); i++){
 
-
             View view = inflater.inflate(R.layout.activity_category_main_item, null);
+
+            LinearLayout editorLayout = view.findViewById(R.id.category_main_editor_layout);
+            ImageButton category_delete_button = view.findViewById(R.id.category_editor_delete);
+            ImageButton category_edit_button = view.findViewById(R.id.category_editor_edit);
+            ImageButton category_close_button = view.findViewById(R.id.category_editor_close);
+
             CardView cardView = view.findViewById(R.id.category_main_category_cardview);
             TextView category_name = view.findViewById(R.id.category_main_category_name);
             TextView category_subtitle = view.findViewById(R.id.category_main_category_subtitle);
@@ -94,6 +104,55 @@ public class Category_MainActivity extends AppCompatActivity {
             ImageButton test_button = view.findViewById(R.id.category_main_category_test_button);
 
             String categoryName = LoadingActivity.categoryDatabase.getCategoryName(i);
+            String categorySubtitle = LoadingActivity.categoryDatabase.getCategorySubTitle(i);
+
+            view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if(!categoryName.equals("전체")) {
+                        category_main_title.setText("카테고리 편집");
+                        editorLayout.setVisibility(View.VISIBLE);
+                    }
+
+                    return false;
+                }
+            });
+
+            final int tempIdx = i;
+            final String tempSubtitle = categorySubtitle;
+            category_delete_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(LoadingActivity.SELECTED_CATEGORY_NAME.equals(categoryName))
+                        LoadingActivity.SELECTED_CATEGORY_NAME = "전체";
+
+                    LoadingActivity.categoryDatabase.delete(categoryName, tempSubtitle);
+                    makeCategoryList();
+                }
+            });
+
+            category_edit_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Intent intent = new Intent(Category_MainActivity.this, Category_AddActivity.class);
+
+                    intent.putExtra("type", "edit");
+                    intent.putExtra("category_name", categoryName);
+                    intent.putExtra("category_content", tempSubtitle);
+                    startActivity(intent);
+
+                    editorLayout.setVisibility(View.GONE);
+                }
+            });
+
+            category_close_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    category_main_title.setText("카테고리");
+                    editorLayout.setVisibility(View.GONE);
+                }
+            });
 
             category_name.setText(categoryName);
             if(categoryName.equals(LoadingActivity.SELECTED_CATEGORY_NAME)){
@@ -148,24 +207,18 @@ public class Category_MainActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     
                     // 푸름이 코드
-                    //String categoryName = cn;
+                    String categoryName = cn;
                     //fileSelectIntent();
 
                     // 여기부터 준우가 적은거임..
                     Intent intent = new Intent(Category_MainActivity.this, Test_MainActivity.class);
+                    intent.putExtra("category_name", cn);
                     startActivity(intent);
 
                 }
             });
-
-
-
-
-
             linearLayout.addView(view);
         }
-
-
     }
 
 

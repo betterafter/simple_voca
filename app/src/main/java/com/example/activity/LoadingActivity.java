@@ -5,7 +5,9 @@ import android.os.Build;
 import android.os.Bundle;
 
 import com.example.Items.ListItem;
+import com.example.Items.ScoreListItem;
 import com.example.Items.categoryListItem;
+import com.example.database.ScoreDatabase;
 import com.example.database.VocaDatabase;
 import com.example.database.categoryDatabase;
 import com.example.simple_voca.R;
@@ -19,9 +21,11 @@ public class LoadingActivity extends AppCompatActivity {
 
     public static VocaDatabase vocaDatabase;
     public static categoryDatabase categoryDatabase;
+    public static ScoreDatabase ScoreDatabase;
 
     public static ArrayList<ListItem> vocaList = new ArrayList<>();
     public static ArrayList<categoryListItem> categoryList = new ArrayList<>();
+    public static ArrayList<ScoreListItem> categoryTestResultList = new ArrayList<>();
 
     public static String SELECTED_CATEGORY_NAME = "전체";
     public static String SELECTED_CATEGORY_SUBTITLE;
@@ -47,7 +51,8 @@ public class LoadingActivity extends AppCompatActivity {
         categoryDatabase.makeList(categoryList);
         SELECTED_CATEGORY_SUBTITLE = categoryDatabase.getCategorySubTitle(SELECTED_CATEGORY_NAME);
 
-
+        ScoreDatabase = new ScoreDatabase(getApplicationContext(), "Score", null, 3);
+        //ScoreDatabase.deleteAll();
 
         Intent intent = new Intent(LoadingActivity.this, MainActivity.class);
         startActivity(intent);

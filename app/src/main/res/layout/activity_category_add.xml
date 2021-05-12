@@ -55,7 +55,8 @@
                     android:id="@+id/category_add_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="hint" />
+                    android:backgroundTint="@color/white"
+                    android:hint="카테고리 이름을 적어주세요" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -67,7 +68,8 @@
                     android:id="@+id/category_add_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="hint" />
+                    android:backgroundTint="@color/white"
+                    android:hint="카테고리에 대한 설명을 적어주세요" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout

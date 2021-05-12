@@ -64,6 +64,14 @@ public class categoryDatabase extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(sql);
     }
 
+    public void delete(String category, String content){
+
+        SQLiteDatabase db = getWritableDatabase();
+        String sql = "delete from " + tableName + " where name = " + '\"' + category + '\"'
+                + " and content = " + '\"' + content + '\"';
+        db.execSQL(sql);
+    }
+
 
     public void delete(int index){
         SQLiteDatabase db = getWritableDatabase();

@@ -14,9 +14,82 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
             android:layout_marginBottom="40dp"
+            android:layout_weight="1"
             android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/category_main_category_edit_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:weightSum="10"
+                android:visibility="gone"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/category_main_category_edit_layout_back"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical|right"
+                    android:background="@color/white"
+                    android:tint="@color/mainBlue"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/baseline_arrow_back_18" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7" />
+
+                <ImageButton
+                    android:id="@+id/category_main_category_edit_layout_edit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:background="@color/white"
+                    android:tint="@color/mainBlue"
+                    android:layout_weight="1"
+                    android:src="@drawable/baseline_edit_24" />
+
+                <ImageButton
+                    android:id="@+id/category_main_delete_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:src="@drawable/outline_delete_24"
+                    android:tint="@color/mainBlue" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/category_main_category_normal_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <ImageButton
+                    android:id="@+id/category_main_back_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/white"
+                    android:src="@drawable/baseline_arrow_back_18"
+                    android:tint="@color/mainBlue" />
+
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/category_main_title"
@@ -30,41 +103,16 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:weightSum="10"
-                android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/category_main_back_button"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:backgroundTint="@color/white"
-                    android:tint="@color/mainBlue"
-                    android:src="@drawable/baseline_arrow_back_18" />
-
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="7" />
-
-                <ImageButton
-                    android:id="@+id/category_main_delete_button"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|right"
-                    android:layout_weight="1"
-                    android:background="@color/white"
-                    android:tint="@color/mainBlue"
-                    android:src="@drawable/outline_delete_24" />
-
-            </LinearLayout>
-
         </FrameLayout>
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:fontFamily="@font/nanum_square_bold"
+            android:text="카테고리 이름을 터치해 현재 카테고리를 변경해주세요."
+            android:textColor="@color/black" />
 
 
         <FrameLayout
@@ -74,7 +122,8 @@
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginBottom="35dp">
 
                 <LinearLayout
                     android:id="@+id/category_main_category_list"

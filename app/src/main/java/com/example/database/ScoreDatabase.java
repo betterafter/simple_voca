@@ -7,29 +7,18 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-
-import com.example.Items.ListItem;
 import com.example.Items.ScoreListItem;
-import com.example.activity.LoadingActivity;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 public class ScoreDatabase extends SQLiteOpenHelper {
 
-    final static String tableName = "voca";
-
-    private final int PARENT_VIEW = 0;
-    private final int CHILD_VIEW = 1;
-    private final int LOADING_VIEW = 2;
-    public static String remindFlag = "REMIND";
-    public static String importantFlag = "IMPORTANT";
-    public static String nullFlag = "0";
+    final static String tableName = "Score";
 
     public ScoreDatabase(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -39,7 +28,6 @@ public class ScoreDatabase extends SQLiteOpenHelper {
         super(context, name, factory, version, errorHandler);
     }
 
-    // flag = NULL / REMIND / IMPORTANT
     public void forceInit(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("DROP TABLE " + tableName);
         String sql = "CREATE TABLE " + tableName + " (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -84,6 +72,8 @@ public class ScoreDatabase extends SQLiteOpenHelper {
                 + date
                 + "');";
         sqLiteDatabase.execSQL(sql);
+
+        System.out.println(sql);
     }
 
     public void delete(int index){
@@ -115,6 +105,14 @@ public class ScoreDatabase extends SQLiteOpenHelper {
     }
 
 
+    public void deleteAll(){
+
+        SQLiteDatabase db = getWritableDatabase();
+        String sql = "delete from " + tableName;
+        db.execSQL(sql);
+    }
+
+
 
 
 
@@ -141,6 +139,38 @@ public class ScoreDatabase extends SQLiteOpenHelper {
 
         Collections.sort(scoreList);
     }
+
+
+
+    public void makeCategoryList(ArrayList<ScoreListItem> scoreList, String category){
+
+        scoreList.clear();
+
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String sql = "SELECT * FROM " + tableName + " where category = " + '\"' + category + '\"'
+                + " order by date desc limit 10";
+
+        //String sql = "Select * from " + tableName;
+
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
+        cursor.moveToFirst();
+
+        System.out.println(cursor.getCount());
+
+
+        if(cursor.getCount() > 0){
+            do {
+                String[] data = new String[]{
+                        cursor.getString(1), cursor.getString(2), cursor.getString(3)
+                };
+                scoreList.add(new ScoreListItem(data[0], data[1], data[2]));
+            }
+            while(cursor.moveToNext());
+        }
+
+        Collections.sort(scoreList);
+    }
+
 
 
 

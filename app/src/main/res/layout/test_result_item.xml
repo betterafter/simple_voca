@@ -2,72 +2,108 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_marginHorizontal="30dp"
+        android:background="@drawable/recyclerview_item"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/test_result_word"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView" />
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:src="@drawable/baseline_bookmark_24" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/test_result_announce"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal">
+
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginVertical="30dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/test_result_word"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/opensans_bold"
+                    android:text="abcdefghijklmnopqrstuvwxyzaaaa"
+                    android:textAlignment="center"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/test_result_announce"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/opensans_regular"
+                    android:text="TextView"
+                    android:textAlignment="center"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/item_result_bookmark"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center"
+                    android:backgroundTint="@color/white"
+                    android:src="@drawable/baseline_bookmark_border_24"
+                    android:tint="@color/mainBlue" />
+
+            </LinearLayout>
+
+        </FrameLayout>
 
         <Button
             android:id="@+id/test_result_item1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Button"
-            android:textColor="@color/black"
+            android:layout_marginBottom="10dp"
             android:backgroundTint="@color/mainGray"
-            />
+            android:fontFamily="@font/nanum_square_bold"
+            android:text="Button"
+            android:textColor="@color/black" />
 
         <Button
             android:id="@+id/test_result_item2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="@color/mainGray"
+            android:fontFamily="@font/nanum_square_bold"
             android:text="Button"
-            android:textColor="@color/black"
-            android:backgroundTint="@color/mainGray"/>
+            android:textColor="@color/black" />
 
         <Button
             android:id="@+id/test_result_item3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="@color/mainGray"
+            android:fontFamily="@font/nanum_square_bold"
             android:text="Button"
-            android:textColor="@color/black"
-            android:backgroundTint="@color/mainGray"/>
+            android:textColor="@color/black" />
 
         <Button
             android:id="@+id/test_result_item4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp"
+            android:backgroundTint="@color/mainGray"
+            android:fontFamily="@font/nanum_square_bold"
             android:text="Button"
-            android:textColor="@color/black"
-            android:backgroundTint="@color/mainGray"/>
+            android:textColor="@color/black" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

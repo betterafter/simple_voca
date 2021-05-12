@@ -6,10 +6,11 @@ public class ScoreListItem implements Comparable {
     private String date;
     private int[] params;
 
-    public ScoreListItem(String score,String category,String date){
+    public ScoreListItem(String score, String category, String date){
         setData(date);
         this.score = Integer.parseInt(score);
         this.category = category;
+        this.date = date;
     }
 
     public String getDate(){
@@ -22,6 +23,10 @@ public class ScoreListItem implements Comparable {
         for(int i = 0; i < paramsString.length; i ++){
             params[i] = Integer.parseInt(paramsString[i]);
         }
+    }
+
+    public int getScore() {
+        return score;
     }
 
     public int[] getParams(){

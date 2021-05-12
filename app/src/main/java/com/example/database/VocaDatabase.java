@@ -5,12 +5,12 @@ import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.example.Items.ListItem;
 import com.example.activity.LoadingActivity;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import androidx.annotation.Nullable;
 
@@ -230,6 +230,8 @@ public class VocaDatabase extends SQLiteOpenHelper {
     }
 
 
+
+
     public void makeCategoryList(ArrayList<ListItem> vocaList, String category){
         int cnt = 0;
         vocaList.clear();
@@ -258,6 +260,80 @@ public class VocaDatabase extends SQLiteOpenHelper {
         }
     }
 
+
+
+
+
+
+    public ArrayList<String[]> makeTestList(String category){
+
+        ArrayList<String[]> res = new ArrayList<>();
+        String sql = "select word, mean, announce from " + tableName + " where sort = " + '\"' + category + '\"';
+
+        System.out.println(sql);
+
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
+        cursor.moveToFirst();
+
+        if(cursor.getCount() < 20) return res;
+
+
+        do{
+            Random random = new Random();
+            int idx = random.nextInt(cursor.getCount());
+            cursor.moveToPosition(idx);
+
+            String[] temp = new String[]{
+                    cursor.getString(0), cursor.getString(1), cursor.getString(2)
+            };
+            res.add(temp);
+        }
+        while(res.size() < 20);
+
+        return res;
+    }
+
+
+
+
+
+    public ArrayList<String[]> makeImportantTestList(String category){
+
+        ArrayList<String[]> res = new ArrayList<>();
+        String sql = "select word, mean, announce from " + tableName + " where sort = " + '\"' + category + '\"'
+                + " and flags = " + '\"' + importantFlag + '\"';
+
+        System.out.println(sql);
+
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
+        cursor.moveToFirst();
+
+        if(cursor.getCount() < 20) return res;
+
+
+        do{
+            Random random = new Random();
+            int idx = random.nextInt(cursor.getCount());
+            System.out.println(idx);
+            cursor.moveToPosition(idx);
+
+            String[] temp = new String[]{
+                    cursor.getString(0), cursor.getString(1), cursor.getString(2)
+            };
+            res.add(temp);
+        }
+        while(res.size() < 20);
+
+        return res;
+    }
+
+
+
+
+
+
     public void listToDatabase(ArrayList<ListItem> updatedTableColumns){
         for(int i = 0; i < updatedTableColumns.size(); i ++){
             insert(updatedTableColumns.get(i).getData()[0], updatedTableColumns.get(i).getData()[1],
@@ -267,6 +343,11 @@ public class VocaDatabase extends SQLiteOpenHelper {
                     updatedTableColumns.get(i).getData()[8]);
         }
     }
+
+
+
+
+
 
 
     public void makeEmptyMeanList(ArrayList<ListItem> vocaList){
@@ -295,9 +376,19 @@ public class VocaDatabase extends SQLiteOpenHelper {
     }
 
 
+
+
+
+
+
     public String[] getWordChangerString(int i, ArrayList<ListItem> vocaList){
         return vocaList.get(i).getData();
     }
+
+
+
+
+
 
     public int getSize(){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
@@ -308,6 +399,12 @@ public class VocaDatabase extends SQLiteOpenHelper {
 
         return cursor.getCount();
     }
+
+
+
+
+
+
 
     public int getCategoryAllWordSize(String categoryName){
 
@@ -321,6 +418,12 @@ public class VocaDatabase extends SQLiteOpenHelper {
         return cursor.getCount();
     }
 
+
+
+
+
+
+
     public int getCategoryRemindedWordSize(String categoryName){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         String sql =
@@ -332,6 +435,12 @@ public class VocaDatabase extends SQLiteOpenHelper {
         Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
         return cursor.getCount();
     }
+
+
+
+
+
+
 
     public int getCategoryImportantWordSize(String categoryName){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
@@ -346,5 +455,19 @@ public class VocaDatabase extends SQLiteOpenHelper {
     }
 
 
+
+
+
+
+    public void changeBookmarkState(String word, String category, String type){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String sql
+                = "update " + tableName +
+                " set " +
+                " flags = " + "\"" + type + "\"" +
+                " where word = " + "\"" + word + "\"" +
+                " and sort = " + "\"" + category + "\"";
+        sqLiteDatabase.execSQL(sql);
+    }
 }
 
