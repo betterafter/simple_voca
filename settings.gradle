@@ -1,2 +1,2 @@
 include ':app'
-rootProject.name = "simple_voca"
+rootProject.name = "다너단어"
