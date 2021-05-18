@@ -64,16 +64,16 @@ public class VocaForegroundService extends Service {
             }
 
             BitmapDrawable bd
-                    = (BitmapDrawable) (ResourcesCompat.getDrawable(getResources(), R.drawable.main_icon, null));
+                    = (BitmapDrawable) (ResourcesCompat.getDrawable(getResources(), R.drawable.icon_main_2, null));
             Bitmap bitmap = bd.getBitmap();
             // Notification 세팅
             notification
                     = new NotificationCompat.Builder(getApplicationContext(), "channel")
-                    .setSmallIcon(R.mipmap.icon_main)
+                    .setSmallIcon(R.mipmap.icon_service_black)
                     .setLargeIcon(bitmap)
-                    .setContentTitle(data[0])
+                    .setContentTitle(data[0] + "  [" + data[2] + "]")
                     .setContentIntent(pendingIntent)
-                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                     .setContentText(data[1]);
 
             // id 값은 0보다 큰 양수가 들어가야 한다.
@@ -86,6 +86,7 @@ public class VocaForegroundService extends Service {
                 notification, getApplicationContext(), pendingIntent);
 
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
         mReceiver = new wordChangeBroadcastReceiver(vocaForegroundServiceUpdater);
         registerReceiver(mReceiver, filter);
 

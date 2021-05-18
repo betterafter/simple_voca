@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.danerdaner.simple_voca.ImageSerializer;
 import com.danerdaner.simple_voca.R;
+import com.danerdaner.simple_voca.wordChangeBroadcastReceiver;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -39,7 +40,9 @@ public class ScreenOnActivity extends AppCompatActivity {
     private TextView memo;
     private ImageView imageView;
 
-    private boolean isTimeThreadStop = false;
+    private TimeThread timeThread;
+
+    public static boolean isTimeThreadStop = false;
 
     private String SCREEN_ON_ACTIVITY_NAME = "ScreenOnActivity";
 
@@ -47,6 +50,8 @@ public class ScreenOnActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        isTimeThreadStop = false;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true);
@@ -81,9 +86,6 @@ public class ScreenOnActivity extends AppCompatActivity {
         example_mean = findViewById(R.id.screen_on_example_mean);
         memo = findViewById(R.id.screen_on_memo);
         imageView = findViewById(R.id.screen_on_image);
-
-        TimeThread timeThread = new TimeThread();
-        timeThread.start();
     }
 
     @Override
@@ -101,6 +103,17 @@ public class ScreenOnActivity extends AppCompatActivity {
         memo.setText(data[5]);
         imageView.setImageDrawable(new BitmapDrawable(
                 getResources(), ImageSerializer.PackSerializedToImage(data[6])));
+
+//        if(timeThread == null) System.out.println("timeThread null");
+//        else System.out.println("timeThread not null");
+//
+//        if(timeThread == null) {
+//            timeThread = new TimeThread();
+//            timeThread.start();
+//        }
+
+        TimeThread t = new TimeThread();
+        t.start();
     }
 
     private class TimeThread extends Thread{
@@ -117,12 +130,15 @@ public class ScreenOnActivity extends AppCompatActivity {
                     System.out.println(ActivityName);
                     System.out.println(getApplicationContext().getClass().getName());
 
-                    if(!ActivityName.contains(SCREEN_ON_ACTIVITY_NAME)){
+                    if(!ActivityName.contains(SCREEN_ON_ACTIVITY_NAME)
+                            || wordChangeBroadcastReceiver.ScreenOnActivityStop){
                         moveTaskToBack(true);						// 태스크를 백그라운드로 이동
-                        finishAndRemoveTask();
-                        isTimeThreadStop = true;                            // 액티비티 종료 + 태스크 리스트에서 지우기
+                        finishAndRemoveTask();                              // 액티비티 종료 + 태스크 리스트에서 지우기
+                        isTimeThreadStop = true;
+                        timeThread = null;
                         break;
                     }
+
 
                     long now = System.currentTimeMillis();
                     Date date = new Date(now);
@@ -208,6 +224,7 @@ public class ScreenOnActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        timeThread = null;
     }
 
     @Override
@@ -220,6 +237,7 @@ public class ScreenOnActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         isTimeThreadStop = true;
+        timeThread = null;
     }
 
 

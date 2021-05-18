@@ -52,10 +52,10 @@ public class LoadingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load);
 
-        getPermission();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String lock_category_name = sharedPreferences.getString("category", "전체");
 
+        getPermission();
 
         vocaDatabase = new VocaDatabase(getApplicationContext(), "voca", null, 2);
         vocaDatabase.makeList(vocaList);
@@ -84,8 +84,10 @@ public class LoadingActivity extends AppCompatActivity {
                 startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
             }
             else{
-                Intent serviceIntent = new Intent(LoadingActivity.this, VocaForegroundService.class);
-                startForegroundService(serviceIntent);
+                if(sharedPreferences.getBoolean("service", false)){
+                    Intent serviceIntent = new Intent(LoadingActivity.this, VocaForegroundService.class);
+                    startForegroundService(serviceIntent);
+                }
 
                 Intent intent = new Intent(LoadingActivity.this, MainActivity.class);
                 startActivity(intent);
@@ -102,9 +104,10 @@ public class LoadingActivity extends AppCompatActivity {
 
             } else {
                 // 서비스 인텐트 생성 후 서비스 실행. 이 때 오레오 이전 버전과 이후 버전에서 서비스를 시작하는 방식이 조금 다르다.
-                Intent serviceIntent = new Intent(LoadingActivity.this, VocaForegroundService.class);
-                startForegroundService(serviceIntent);
-
+                if(sharedPreferences.getBoolean("service", false)){
+                    Intent serviceIntent = new Intent(LoadingActivity.this, VocaForegroundService.class);
+                    startForegroundService(serviceIntent);
+                }
                 Intent intent = new Intent(LoadingActivity.this, MainActivity.class);
                 startActivity(intent);
             }

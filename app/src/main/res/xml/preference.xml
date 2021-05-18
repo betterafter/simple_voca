@@ -19,12 +19,13 @@
 
     <PreferenceCategory android:title="알림">
         <CheckBoxPreference
-            android:title="잠금화면 활성화"
-            android:key="lock_screen"
-            />
-        <CheckBoxPreference
             android:title="알림 서비스 활성화"
             android:key="service"
+            />
+        <CheckBoxPreference
+            android:title="잠금화면 활성화"
+            android:key="lock_screen"
+            android:dependency="service"
             />
         <ListPreference
             android:title="카테고리 선택"

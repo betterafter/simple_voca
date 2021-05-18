@@ -34,15 +34,16 @@ public class VocaForegroundServiceUpdater {
         String[] data = LoadingActivity.vocaDatabase.getWordChangerString(idx, LoadingActivity.lockVocaList);
 
         BitmapDrawable bd
-                = (BitmapDrawable) (ResourcesCompat.getDrawable(context.getResources(), R.drawable.main_icon, null));
+                = (BitmapDrawable) (ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_main_2, null));
         Bitmap bitmap = bd.getBitmap();
+        // Notification 세팅
         notification
                 = new NotificationCompat.Builder(context, "channel")
-                .setSmallIcon(R.mipmap.icon_main)
+                .setSmallIcon(R.mipmap.icon_service_black)
                 .setLargeIcon(bitmap)
-                .setContentTitle(data[0])
+                .setContentTitle(data[0] + "  [" + data[2] + "]")
                 .setContentIntent(pendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentText(data[1]);
 
         // id 값은 0보다 큰 양수가 들어가야 한다.

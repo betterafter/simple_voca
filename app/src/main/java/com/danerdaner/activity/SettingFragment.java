@@ -1,6 +1,8 @@
 package com.danerdaner.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
@@ -10,8 +12,10 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.danerdaner.simple_voca.R;
+import com.danerdaner.simple_voca.VocaForegroundService;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 public class SettingFragment extends PreferenceFragment {
 
@@ -69,6 +73,7 @@ public class SettingFragment extends PreferenceFragment {
 
 
     SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
             font_size.setSummary(sharedPreferences.getString("font_size", "24"));
@@ -95,6 +100,18 @@ public class SettingFragment extends PreferenceFragment {
                     }
                 }
             }
+
+            if(s.equals("service")){
+                Intent intent = new Intent(getActivity(), VocaForegroundService.class);
+                if(service.isChecked()) getActivity().startForegroundService(intent);
+                else getActivity().stopService(intent);
+            }
         }
     };
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener);
+    }
 }
