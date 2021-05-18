@@ -3,10 +3,13 @@ package com.danerdaner.simple_voca;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 
 import com.danerdaner.activity.LoadingActivity;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 public class VocaForegroundServiceUpdater {
 
@@ -27,15 +30,19 @@ public class VocaForegroundServiceUpdater {
 
     public void wordChanger(){
 
-        int idx = (int)(Math.random() * LoadingActivity.vocaList.size());
-        String[] data = LoadingActivity.vocaDatabase.getWordChangerString(idx, LoadingActivity.vocaList);
+        int idx = (int)(Math.random() * LoadingActivity.lockVocaList.size());
+        String[] data = LoadingActivity.vocaDatabase.getWordChangerString(idx, LoadingActivity.lockVocaList);
 
-
+        BitmapDrawable bd
+                = (BitmapDrawable) (ResourcesCompat.getDrawable(context.getResources(), R.drawable.main_icon, null));
+        Bitmap bitmap = bd.getBitmap();
         notification
                 = new NotificationCompat.Builder(context, "channel")
-                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setSmallIcon(R.mipmap.icon_main)
+                .setLargeIcon(bitmap)
                 .setContentTitle(data[0])
                 .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentText(data[1]);
 
         // id 값은 0보다 큰 양수가 들어가야 한다.

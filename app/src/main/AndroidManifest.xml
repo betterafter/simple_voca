@@ -30,6 +30,7 @@
         <activity android:name="com.danerdaner.activity.Test_TestActivity" />
         <activity android:name="com.danerdaner.activity.Test_ResultActivity" />
         <activity android:name="com.danerdaner.activity.Test_ResultDetailActivity" />
+        <activity android:name="com.danerdaner.activity.SettingActivity"></activity>
 
         <receiver android:name=".wordChangeBroadcastReceiver">
             <intent-filter>

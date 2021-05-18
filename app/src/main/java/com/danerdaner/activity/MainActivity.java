@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ImageButton main_add_word_button;
     private ImageButton main_category_button;
+    private ImageButton main_setting_button;
     private HorizontalScrollView navigationScrollView;
 
     private TextView CategoryTitle;
@@ -161,6 +162,16 @@ public class MainActivity extends AppCompatActivity {
 
         vocaGridViewAdapter = new VocaGridViewAdapter(LoadingActivity.vocaList, getApplicationContext());
         main_gridView.setAdapter(vocaGridViewAdapter);
+
+
+        main_setting_button = findViewById(R.id.main_setting_button);
+        main_setting_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
 

@@ -10,6 +10,7 @@ import com.danerdaner.Items.ListItem;
 import com.danerdaner.activity.LoadingActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 import androidx.annotation.Nullable;
@@ -226,6 +227,45 @@ public class VocaDatabase extends SQLiteOpenHelper {
                 vocaList.add(new ListItem(data, PARENT_VIEW));
             }
             while(cursor.moveToNext());
+        }
+
+        if(LoadingActivity.sharedPreferences.getString("word_order", "알파벳 순서").equals("알파벳 순서")){
+            Collections.sort(vocaList);
+        }
+        else{
+            Collections.shuffle(vocaList);
+        }
+    }
+
+    public void makeList(ArrayList<ListItem> vocaList, String category_name){
+
+        vocaList.clear();
+
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String sql = "SELECT * FROM " + tableName
+                + " where sort = " + "\"" + category_name + "\"";
+
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
+        cursor.moveToFirst();
+
+
+        if(cursor.getCount() > 0){
+            do {
+                String[] data = new String[]{
+                        cursor.getString(1), cursor.getString(2), cursor.getString(3),
+                        cursor.getString(4), cursor.getString(5), cursor.getString(6),
+                        cursor.getString(7), cursor.getString(8), cursor.getString(9),
+                };
+                vocaList.add(new ListItem(data, PARENT_VIEW));
+            }
+            while(cursor.moveToNext());
+        }
+
+        if(LoadingActivity.sharedPreferences.getString("word_order", "알파벳 순서").equals("알파벳 순서")){
+            Collections.sort(vocaList);
+        }
+        else{
+            Collections.shuffle(vocaList);
         }
     }
 

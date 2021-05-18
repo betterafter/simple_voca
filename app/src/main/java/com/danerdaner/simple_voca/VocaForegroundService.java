@@ -59,8 +59,8 @@ public class VocaForegroundService extends Service {
             String[] data = new String[]{
                     "단어가 없습니다.", "단어를 저장해주세요."
             };
-            if(!LoadingActivity.vocaList.isEmpty()) {
-                data = LoadingActivity.vocaDatabase.getWordChangerString(0, LoadingActivity.vocaList);
+            if(!LoadingActivity.lockVocaList.isEmpty()) {
+                data = LoadingActivity.vocaDatabase.getWordChangerString(0, LoadingActivity.lockVocaList);
             }
 
             BitmapDrawable bd

@@ -1,9 +1,11 @@
 package com.danerdaner.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 
 import com.danerdaner.Items.ListItem;
@@ -29,6 +31,7 @@ public class LoadingActivity extends AppCompatActivity {
     public static ArrayList<ListItem> vocaList = new ArrayList<>();
     public static ArrayList<categoryListItem> categoryList = new ArrayList<>();
     public static ArrayList<ScoreListItem> categoryTestResultList = new ArrayList<>();
+    public static ArrayList<ListItem> lockVocaList = new ArrayList<>();
 
     public static String SELECTED_CATEGORY_NAME = "전체";
     public static String SELECTED_CATEGORY_SUBTITLE;
@@ -39,6 +42,8 @@ public class LoadingActivity extends AppCompatActivity {
 
     private static final int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 1;
 
+    public static SharedPreferences sharedPreferences;
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
    // @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -48,9 +53,13 @@ public class LoadingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_load);
 
         getPermission();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String lock_category_name = sharedPreferences.getString("category", "전체");
+
 
         vocaDatabase = new VocaDatabase(getApplicationContext(), "voca", null, 2);
         vocaDatabase.makeList(vocaList);
+        vocaDatabase.makeList(lockVocaList, lock_category_name);
 
         categoryDatabase = new categoryDatabase(getApplicationContext(), "category", null, 2);
         if(categoryDatabase.getSize() == 0){
@@ -61,6 +70,7 @@ public class LoadingActivity extends AppCompatActivity {
 
         ScoreDatabase = new ScoreDatabase(getApplicationContext(), "Score", null, 3);
         //ScoreDatabase.deleteAll();
+
     }
 
 

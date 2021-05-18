@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="일반">
+        <ListPreference
+            android:title="폰트 크기 조절"
+            android:key="font_size"
+            android:entries="@array/font_size"
+            android:entryValues="@array/font_size"
+            />
+        <ListPreference
+            android:title="단어 순서"
+            android:key="word_order"
+            android:entries="@array/word_order"
+            android:entryValues="@array/word_order"
+            />
+    </PreferenceCategory>
+
+
+    <PreferenceCategory android:title="알림">
+        <CheckBoxPreference
+            android:title="잠금화면 활성화"
+            android:key="lock_screen"
+            />
+        <CheckBoxPreference
+            android:title="알림 서비스 활성화"
+            android:key="service"
+            />
+        <ListPreference
+            android:title="카테고리 선택"
+            android:key="category"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="기타">
+
+        <Preference
+            android:title="개발자 정보"
+            android:key="developer_info"
+            />
+
+        <Preference
+            android:title="문의"
+            android:key="question"
+            />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

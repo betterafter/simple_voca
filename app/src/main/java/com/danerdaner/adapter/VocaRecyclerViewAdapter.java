@@ -212,6 +212,8 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             viewHolder.add_voca_mean.setText(data[1]);
             viewHolder.add_voca_announce.setText("[" + data[2] + "]");
 
+            int font_size = Integer.parseInt(LoadingActivity.sharedPreferences.getString("font_size", "24"));
+            viewHolder.add_voca_word.setTextSize(font_size);
 
             if(wordDataList.size() > position + 1 && wordDataList.get(position + 1).getType() == CHILD_VIEW) {
                 viewHolder.itemView.findViewById(R.id.item).setBackground(null);

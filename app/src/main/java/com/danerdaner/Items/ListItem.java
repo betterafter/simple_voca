@@ -1,6 +1,6 @@
 package com.danerdaner.Items;
 
-public class ListItem {
+public class ListItem implements Comparable<ListItem> {
     public String[] data;
     public int type;
 
@@ -23,5 +23,10 @@ public class ListItem {
     public ListItem(String[] data, int type){
         this.data = data;
         this.type =type;
+    }
+
+    @Override
+    public int compareTo(ListItem listItem) {
+        return data[0].compareTo(listItem.getData()[0]);
     }
 }
