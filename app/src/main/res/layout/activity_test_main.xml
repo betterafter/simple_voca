@@ -23,6 +23,7 @@
                 android:id="@+id/category_main_back_button"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
+                android:onClick="test_main_onBackClick"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/baseline_arrow_back_18"

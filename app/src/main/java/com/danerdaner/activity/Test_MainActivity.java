@@ -160,7 +160,12 @@ public class Test_MainActivity extends AppCompatActivity {
         lineChart.setDescription(description);
         lineChart.animateY(1000, Easing.EaseInCubic);
         lineChart.invalidate();
+    }
 
+    public void test_main_onBackClick(View view){
+        Intent intent = new Intent(Test_MainActivity.this, Category_MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 

@@ -23,6 +23,7 @@
             <ImageButton
                 android:id="@+id/add_voca_back_button"
                 android:layout_gravity="center_vertical"
+                android:onClick="add_edit_onBackClick"
                 android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

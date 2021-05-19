@@ -23,6 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
+                android:onClick="test_result_detail_onBackClick"
                 android:backgroundTint="@color/mainBlue"
                 android:src="@drawable/baseline_arrow_back_18" />
 
@@ -37,6 +38,17 @@
                 android:textColor="@color/blueGradient5"
                 android:textSize="24sp"
                 android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/category_main_home_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="test_result_detail_onHomeClick"
+                android:layout_gravity="center_vertical|right"
+                android:layout_marginLeft="10dp"
+                android:tint="@color/white"
+                android:backgroundTint="@color/mainBlue"
+                android:src="@drawable/baseline_home_20" />
 
         </FrameLayout>
 

@@ -79,4 +79,29 @@ public class Category_AddActivity extends AppCompatActivity {
             category_add_content.setText(category_content_str);
 
     }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        finish();
+    }
+
+    public void category_add_onBackClick(View view){
+        Intent intent = new Intent(Category_AddActivity.this, Category_MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }

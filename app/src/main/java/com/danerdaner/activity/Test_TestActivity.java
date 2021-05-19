@@ -100,15 +100,11 @@ public class Test_TestActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     myAnswers.get(problemNum).setCorrect(true);
 
-                    // 디버그용
-//                    for(int i=0;i<myAnswers.size();i++){
-//                        TestAnswer t = myAnswers.get(i);
-//                        if(!myAnswers.get(i).isCorrect()){
-//                            System.out.println(i+" "+t.getProblem()[0]+" : "+t.getSelects()[t.getWrongAnswer()]+"아니고, "+t.getSelects()[t.getAnswer()]);
-//                        }
-//                    }
                     // 화면전환
                     Intent intent = new Intent(Test_TestActivity.this, Test_ResultActivity.class);
+
+                    intent.addFlags(intent.FLAG_ACTIVITY_CLEAR_TOP);
+
                     intent.putExtra("answers", myAnswers);
                     intent.putExtra("category_name", Category_name);
                     intent.putExtra("test_type", test_type);
@@ -183,19 +179,31 @@ public class Test_TestActivity extends AppCompatActivity {
             myAnswers.get(problemNum).setCorrect(false);
             myAnswers.get(problemNum).setWrongAnswer(selectionNum);
 
-            // 디버그용
-//            for(int i=0;i<myAnswers.size();i++){
-//                TestAnswer t = myAnswers.get(i);
-//                if(!myAnswers.get(i).isCorrect()){
-//                    System.out.println(i+" "+t.getProblem()[0]+" : "+t.getSelects()[t.getWrongAnswer()]+"아니고, "+t.getSelects()[t.getAnswer()]);
-//                }
-//            }
             // 화면전환
             Intent intent = new Intent(Test_TestActivity.this, Test_ResultActivity.class);
+
             intent.putExtra("answers", myAnswers);
             intent.putExtra("category_name", Category_name);
             intent.putExtra("test_type", test_type);
             startActivity(intent);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        finish();
     }
 }

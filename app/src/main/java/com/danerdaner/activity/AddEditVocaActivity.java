@@ -1,5 +1,6 @@
 package com.danerdaner.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -14,12 +15,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.danerdaner.simple_voca.ImageSerializer;
 import com.danerdaner.simple_voca.R;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -96,6 +100,17 @@ public class AddEditVocaActivity extends AppCompatActivity {
                 String example_mean = add_voca_example_mean.getText().toString();
                 String memo = add_voca_memo.getText().toString();
                 String group = add_select_group_spinner.getSelectedItem().toString();
+
+                if(!checkString(word, getApplicationContext())) return;
+                if(!checkString(mean, getApplicationContext())) return;
+                if(!checkString(announce, getApplicationContext())) return;
+
+                example = changeChar(example);
+
+//                if(!checkString(word, getApplicationContext())) return;
+//                if(!checkString(word, getApplicationContext())) return;
+//                if(!checkString(word, getApplicationContext())) return;
+//                if(!checkString(word, getApplicationContext())) return;
 
                 if(SAVE_STATE.equals("SAVE")) {
                     // 데이터베이스에 넣기
@@ -219,6 +234,58 @@ public class AddEditVocaActivity extends AppCompatActivity {
             System.out.println(add_voca_select_picture_imageview.getWidth());
             System.out.println(add_voca_select_picture_imageview.getHeight());
         }
+    }
 
+
+
+    private boolean checkString(String str, Context context){
+
+        Pattern pattern = Pattern.compile("[ !@#$%^&*(),.?\"\':{}|<>]");
+        Matcher matcher = pattern.matcher(str);
+
+        if(!matcher.find()) {
+            return true;
+        }
+        else{
+            Toast.makeText(context, "특수문자를 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
+    private String changeChar(String str){
+
+        String res = "";
+        for(int i = 0; i < str.length(); i++){
+            if(str.charAt(i) == '\''){
+                res = res + "\"";
+            }
+            else res += str.charAt(i);
+        }
+
+        return res;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        finish();
+    }
+
+    public void add_edit_onBackClick(View view){
+        Intent intent = new Intent(AddEditVocaActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

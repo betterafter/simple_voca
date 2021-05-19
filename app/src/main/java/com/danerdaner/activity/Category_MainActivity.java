@@ -266,7 +266,17 @@ public class Category_MainActivity extends AppCompatActivity {
         }
 
     }
-    private void readFile(){
 
+    public void category_main_onBackClick(View view){
+        Intent intent = new Intent(Category_MainActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Category_MainActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

@@ -2,6 +2,7 @@ package com.danerdaner.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import com.danerdaner.adapter.TestResultViewAdapter;
 import com.danerdaner.simple_voca.R;
@@ -37,5 +38,17 @@ public class Test_ResultDetailActivity extends AppCompatActivity {
         viewAdapter = new TestResultViewAdapter(answers, getApplicationContext(), category_name, test_type);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerView.setAdapter(viewAdapter);
+    }
+
+    public void test_result_detail_onBackClick(View view){
+        Intent intent = new Intent(Test_ResultDetailActivity.this, Test_ResultActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void test_result_detail_onHomeClick(View view){
+        Intent intent = new Intent(Test_ResultDetailActivity.this, Category_MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
