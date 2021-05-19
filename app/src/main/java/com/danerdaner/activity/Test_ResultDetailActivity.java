@@ -41,8 +41,6 @@ public class Test_ResultDetailActivity extends AppCompatActivity {
     }
 
     public void test_result_detail_onBackClick(View view){
-        Intent intent = new Intent(Test_ResultDetailActivity.this, Test_ResultActivity.class);
-        startActivity(intent);
         finish();
     }
 

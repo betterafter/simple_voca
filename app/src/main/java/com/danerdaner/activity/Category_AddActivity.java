@@ -1,12 +1,17 @@
 package com.danerdaner.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.danerdaner.simple_voca.R;
 import com.google.android.material.textfield.TextInputEditText;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,9 +37,6 @@ public class Category_AddActivity extends AppCompatActivity {
             category_content_str = intent.getStringExtra("category_content");
         }
 
-        System.out.println(category_name_str);
-        System.out.println(category_content_str);
-
 
         category_add_name = findViewById(R.id.category_add_name);
         category_add_content = findViewById(R.id.category_add_content);
@@ -51,6 +53,9 @@ public class Category_AddActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String name = category_add_name.getText().toString();
                 String content = category_add_content.getText().toString();
+
+                if(!checkString(name, getApplicationContext())) return;
+                content = changeChar(content);
 
                 //진짜로 저장할 것인지 물어보는 다이얼로그 추가할 것
                 LoadingActivity.categoryDatabase.insert(name, content);
@@ -78,6 +83,33 @@ public class Category_AddActivity extends AppCompatActivity {
         if(category_content_str != null && !category_content_str.equals(""))
             category_add_content.setText(category_content_str);
 
+    }
+
+    private boolean checkString(String str, Context context){
+
+        Pattern pattern = Pattern.compile("[ \n!@#$%^&*(),.?\"\':{}|<>]");
+        Matcher matcher = pattern.matcher(str);
+
+        if(!matcher.find()) {
+            return true;
+        }
+        else{
+            Toast.makeText(context, "카테고리 입력에 특수문자 및 공백을 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
+    private String changeChar(String str){
+
+        String res = "";
+        for(int i = 0; i < str.length(); i++){
+            if(str.charAt(i) == '\''){
+                res = res + "\"";
+            }
+            else res += str.charAt(i);
+        }
+
+        return res;
     }
 
 

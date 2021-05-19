@@ -106,11 +106,8 @@ public class AddEditVocaActivity extends AppCompatActivity {
                 if(!checkString(announce, getApplicationContext())) return;
 
                 example = changeChar(example);
-
-//                if(!checkString(word, getApplicationContext())) return;
-//                if(!checkString(word, getApplicationContext())) return;
-//                if(!checkString(word, getApplicationContext())) return;
-//                if(!checkString(word, getApplicationContext())) return;
+                example_mean = changeChar(example_mean);
+                memo = changeChar(memo);
 
                 if(SAVE_STATE.equals("SAVE")) {
                     // 데이터베이스에 넣기
@@ -240,14 +237,14 @@ public class AddEditVocaActivity extends AppCompatActivity {
 
     private boolean checkString(String str, Context context){
 
-        Pattern pattern = Pattern.compile("[ !@#$%^&*(),.?\"\':{}|<>]");
+        Pattern pattern = Pattern.compile("[ \n!@#$%^&*(),.?\"\':{}|<>]");
         Matcher matcher = pattern.matcher(str);
 
         if(!matcher.find()) {
             return true;
         }
         else{
-            Toast.makeText(context, "특수문자를 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "단어, 단어의 뜻, 단어의 발음 입력에 특수문자 및 공백을 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
             return false;
         }
     }

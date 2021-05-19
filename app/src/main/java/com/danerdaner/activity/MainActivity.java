@@ -10,6 +10,7 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
@@ -43,11 +44,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static ArrayList<Button> selectedButtons = new ArrayList<>();
     public static int selectedNumber = 0;
-    private static boolean isNavigationButtonTouched = true;
+    private static boolean isNavigationButtonTouched = false;
 
 
-    private final int PARENT_VIEW = 0;
-    private final int CHILD_VIEW = 1;
 
 
     private ImageButton main_add_word_button;
@@ -63,22 +62,25 @@ public class MainActivity extends AppCompatActivity {
     public static LinearLayout main_voca_page_list_layout;
     public static RecyclerView main_recyclerView;
     private GridView main_gridView;
-    //private ViewPager2 viewPager2;
 
 
 
     public static VocaRecyclerViewAdapter vocaRecyclerViewAdapter;
     public static VocaGridViewAdapter vocaGridViewAdapter;
-    //private VocaViewPagerAdapter viewPagerAdapter;
 
     public static TextToSpeech tts;
 
 
     public static MediaPlayer player;
 
-    private boolean isRecyclerViewActivated = true;
+    private static int firstVisibleItemPosition;
+    private static int lastVisibleItemPosition;
 
-    //private LineChart lineChart;
+
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-
+        isNavigationButtonTouched = false;
 
 
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
@@ -125,18 +127,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
-        // 셔플 기능
-//        main_swap_button = findViewById(R.id.main_swap_button);
-//        main_swap_button.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View view){
-//                Collections.shuffle(LoadingActivity.vocaList);
-//                vocaGridViewAdapter.notifyDataSetChanged();
-//                vocaRecyclerViewAdapter.notifyDataSetChanged();
-//            }
-//        });
 
 
         // 리사이클러뷰 어뎁터 생성
@@ -202,17 +192,15 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 //vocaRecyclerViewAdapter.notifyDataSetChanged();
-                vocaRecyclerViewAdapter.notifyItemRangeChanged(0, LoadingActivity.vocaList.size());
+                //vocaRecyclerViewAdapter.notifyItemRangeChanged(0, LoadingActivity.vocaList.size());
+                vocaRecyclerViewAdapter.notifyDataSetChanged();
             }
         });
         //..........................................................................................
 
 
-        onRecyclerViewScrollListener(main_recyclerView);
+
         navigationScrollView = findViewById(R.id.main_voca_page_list);
-
-
-
     }
 
 
@@ -223,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        System.out.println("onStart");
     }
 
 
@@ -233,6 +222,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         vocaRecyclerViewAdapter.notifyDataSetChanged();
+        LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
+
         selectedNumber = 0;
         CategoryTitle.setText(LoadingActivity.SELECTED_CATEGORY_NAME);
         CategorySubTitle.setText(LoadingActivity.SELECTED_CATEGORY_SUBTITLE);
@@ -244,8 +235,30 @@ public class MainActivity extends AppCompatActivity {
             ItemTouchHelperCallback.viewHolders.remove(0);
         }
 
-        MakeListPager();
+        main_recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+
+                System.out.println("onResume");
+
+                firstVisibleItemPosition
+                        = ((LinearLayoutManager) main_recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+
+                lastVisibleItemPosition
+                        = ((LinearLayoutManager) main_recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
+
+                MakeListPager();
+                onRecyclerViewScrollListener(main_recyclerView);
+                main_recyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
     }
+
+
+
+
+
+
 
 
 
@@ -270,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
         int width = size.x;
         int height = size.y;
 
-        for(int i = 0; i < (double)LoadingActivity.vocaList.size() / 4; i++){
+        for(int i = 0; i < (double)LoadingActivity.vocaList.size() / (lastVisibleItemPosition - firstVisibleItemPosition + 1); i++){
 
             final int temp = i;
             Button button = new Button(mainActivity.getApplicationContext());
@@ -301,7 +314,12 @@ public class MainActivity extends AppCompatActivity {
 
                     isNavigationButtonTouched = true;
 
-                    LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
+                    if(WORD_MEAN_VISIBLE){
+                        LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
+                    }
+                    else
+                        LoadingActivity.vocaDatabase.makeEmptyMeanList(LoadingActivity.vocaList);
+
                     vocaRecyclerViewAdapter.notifyDataSetChanged();
 
                     // 네비게이션 목차 버튼 색 바꾸기 -----------------------------------------------------
@@ -363,28 +381,41 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+
+
+
+
+
+
+
+
     public void onRecyclerViewScrollListener(RecyclerView recyclerView){
 
+
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            boolean isFirstTouchedToDrag = true;
 
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if(newState == recyclerView.SCROLL_STATE_IDLE){
                     isNavigationButtonTouched = false;
+                    isFirstTouchedToDrag = true;
+                }
+                else if(newState == recyclerView.SCROLL_STATE_DRAGGING){
+                    if(WORD_MEAN_VISIBLE)
+                        LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
+                    else
+                        LoadingActivity.vocaDatabase.makeEmptyMeanList(LoadingActivity.vocaList);
+                    vocaRecyclerViewAdapter.notifyDataSetChanged();
                 }
             }
 
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
-                // 스크롤 할 때 각 아이템 메뉴 옵션들 보이는거 전부 없애기
-                if(ItemTouchHelperCallback.viewHolders.size() > 0) {
-                    recyclerView.getAdapter().
-                            notifyItemChanged(ItemTouchHelperCallback.viewHolders.get(0).getViewHolder().getAdapterPosition());
-                    ItemTouchHelperCallback.viewHolders.remove(0);
-                }
 
                 if (!isNavigationButtonTouched) {
 
@@ -394,6 +425,7 @@ public class MainActivity extends AppCompatActivity {
                     int lastVisibleItemPosition
                             = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
 
+                    System.out.println(firstVisibleItemPosition);
 
                     // 이전 선택 버튼 색 바꾸기
                     selectedButtons.get(selectedNumber)

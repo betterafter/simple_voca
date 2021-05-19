@@ -232,9 +232,9 @@ public class VocaDatabase extends SQLiteOpenHelper {
         if(LoadingActivity.sharedPreferences.getString("word_order", "알파벳 순서").equals("알파벳 순서")){
             Collections.sort(vocaList);
         }
-        else{
-            Collections.shuffle(vocaList);
-        }
+//        else{
+//            Collections.shuffle(vocaList);
+//        }
     }
 
     public void makeList(ArrayList<ListItem> vocaList, String category_name){
@@ -298,6 +298,7 @@ public class VocaDatabase extends SQLiteOpenHelper {
             }
             while(cursor.moveToNext());
         }
+
     }
 
 
@@ -412,6 +413,10 @@ public class VocaDatabase extends SQLiteOpenHelper {
                 vocaList.add(new ListItem(data, PARENT_VIEW));
             }
             while(cursor.moveToNext());
+        }
+
+        if(LoadingActivity.sharedPreferences.getString("word_order", "알파벳 순서").equals("알파벳 순서")){
+            Collections.sort(vocaList);
         }
     }
 

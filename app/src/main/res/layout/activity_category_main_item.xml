@@ -167,7 +167,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/category_main_category_remind_word"
+                        android:id="@+id/category_main_category_important_word"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="20dp"
@@ -179,7 +179,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/category_main_category_important_word"
+                        android:id="@+id/category_main_category_remind_word"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="20dp"
