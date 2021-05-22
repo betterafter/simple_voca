@@ -35,7 +35,7 @@ public class TestResultViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             if(t.isCorrect())
                 answerList.remove(i);
         }
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
     }
 
     private class ViewHolder extends RecyclerView.ViewHolder{
@@ -107,8 +107,11 @@ public class TestResultViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         viewHolder.test_result_word.setText(ans.getProblem()[0]);
         viewHolder.test_result_announce.setText("[" + ans.getProblem()[1] + "]");
-        for(int i=0;i<4;i++)
+        for(int i=0;i<4;i++) {
             viewHolder.test_result_item[i].setText(ans.getSelects()[i]);
+            viewHolder.test_result_item[i].setBackgroundColor(context.getResources().getColor(R.color.mainGray));
+            viewHolder.test_result_item[i].setTextColor(context.getResources().getColor(R.color.black));
+        }
         viewHolder.test_result_item[ans.getAnswer()].setBackgroundColor(context.getResources().getColor(R.color.mainBlue));
         viewHolder.test_result_item[ans.getAnswer()].setTextColor(context.getResources().getColor(R.color.white));
         viewHolder.test_result_item[ans.getWrongAnswer()].setBackgroundColor(context.getResources().getColor(R.color.mainRed));

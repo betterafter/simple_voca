@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     public static int selectedNumber = 0;
     private static boolean isNavigationButtonTouched = false;
 
-
+    public static RecyclerView.SmoothScroller smoothScroller;
 
 
     private ImageButton main_add_word_button;
@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, Category_MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -270,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
         main_voca_page_list_layout.removeAllViews();
         selectedButtons.clear();
 
-        RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(mainActivity.getApplicationContext()) {
+        smoothScroller = new LinearSmoothScroller(mainActivity.getApplicationContext()) {
             @Override protected int getVerticalSnapPreference() {
                 return LinearSmoothScroller.SNAP_TO_START;
             }
@@ -482,5 +483,11 @@ public class MainActivity extends AppCompatActivity {
             tts.shutdown();
             tts = null;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
     }
 }

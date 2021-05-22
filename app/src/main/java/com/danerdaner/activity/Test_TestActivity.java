@@ -94,7 +94,9 @@ public class Test_TestActivity extends AppCompatActivity {
                     makeProblem(TestList, problemNum+1);
                 }
             });
-        }else{
+        }
+        else{
+            // 20번 문제까지 다 풀었을 경우
             problem_answer[answerNum].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

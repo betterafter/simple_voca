@@ -134,14 +134,11 @@ public class Test_MainActivity extends AppCompatActivity {
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setTextColor(Color.BLACK);
         xAxis.setValueFormatter(new IndexAxisValueFormatter(countList));
-        xAxis.setLabelCount(10);
-        //xAxis.setAxisMinimum(1);
-        //xAxis.setAxisMaximum(10);
-        //xAxis.enableGridDashedLine(8, 24, 0);
+        //xAxis.setLabelCount(10);
+
 
         YAxis yLAxis = lineChart.getAxisLeft();
         yLAxis.setTextColor(Color.BLACK);
-        //yLAxis.setValueFormatter(new IndexAxisValueFormatter(YScoreList));
         yLAxis.setAxisMinimum(0);
         yLAxis.setAxisMaximum(100);
 
@@ -153,8 +150,6 @@ public class Test_MainActivity extends AppCompatActivity {
         Description description = new Description();
         description.setText("");
         lineChart.setVisibleXRangeMaximum(10);
-//        lineChart.setVisibleYRangeMinimum(10);
-       // lineChart.setMaxVisibleValueCount(10);
         lineChart.setDoubleTapToZoomEnabled(false);
         lineChart.setDrawGridBackground(false);
         lineChart.setDescription(description);

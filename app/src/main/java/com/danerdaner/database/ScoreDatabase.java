@@ -163,12 +163,16 @@ public class ScoreDatabase extends SQLiteOpenHelper {
                 String[] data = new String[]{
                         cursor.getString(1), cursor.getString(2), cursor.getString(3)
                 };
+                System.out.println(cursor.getString(1));
+                System.out.println(cursor.getString(2));
+                System.out.println(cursor.getString(3));
+                System.out.println("--------------------");
                 scoreList.add(new ScoreListItem(data[0], data[1], data[2]));
             }
             while(cursor.moveToNext());
         }
 
-        Collections.sort(scoreList);
+        //Collections.sort(scoreList);
     }
 
 

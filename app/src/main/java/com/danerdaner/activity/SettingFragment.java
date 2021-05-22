@@ -9,6 +9,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
 import android.widget.Toast;
 
 import com.danerdaner.simple_voca.R;
@@ -30,6 +31,8 @@ public class SettingFragment extends PreferenceFragment {
 
     Preference developer_info;
     Preference question;
+
+    private static final int PICKFILE_REQUEST_CODE = 0;
 
 
 
@@ -108,6 +111,24 @@ public class SettingFragment extends PreferenceFragment {
             }
         }
     };
+
+    @Override
+    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
+
+        String key = preference.getKey();
+        if(key.equals("get_wordfile")){
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("*/*");
+            startActivityForResult(intent, PICKFILE_REQUEST_CODE);
+        }
+
+        if(key.equals("developer_info")){
+            Intent intent = new Intent(getActivity(), Setting_Developer_Info_Activity.class);
+            startActivity(intent);
+        }
+
+        return false;
+    }
 
     @Override
     public void onPause() {

@@ -31,6 +31,7 @@
         <activity android:name="com.danerdaner.activity.Test_ResultActivity" />
         <activity android:name="com.danerdaner.activity.Test_ResultDetailActivity" />
         <activity android:name="com.danerdaner.activity.SettingActivity"></activity>
+        <activity android:name="com.danerdaner.activity.Setting_Developer_Info_Activity"></activity>
 
         <receiver android:name=".wordChangeBroadcastReceiver">
             <intent-filter>

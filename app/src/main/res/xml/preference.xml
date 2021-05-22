@@ -33,16 +33,19 @@
             />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="단어장">
+        <Preference
+            android:title="불러오기"
+            android:key="get_wordfile"
+            />
+
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="기타">
 
         <Preference
             android:title="개발자 정보"
             android:key="developer_info"
-            />
-
-        <Preference
-            android:title="문의"
-            android:key="question"
             />
 
     </PreferenceCategory>

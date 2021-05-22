@@ -26,6 +26,7 @@ import com.danerdaner.simple_voca.R;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -113,8 +114,6 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                                 && wordDataList.get(getAdapterPosition() + 1).getType() == CHILD_VIEW
                                 && getItemViewType() == PARENT_VIEW) {
 
-                            //layout.setBackground(drawable);
-
                             wordDataList.remove(getAdapterPosition() + 1);
                             notifyItemChanged(getAdapterPosition());
                             notifyItemRemoved(getAdapterPosition() + 1);
@@ -125,8 +124,6 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                                 || wordDataList.get(getAdapterPosition() + 1).getType() != CHILD_VIEW)
                                 && getItemViewType() == PARENT_VIEW) {
 
-                            //layout.setBackground(null);
-
                             String[] data = ((ListItem) wordDataList.get(getAdapterPosition())).getData();
                             wordDataList.add(getAdapterPosition() + 1, new ListItem(data, CHILD_VIEW));
                             notifyItemChanged(getAdapterPosition());
@@ -135,7 +132,12 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
                         final int pos = getAdapterPosition();
                         System.out.println(pos);
-                        MainActivity.main_recyclerView.scrollToPosition(pos);
+                        //MainActivity.main_recyclerView.scrollToPosition(pos);
+
+                        // 터치했을때 뷰 확장되면서 해당 포지션으로 스무스하게 이동함
+                        MainActivity.smoothScroller.setTargetPosition(pos);
+                        ((LinearLayoutManager) MainActivity.main_recyclerView.
+                                getLayoutManager()).startSmoothScroll(MainActivity.smoothScroller);
                     }
                 }
             });
