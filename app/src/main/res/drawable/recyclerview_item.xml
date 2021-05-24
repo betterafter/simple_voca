@@ -11,7 +11,7 @@
                 android:width="1dp"
                 android:color="@color/mainBlue" />
 
-            <solid android:color="#FFF" />
+            <solid android:color="@android:color/transparent" />
         </shape>
     </item>
 

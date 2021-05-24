@@ -105,15 +105,16 @@ public class Test_MainActivity extends AppCompatActivity {
 
         List<Entry> entries = new ArrayList<>();
         for(int i = 0; i < scoreList.size(); i++){
-            entries.add(new Entry(i , scoreList.get(i).getScore()));
+            entries.add(new Entry(i, scoreList.get(i).getScore()));
             //dateList[i] = scoreList.get(i).getDate();
             //System.out.println("date : " + dateList[i] + " ");
         }
 
         for(int i = 1; i <= 10; i++){
-            YScoreList.add(Integer.toString((i + 1) * 10));
+            YScoreList.add(Integer.toString(1 * 10));
             countList.add(i + "회");
         }
+
 
         LineDataSet lineDataSet = new LineDataSet(entries, "점수");
         lineDataSet.setLineWidth(2);
@@ -131,14 +132,15 @@ public class Test_MainActivity extends AppCompatActivity {
         lineChart.setData(lineData);
 
         XAxis xAxis = lineChart.getXAxis();
+        xAxis.setGranularity(1);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setTextColor(Color.BLACK);
+        xAxis.setTextColor(ResourcesCompat.getColor(getResources(), R.color.mainBlue, null));
         xAxis.setValueFormatter(new IndexAxisValueFormatter(countList));
-        //xAxis.setLabelCount(10);
+        xAxis.setLabelCount(entries.size());
 
 
         YAxis yLAxis = lineChart.getAxisLeft();
-        yLAxis.setTextColor(Color.BLACK);
+        yLAxis.setTextColor(ResourcesCompat.getColor(getResources(), R.color.mainBlue, null));
         yLAxis.setAxisMinimum(0);
         yLAxis.setAxisMaximum(100);
 
@@ -156,6 +158,7 @@ public class Test_MainActivity extends AppCompatActivity {
         lineChart.animateY(1000, Easing.EaseInCubic);
         lineChart.invalidate();
     }
+
 
     public void test_main_onBackClick(View view){
         Intent intent = new Intent(Test_MainActivity.this, Category_MainActivity.class);

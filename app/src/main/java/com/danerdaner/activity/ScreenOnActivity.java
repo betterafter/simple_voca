@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,6 +42,7 @@ public class ScreenOnActivity extends AppCompatActivity {
     private ImageView imageView;
 
     private TimeThread timeThread;
+    private Button screen_on_unlock_button;
 
     public static boolean isTimeThreadStop = false;
 
@@ -86,6 +88,14 @@ public class ScreenOnActivity extends AppCompatActivity {
         example_mean = findViewById(R.id.screen_on_example_mean);
         memo = findViewById(R.id.screen_on_memo);
         imageView = findViewById(R.id.screen_on_image);
+
+        screen_on_unlock_button = findViewById(R.id.screen_on_unlock_button);
+        screen_on_unlock_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     @Override
@@ -225,11 +235,13 @@ public class ScreenOnActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         timeThread = null;
+        //finish();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        //finish();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -238,6 +250,7 @@ public class ScreenOnActivity extends AppCompatActivity {
         super.onDestroy();
         isTimeThreadStop = true;
         timeThread = null;
+        //finish();
     }
 
 

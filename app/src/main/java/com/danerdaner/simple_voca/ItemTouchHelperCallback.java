@@ -126,10 +126,13 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
                         if(viewHolder.getAdapterPosition() != RecyclerView.NO_POSITION){
                             String data[] = LoadingActivity.vocaList.get(viewHolder.getAdapterPosition()).getData();
+                            String word = data[0];
+                            String category = data[7];
+                            int index = LoadingActivity.vocaDatabase.findTableIndex(word, category);
 
                             if(!data[8].equals(VocaDatabase.remindFlag)) {
                                 LoadingActivity.vocaDatabase.change(
-                                        viewHolder.getAdapterPosition(),
+                                        index,
                                         data[0], data[1], data[2], data[3], data[4], data[5],
                                         data[6], data[7], VocaDatabase.remindFlag);
 
@@ -138,7 +141,7 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
                             }
                             else {
                                 LoadingActivity.vocaDatabase.change(
-                                        viewHolder.getAdapterPosition(),
+                                        index,
                                         data[0], data[1], data[2], data[3], data[4], data[5],
                                         data[6], data[7], VocaDatabase.nullFlag);
 
@@ -154,10 +157,13 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
                         if(viewHolder.getAdapterPosition() != RecyclerView.NO_POSITION){
                             String data[] = LoadingActivity.vocaList.get(viewHolder.getAdapterPosition()).getData();
+                            String word = data[0];
+                            String category = data[7];
+                            int index = LoadingActivity.vocaDatabase.findTableIndex(word, category);
 
                             if(!data[8].equals(VocaDatabase.importantFlag)) {
                                 LoadingActivity.vocaDatabase.change(
-                                        viewHolder.getAdapterPosition(),
+                                        index,
                                         data[0], data[1], data[2], data[3], data[4], data[5],
                                         data[6], data[7], VocaDatabase.importantFlag);
 
@@ -166,7 +172,7 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
                             }
                             else {
                                 LoadingActivity.vocaDatabase.change(
-                                        viewHolder.getAdapterPosition(),
+                                        index,
                                         data[0], data[1], data[2], data[3], data[4], data[5],
                                         data[6], data[7], VocaDatabase.nullFlag);
 
@@ -273,6 +279,6 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 //
     @Override
     public boolean isLongPressDragEnabled() {
-        return true;
+        return false;
     }
 }

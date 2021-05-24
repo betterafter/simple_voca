@@ -122,7 +122,7 @@
                             android:id="@+id/add_voca_word"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:backgroundTint="@color/white"
+                            android:backgroundTint="@android:color/transparent"
                             android:hint="단어 (필수)" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -131,7 +131,7 @@
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_gravity="right|center"
-                        android:backgroundTint="@color/white"
+                        android:backgroundTint="@android:color/transparent"
                         android:src="@drawable/baseline_search_20"
                         android:text="Button"
                         android:tint="@color/mainBlue" />
@@ -147,7 +147,7 @@
                         android:id="@+id/add_voca_mean"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:backgroundTint="@color/white"
+                        android:backgroundTint="@android:color/transparent"
                         android:hint="뜻 (필수)" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -164,7 +164,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="20dp"
-                    android:backgroundTint="@color/white"
+                    android:backgroundTint="@android:color/transparent"
                     android:hint="발음을 입력해주세요" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -177,7 +177,7 @@
                     android:id="@+id/add_voca_example"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:backgroundTint="@color/white"
+                    android:backgroundTint="@android:color/transparent"
                     android:layout_marginHorizontal="20dp"
                     android:hint="예문을 적어주세요" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -191,7 +191,7 @@
                     android:id="@+id/add_voca_example_mean"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:backgroundTint="@color/white"
+                    android:backgroundTint="@android:color/transparent"
                     android:layout_marginHorizontal="20dp"
                     android:hint="예문의 해석을 적어주세요" />
 
@@ -207,7 +207,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="20dp"
-                    android:backgroundTint="@color/white"
+                    android:backgroundTint="@android:color/transparent"
                     android:hint="메모" />
             </com.google.android.material.textfield.TextInputLayout>
 

@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.danerdaner.Items.ListItem;
 import com.danerdaner.activity.LoadingActivity;
+import com.danerdaner.activity.MainActivity;
+import com.danerdaner.activity.SettingFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -87,46 +89,25 @@ public class VocaDatabase extends SQLiteOpenHelper {
                 + flags
                 + "');";
 
-
         sqLiteDatabase.execSQL(sql);
+        print();
     }
 
 
     public void delete(int index){
+
+        String[] prev = findTableData(index);
+        String word = prev[0];
+        String category = prev[7];
+
         SQLiteDatabase db = getWritableDatabase();
-
-        ArrayList<ListItem> updatedTableColumns = new ArrayList<ListItem>();
-        makeList(updatedTableColumns);
-        if(updatedTableColumns.size() == 0){
-            return;
-        }
+        String sql = "delete from " + tableName +
+                " where word = " + "\"" + word + "\"" +
+                " and sort = " + "\"" + category + "\"";
 
 
-        // Remove the columns we don't want anymore from the table's list of columns
-        updatedTableColumns.remove(index);
-
-        db.execSQL("ALTER TABLE " + tableName + " RENAME TO " + tableName + "_old;");
-
-        String sql = "CREATE TABLE " + tableName + " (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "word TEXT," +
-                "mean TEXT," +
-                "announce TEXT," +
-                "example TEXT," +
-                "example_mean TEXT," +
-                "memo TEXT," +
-                "image TEXT," +
-                "sort TEXT," +
-                "flags TEXT" + ")";
+        print();
         db.execSQL(sql);
-
-        for(int i = 0; i < updatedTableColumns.size(); i ++){
-            insert(updatedTableColumns.get(i).getData()[0], updatedTableColumns.get(i).getData()[1],
-                    updatedTableColumns.get(i).getData()[2],updatedTableColumns.get(i).getData()[3],
-                    updatedTableColumns.get(i).getData()[4],updatedTableColumns.get(i).getData()[5],
-                    updatedTableColumns.get(i).getData()[6],updatedTableColumns.get(i).getData()[7],
-                    updatedTableColumns.get(i).getData()[8]);
-        }
-        db.execSQL("DROP TABLE " + tableName + "_old;");
     }
 
 
@@ -137,81 +118,94 @@ public class VocaDatabase extends SQLiteOpenHelper {
 
     public void change(int index, String word, String mean, String announce, String example,
                        String example_mean, String memo, String image, String sort, String flag){
-        SQLiteDatabase db = getWritableDatabase();
-        String[] colmn = new String[9];
-        ArrayList<ListItem> updatedTableColumns = new ArrayList<ListItem>();
-        makeList(updatedTableColumns);
-        if(updatedTableColumns.size() == 0){
-            return;
-        }
 
-        // Remove the columns we don't want anymore from the table's list of columns
-        updatedTableColumns.remove(index);
-        colmn[0] = word;
-        colmn[1] = mean;
-        colmn[2] = announce;
-        colmn[3] = example;
-        colmn[4] = example_mean;
-        colmn[5] = memo;
-        colmn[6] = image;
-        colmn[7] = sort;
-        colmn[8] = flag + "";
-        updatedTableColumns.add(index, new ListItem(colmn, PARENT_VIEW));
+        String[] prev = findTableData(index);
 
-        db.execSQL("ALTER TABLE " + tableName + " RENAME TO " + tableName + "_old;");
-
-        String sql = "CREATE TABLE " + tableName + " (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "word TEXT," +
-                "mean TEXT," +
-                "announce TEXT," +
-                "example TEXT," +
-                "example_mean TEXT," +
-                "memo TEXT," +
-                "image TEXT," +
-                "sort TEXT," +
-                "flags TEXT" + ")";
-        db.execSQL(sql);
-
-        for(int i = 0; i < updatedTableColumns.size(); i ++){
-            insert(updatedTableColumns.get(i).getData()[0], updatedTableColumns.get(i).getData()[1],
-                    updatedTableColumns.get(i).getData()[2],updatedTableColumns.get(i).getData()[3],
-                    updatedTableColumns.get(i).getData()[4],updatedTableColumns.get(i).getData()[5],
-                    updatedTableColumns.get(i).getData()[6],updatedTableColumns.get(i).getData()[7],
-                    updatedTableColumns.get(i).getData()[8]);
-        }
-
-        db.execSQL("DROP TABLE " + tableName + "_old;");
-    }
-
-
-    public void update(String[] prev, String[] after){
         SQLiteDatabase db = getWritableDatabase();
         String sql
                 = "update " + tableName +
-                " set word = " + "\"" + after[0] + "\"" + "," +
-                " mean = " + "\"" + after[1] + "\"" + "," +
-                " announce = " + "\"" + after[2] + "\"" + "," +
-                " example = " + "\"" + after[3] + "\"" + "," +
-                " example_mean = " + "\"" + after[4] + "\"" + "," +
-                " memo = " + "\"" + after[5] + "\"" + "," +
-                " image = " + "\"" + after[6] + "\"" + "," +
-                " sort = " + "\"" + after[7] + "\"" + "," +
-                " flags = " + "\"" + after[8] + "\"" +
+                " set word = " + "\"" + word + "\"" + "," +
+                " mean = " + "\"" + mean + "\"" + "," +
+                " announce = " + "\"" + announce + "\"" + "," +
+                " example = " + "\"" + example + "\"" + "," +
+                " example_mean = " + "\"" + example_mean + "\"" + "," +
+                " memo = " + "\"" + memo + "\"" + "," +
+                " image = " + "\"" + image + "\"" + "," +
+                " sort = " + "\"" + sort + "\"" + "," +
+                " flags = " + "\"" + flag + "\"" +
                 " where word = " + "\"" + prev[0] + "\"" +
-                " and mean = " + "\"" + prev[1] + "\"";
+                " and sort = " + "\"" + prev[7] + "\"";
+
+
+        print();
         db.execSQL(sql);
+
+
+
+        MainActivity.vocaRecyclerViewAdapter.notifyDataSetChanged();
     }
 
+    public int findTableIndex(String word, String category){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String sql = "SELECT * FROM " + tableName
+                + " where word = " + "\"" + word + "\"" + " and sort = " + "\"" + category + "\"";
 
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
+        cursor.moveToFirst();
+        return Integer.parseInt(cursor.getString(0));
+    }
+
+    public String[] findTableData(int position){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String sql = "SELECT * FROM " + tableName
+                +" where id = " + "\"" + position + "\"";
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
+        cursor.moveToFirst();
+        return new String[]{cursor.getString(1), cursor.getString(2), cursor.getString(3),
+                cursor.getString(4), cursor.getString(5), cursor.getString(6),
+                cursor.getString(7), cursor.getString(8), cursor.getString(9)};
+    }
+
+    public boolean CheckIfWordInCategory(String word, String category){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String sql = "SELECT * FROM " + tableName
+                + " where word = " + "\"" + word + "\"" + " and sort = " + "\"" + category + "\"";
+
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
+        cursor.moveToFirst();
+        if(cursor.getCount() <= 0) return false;
+        else return true;
+    }
+
+    public void UnCheckedIfNoWordInTable(){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String sql = "SELECT * FROM " + tableName;
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
+        if(cursor.getCount() <= 0){
+            SettingFragment.service.setChecked(false);
+        }
+    }
 
 
     public void makeList(ArrayList<ListItem> vocaList){
 
         vocaList.clear();
+        if(LoadingActivity.sharedPreferences.getString("word_order", "알파벳 순서").equals("무작위로")){
+            if(LoadingActivity.vocaShuffleList.size() > 0) {
+                vocaList.addAll(LoadingActivity.vocaShuffleList);
+                return;
+            }
+        }
 
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        String sql = "SELECT * FROM " + tableName
-                + " where sort = " + "\"" + LoadingActivity.SELECTED_CATEGORY_NAME + "\"";
+        String sql;
+        if(LoadingActivity.SELECTED_CATEGORY_NAME.equals("전체")){
+            sql = "SELECT * FROM " + tableName;
+        }
+        else{
+            sql = "SELECT * FROM " + tableName
+                    + " where sort = " + "\"" + LoadingActivity.SELECTED_CATEGORY_NAME + "\"";
+        }
 
         Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
         cursor.moveToFirst();
@@ -229,12 +223,11 @@ public class VocaDatabase extends SQLiteOpenHelper {
             while(cursor.moveToNext());
         }
 
+
         if(LoadingActivity.sharedPreferences.getString("word_order", "알파벳 순서").equals("알파벳 순서")){
             Collections.sort(vocaList);
         }
-//        else{
-//            Collections.shuffle(vocaList);
-//        }
+
     }
 
     public void makeList(ArrayList<ListItem> vocaList, String category_name){
@@ -269,9 +262,6 @@ public class VocaDatabase extends SQLiteOpenHelper {
         }
     }
 
-
-
-
     public void makeCategoryList(ArrayList<ListItem> vocaList, String category){
         int cnt = 0;
         vocaList.clear();
@@ -301,17 +291,10 @@ public class VocaDatabase extends SQLiteOpenHelper {
 
     }
 
-
-
-
-
-
     public ArrayList<String[]> makeTestList(String category){
 
         ArrayList<String[]> res = new ArrayList<>();
         String sql = "select word, mean, announce from " + tableName + " where sort = " + '\"' + category + '\"';
-
-        System.out.println(sql);
 
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
@@ -334,10 +317,6 @@ public class VocaDatabase extends SQLiteOpenHelper {
 
         return res;
     }
-
-
-
-
 
     public ArrayList<String[]> makeImportantTestList(String category){
 
@@ -345,8 +324,6 @@ public class VocaDatabase extends SQLiteOpenHelper {
         String sql = "select word, mean, announce from " + tableName + " where sort = " + '\"' + category + '\"'
                 + " and flags = " + '\"' + importantFlag + '\"';
 
-        System.out.println(sql);
-
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
         cursor.moveToFirst();
@@ -357,7 +334,6 @@ public class VocaDatabase extends SQLiteOpenHelper {
         do{
             Random random = new Random();
             int idx = random.nextInt(cursor.getCount());
-            System.out.println(idx);
             cursor.moveToPosition(idx);
 
             String[] temp = new String[]{
@@ -369,11 +345,6 @@ public class VocaDatabase extends SQLiteOpenHelper {
 
         return res;
     }
-
-
-
-
-
 
     public void listToDatabase(ArrayList<ListItem> updatedTableColumns){
         for(int i = 0; i < updatedTableColumns.size(); i ++){
@@ -384,47 +355,6 @@ public class VocaDatabase extends SQLiteOpenHelper {
                     updatedTableColumns.get(i).getData()[8]);
         }
     }
-
-
-
-
-
-
-
-    public void makeEmptyMeanList(ArrayList<ListItem> vocaList){
-
-        vocaList.clear();
-
-        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        String sql = "SELECT * FROM " + tableName
-                + " where sort = " + "\"" + LoadingActivity.SELECTED_CATEGORY_NAME + "\"";
-
-        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
-        cursor.moveToFirst();
-
-
-        if(cursor.getCount() > 0){
-            do {
-                String[] data = new String[]{
-                        cursor.getString(1), "", cursor.getString(3),
-                        cursor.getString(4), cursor.getString(5), cursor.getString(6),
-                        cursor.getString(7), cursor.getString(8), cursor.getString(9),
-                };
-                vocaList.add(new ListItem(data, PARENT_VIEW));
-            }
-            while(cursor.moveToNext());
-        }
-
-        if(LoadingActivity.sharedPreferences.getString("word_order", "알파벳 순서").equals("알파벳 순서")){
-            Collections.sort(vocaList);
-        }
-    }
-
-
-
-
-
-
 
     public String[] getWordChangerString(int i, ArrayList<ListItem> vocaList){
         return vocaList.get(i).getData();
@@ -471,11 +401,20 @@ public class VocaDatabase extends SQLiteOpenHelper {
 
     public int getCategoryRemindedWordSize(String categoryName){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        String sql =
-                "select * " +
-                        "from " + tableName + " " +
-                        "where sort = " + "\"" + categoryName + "\" " +
-                        "and flags = " + "\"REMIND\"" ;
+        String sql;
+        if(categoryName.equals("전체")){
+            sql =
+                    "select * " +
+                            "from " + tableName + " " +
+                            "where flags = " + "\"REMIND\"" ;
+        }
+        else{
+            sql =
+                    "select * " +
+                            "from " + tableName + " " +
+                            "where sort = " + "\"" + categoryName + "\" " +
+                            "and flags = " + "\"REMIND\"" ;
+        }
 
         Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
         return cursor.getCount();
@@ -489,12 +428,20 @@ public class VocaDatabase extends SQLiteOpenHelper {
 
     public int getCategoryImportantWordSize(String categoryName){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        String sql =
-                "select * " +
-                        "from " + tableName + " " +
-                        "where sort = " + "\"" + categoryName + "\" " +
-                        "and flags = " + "\"IMPORTANT\"" ;
-
+        String sql;
+        if(categoryName.equals("전체")){
+            sql =
+                    "select * " +
+                            "from " + tableName + " " +
+                            "where flags = " + "\"IMPORTANT\"" ;
+        }
+        else{
+            sql =
+                    "select * " +
+                            "from " + tableName + " " +
+                            "where sort = " + "\"" + categoryName + "\" " +
+                            "and flags = " + "\"IMPORTANT\"" ;
+        }
         Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
         return cursor.getCount();
     }
@@ -513,6 +460,26 @@ public class VocaDatabase extends SQLiteOpenHelper {
                 " where word = " + "\"" + word + "\"" +
                 " and sort = " + "\"" + category + "\"";
         sqLiteDatabase.execSQL(sql);
+    }
+
+
+    public void print(){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String sql =
+                "select * " +
+                        "from " + tableName;
+
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
+        cursor.moveToFirst();
+        if(cursor.getCount() > 0){
+            do {
+                System.out.println(cursor.getString(0) + " , "+
+                        cursor.getString(1) + " , " + cursor.getString(2) + " , " + " , " + cursor.getString(3)
+                        + " , " + cursor.getString(4) + " , "  + cursor.getString(5) + " , " + cursor.getString(6) + " , " +
+                        cursor.getString(7) + " , " + cursor.getString(8) + " , " + cursor.getString(9));
+            }
+            while(cursor.moveToNext());
+        }
     }
 }
 

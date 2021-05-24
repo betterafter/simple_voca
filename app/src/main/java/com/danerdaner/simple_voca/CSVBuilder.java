@@ -2,6 +2,7 @@ package com.danerdaner.simple_voca;
 
 import com.danerdaner.Items.ListItem;
 import com.danerdaner.activity.LoadingActivity;
+import com.danerdaner.activity.MainActivity;
 
 import java.util.ArrayList;
 
@@ -37,6 +38,7 @@ public class CSVBuilder {
             LoadingActivity.categoryDatabase.insert(valid , "");
         }
         LoadingActivity.vocaDatabase.listToDatabase(dataBase);
+        MainActivity.vocaRecyclerViewAdapter.notifyDataSetChanged();
     }
 
     public String getWordsFromCSVString(String data, ArrayList<ListItem> ret){

@@ -15,6 +15,8 @@ import android.widget.Toast;
 import com.danerdaner.simple_voca.R;
 import com.danerdaner.simple_voca.VocaForegroundService;
 
+import java.util.Collections;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
@@ -27,7 +29,7 @@ public class SettingFragment extends PreferenceFragment {
     ListPreference category_select;
 
     CheckBoxPreference lock_screen;
-    CheckBoxPreference service;
+    public static CheckBoxPreference service;
 
     Preference developer_info;
     Preference question;
@@ -90,11 +92,17 @@ public class SettingFragment extends PreferenceFragment {
             MainActivity.vocaRecyclerViewAdapter.notifyDataSetChanged();
             MainActivity.vocaRecyclerViewAdapter.notifyItemRangeChanged(0, LoadingActivity.vocaList.size());
 
+            if (s.equals("word_order")){
+                if(sharedPreferences.getString("word_order", "알파벳 순서").equals("무작위로")){
+                    LoadingActivity.vocaDatabase.makeList( LoadingActivity.vocaShuffleList);
+                    Collections.shuffle(LoadingActivity.vocaShuffleList);
+                }
+            }
+
             if(s.equals("lock_screen") || s.equals("service")){
                 if((s.equals("lock_screen") && lock_screen.isChecked())
                 || (s.equals("service") && service.isChecked())){
                     String category_name = sharedPreferences.getString("category", "전체");
-                    System.out.println(category_name);
                     LoadingActivity.vocaDatabase.makeList(LoadingActivity.lockVocaList, category_name);
                     if(LoadingActivity.lockVocaList.size() <= 0){
                         Toast.makeText(getActivity(), "단어를 먼저 추가해주세요.", Toast.LENGTH_SHORT).show();
@@ -109,6 +117,8 @@ public class SettingFragment extends PreferenceFragment {
                 if(service.isChecked()) getActivity().startForegroundService(intent);
                 else getActivity().stopService(intent);
             }
+
+
         }
     };
 
@@ -119,7 +129,7 @@ public class SettingFragment extends PreferenceFragment {
         if(key.equals("get_wordfile")){
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("*/*");
-            startActivityForResult(intent, PICKFILE_REQUEST_CODE);
+            getActivity().startActivityForResult(intent, PICKFILE_REQUEST_CODE);
         }
 
         if(key.equals("developer_info")){
@@ -129,6 +139,8 @@ public class SettingFragment extends PreferenceFragment {
 
         return false;
     }
+
+
 
     @Override
     public void onPause() {

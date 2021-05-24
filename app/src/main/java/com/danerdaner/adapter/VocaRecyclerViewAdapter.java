@@ -22,6 +22,7 @@ import com.danerdaner.database.VocaDatabase;
 import com.danerdaner.simple_voca.ImageSerializer;
 import com.danerdaner.simple_voca.ItemTouchHelperCallback;
 import com.danerdaner.simple_voca.R;
+import com.danerdaner.simple_voca.VocaForegroundService;
 
 import java.util.ArrayList;
 
@@ -61,6 +62,7 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         private ImageButton add_voca_editor_close_button;
         private ImageButton add_voca_anounce_button;
         private ImageView add_voca_bookmark;
+        private LinearLayout add_voca_category_name;
 
         private boolean isExpanded = false;
         private int childPosition = -1;
@@ -80,13 +82,17 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             add_voca_mean = itemView.findViewById(R.id.item_mean);
             add_voca_announce = itemView.findViewById(R.id.item_announce);
             add_voca_bookmark = itemView.findViewById(R.id.item_bookmark);
+            add_voca_category_name = itemView.findViewById(R.id.item_category_name);
+
+            if(LoadingActivity.SELECTED_CATEGORY_NAME.equals("전체"))
+                add_voca_category_name.setVisibility(View.VISIBLE);
+            else add_voca_category_name.setVisibility(View.GONE);
 
             add_voca_editor = itemView.findViewById(R.id.item_word_editor);
             add_voca_editor_delete_button = itemView.findViewById(R.id.word_editor_delete);
             add_voca_editor_edit_button = itemView.findViewById(R.id.word_editor_edit);
             add_voca_editor_close_button = itemView.findViewById(R.id.word_editor_close);
             add_voca_anounce_button = itemView.findViewById(R.id.item_word_announce_button);
-
 
             this.itemView = itemView;
             final LinearLayout layout = itemView.findViewById(R.id.item);
@@ -212,7 +218,21 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             String[] data = ((ListItem)wordDataList.get(position)).getData();
             viewHolder.add_voca_word.setText(data[0]);
             viewHolder.add_voca_mean.setText(data[1]);
+            if(!MainActivity.WORD_MEAN_VISIBLE) viewHolder.add_voca_mean.setVisibility(View.INVISIBLE);
+            else viewHolder.add_voca_mean.setVisibility(View.VISIBLE);
             viewHolder.add_voca_announce.setText("[" + data[2] + "]");
+            ((TextView)viewHolder.add_voca_category_name.getChildAt(0)).setText(data[7]);
+
+            int color=viewHolder.add_voca_mean.getCurrentTextColor();
+            String hexColor = String.format("#%06X", (0xFFFFFF & color));
+            System.out.println(hexColor);
+            // 다크모드 아닐 경우
+            if(hexColor.equals("#000000")){
+                viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.white));
+            }
+            else{
+                viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.black));
+            }
 
             int font_size = Integer.parseInt(LoadingActivity.sharedPreferences.getString("font_size", "24"));
             viewHolder.add_voca_word.setTextSize(font_size);
@@ -261,11 +281,17 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                     viewHolder.add_voca_editor_delete_button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            LoadingActivity.vocaDatabase.delete(position);
+                            String word = viewHolder.add_voca_word.getText().toString();
+                            String category = data[7];
+                            int index = LoadingActivity.vocaDatabase.findTableIndex(word, category);
+                            LoadingActivity.vocaDatabase.delete(index);
                             LoadingActivity.vocaDatabase.makeList(wordDataList);
                             notifyDataSetChanged();
-                            //notifyItemChanged(position);
-                            //notifyItemRangeChanged(0, wordDataList.size());
+
+                            // 단어를 삭제했을 때 단어의 개수가 0개라면 서비스도 종료하고 서비스활성화도 체크 해제해야 한다.
+                            Intent intent = new Intent(context, VocaForegroundService.class);
+                            LoadingActivity.vocaDatabase.UnCheckedIfNoWordInTable();
+                            context.getApplicationContext().stopService(intent);
 
                             viewHolder.add_voca_editor.setVisibility(View.GONE);
                         }
@@ -277,8 +303,11 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                             removeAllChildView();
 
                             Intent intent = new Intent(context, AddEditVocaActivity.class);
+                            String word = viewHolder.add_voca_word.getText().toString();
+                            String category = data[7];
+                            int index = LoadingActivity.vocaDatabase.findTableIndex(word, category);
                             intent.putExtra("STATE", "EDIT");
-                            intent.putExtra("POSITION", viewHolder.getAdapterPosition());
+                            intent.putExtra("POSITION", index);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(intent);
 

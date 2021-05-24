@@ -63,8 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:fontFamily="@font/nanum_square_regular"
-                android:text="서푸름"
-                android:textColor="@color/black"
+                android:text="서푸름 (purum5548@naver.com)"
                 android:textStyle="bold" />
 
             <TextView
@@ -74,7 +73,6 @@
                 android:layout_marginBottom="10dp"
                 android:fontFamily="@font/nanum_square_regular"
                 android:text="이준우 (jleey.97@gmail.com)"
-                android:textColor="@color/black"
                 android:textStyle="bold" />
 
             <TextView
@@ -84,7 +82,6 @@
                 android:layout_marginBottom="100dp"
                 android:fontFamily="@font/nanum_square_regular"
                 android:text="신기열  (koin20000@gmail.com)"
-                android:textColor="@color/black"
                 android:textStyle="bold" />
 
             <TextView
@@ -116,7 +113,6 @@
                 android:fontFamily="@font/nanum_square_regular"
                 android:layout_marginBottom="30dp"
                 android:text="신기열"
-                android:textColor="@color/black"
                 android:textStyle="bold" />
 
             <TextView
@@ -135,7 +131,6 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nanum_square_regular"
                 android:text="koin20000@gmail.com"
-                android:textColor="@color/black"
                 android:textStyle="bold" />
 
             <TextView
@@ -145,7 +140,6 @@
                 android:fontFamily="@font/nanum_square_regular"
                 android:layout_marginBottom="30dp"
                 android:text="koin12000@naver.com"
-                android:textColor="@color/black"
                 android:textStyle="bold" />
 
             <TextView
@@ -164,7 +158,6 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nanum_square_regular"
                 android:text="010-6850-1740"
-                android:textColor="@color/black"
                 android:textStyle="bold" />
         </LinearLayout>
 

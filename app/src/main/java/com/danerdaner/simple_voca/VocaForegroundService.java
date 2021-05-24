@@ -13,7 +13,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.IBinder;
 
 import com.danerdaner.activity.LoadingActivity;
-import com.danerdaner.activity.ScreenOnActivity;
+import com.danerdaner.activity.MainActivity;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -43,7 +43,7 @@ public class VocaForegroundService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         // PendingIntent를 이용하면 포그라운드 서비스 상태에서 알림을 누르면 앱의 MainActivity를 다시 열게 된다.
-        Intent ScreenOnIntent = new Intent(getApplicationContext(), ScreenOnActivity.class);
+        Intent ScreenOnIntent = new Intent(getApplicationContext(), MainActivity.class);
         PendingIntent pendingIntent
                 = PendingIntent.getActivity(this, 0, ScreenOnIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                 //= PendingIntent.getActivity(this, 0, ScreenOnIntent, 0);

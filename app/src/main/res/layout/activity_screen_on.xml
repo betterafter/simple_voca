@@ -196,5 +196,23 @@
             android:textAlignment="center"
             android:textColor="@color/backgroundBlack" />
 
+        <Button
+            android:id="@+id/screen_on_unlock_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nanum_square_bold"
+            android:layout_marginTop="30dp"
+            android:drawableLeft="@drawable/baseline_lock_open_24"
+            android:text="잠금 해제"
+            android:layout_gravity="center"
+            android:textColor="@color/blueGradient5"
+            android:textSize="18sp"
+            android:paddingVertical="5dp"
+            android:layout_marginHorizontal="70dp"
+            android:backgroundTint="@color/mainBlue"
+            android:background="@drawable/shape_rectangle_with_total_round_radius"
+            android:tint="@color/white"
+            android:src="@drawable/baseline_lock_open_24"/>
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

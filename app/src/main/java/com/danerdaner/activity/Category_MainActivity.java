@@ -241,13 +241,6 @@ public class Category_MainActivity extends AppCompatActivity {
     }
 
 
-    private void fileSelectIntent(){
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
-        startActivityForResult(intent, PICKFILE_REQUEST_CODE);
-    }
-
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Uri uri = data.getData();

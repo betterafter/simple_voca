@@ -24,7 +24,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
                 android:onClick="settings_onBackClick"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@android:color/transparent"
                 android:src="@drawable/baseline_arrow_back_18"
                 android:tint="@color/mainBlue" />
 

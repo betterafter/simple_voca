@@ -10,6 +10,7 @@
         android:orientation="vertical"
         android:layout_marginHorizontal="30dp"
         android:background="@drawable/recyclerview_item"
+
         app:layout_constraintTop_toTopOf="parent">
 
         <FrameLayout
@@ -33,6 +34,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/opensans_bold"
                     android:text="abcdefghijklmnopqrstuvwxyzaaaa"
+                    android:textColor="@color/mainBlue"
                     android:textAlignment="center"
                     android:textSize="24sp" />
 
@@ -42,6 +44,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/opensans_regular"
                     android:text="TextView"
+                    android:textColor="@color/mainBlue"
                     android:textAlignment="center"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -57,7 +60,7 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_gravity="center"
-                    android:backgroundTint="@color/white"
+                    android:backgroundTint="@android:color/transparent"
                     android:src="@drawable/baseline_bookmark_border_24"
                     android:tint="@color/mainBlue" />
 

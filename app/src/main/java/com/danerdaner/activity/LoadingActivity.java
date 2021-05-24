@@ -1,7 +1,9 @@
 package com.danerdaner.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,9 +20,12 @@ import com.danerdaner.simple_voca.R;
 import com.danerdaner.simple_voca.VocaForegroundService;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 public class LoadingActivity extends AppCompatActivity {
 
@@ -32,17 +37,16 @@ public class LoadingActivity extends AppCompatActivity {
     public static ArrayList<categoryListItem> categoryList = new ArrayList<>();
     public static ArrayList<ScoreListItem> categoryTestResultList = new ArrayList<>();
     public static ArrayList<ListItem> lockVocaList = new ArrayList<>();
+    public static ArrayList<ListItem> vocaShuffleList = new ArrayList<>();
 
     public static String SELECTED_CATEGORY_NAME = "전체";
     public static String SELECTED_CATEGORY_SUBTITLE;
 
-    public static int wordChangedTime = 60;
-    public static int LastTime;
-    public static int CurrTime;
-
     private static final int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 1;
+    private static final int ACTION_MANAGE_READ_REQUEST_CODE = 2;
 
     public static SharedPreferences sharedPreferences;
+    public static boolean WordShuffleCheck = false;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -52,14 +56,17 @@ public class LoadingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load);
 
+        WordShuffleCheck = false;
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String lock_category_name = sharedPreferences.getString("category", "전체");
 
-        getPermission();
-
         vocaDatabase = new VocaDatabase(getApplicationContext(), "voca", null, 2);
-        vocaDatabase.makeList(vocaList);
         vocaDatabase.makeList(lockVocaList, lock_category_name);
+
+        vocaDatabase.makeList(vocaShuffleList);
+        Collections.shuffle(vocaShuffleList);
+        vocaDatabase.makeList(vocaList);
+
 
         categoryDatabase = new categoryDatabase(getApplicationContext(), "category", null, 2);
         if(categoryDatabase.getSize() == 0){
@@ -69,14 +76,28 @@ public class LoadingActivity extends AppCompatActivity {
         SELECTED_CATEGORY_SUBTITLE = categoryDatabase.getCategorySubTitle(SELECTED_CATEGORY_NAME);
 
         ScoreDatabase = new ScoreDatabase(getApplicationContext(), "Score", null, 3);
-        //ScoreDatabase.deleteAll();
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getPermission();
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void getPermission(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {   // 마시멜로우 이상일 경우
+
+            int permission_read = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
+            int permission_write = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+            if(permission_read == PackageManager.PERMISSION_DENIED || permission_write == PackageManager.PERMISSION_DENIED){
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE}, ACTION_MANAGE_READ_REQUEST_CODE);
+            }
+
             if (!Settings.canDrawOverlays(this)) {// 체크
 
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,

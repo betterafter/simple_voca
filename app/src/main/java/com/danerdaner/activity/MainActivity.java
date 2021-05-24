@@ -149,11 +149,6 @@ public class MainActivity extends AppCompatActivity {
         // 그리드뷰 생성
         player = new MediaPlayer();
 
-        main_gridView = (GridView)findViewById(R.id.gridView);
-
-        vocaGridViewAdapter = new VocaGridViewAdapter(LoadingActivity.vocaList, getApplicationContext());
-        main_gridView.setAdapter(vocaGridViewAdapter);
-
 
         main_setting_button = findViewById(R.id.main_setting_button);
         main_setting_button.setOnClickListener(new View.OnClickListener() {
@@ -183,17 +178,13 @@ public class MainActivity extends AppCompatActivity {
                     visible_button.setImageDrawable(
                             ContextCompat.getDrawable(getApplicationContext(), R.drawable.outline_visibility_off_24)
                     );
-                    LoadingActivity.vocaDatabase.makeEmptyMeanList(LoadingActivity.vocaList);
                 }
                 // 단어 뜻 보이기
                 else{
                     WORD_MEAN_VISIBLE = true;
                     visible_button.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.outline_visibility_24));
-                    LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
                 }
 
-                //vocaRecyclerViewAdapter.notifyDataSetChanged();
-                //vocaRecyclerViewAdapter.notifyItemRangeChanged(0, LoadingActivity.vocaList.size());
                 vocaRecyclerViewAdapter.notifyDataSetChanged();
             }
         });
@@ -212,7 +203,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        System.out.println("onStart");
     }
 
 
@@ -222,8 +212,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        vocaRecyclerViewAdapter.notifyDataSetChanged();
         LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
+        vocaRecyclerViewAdapter.notifyDataSetChanged();
+
 
         selectedNumber = 0;
         CategoryTitle.setText(LoadingActivity.SELECTED_CATEGORY_NAME);
@@ -239,8 +230,6 @@ public class MainActivity extends AppCompatActivity {
         main_recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-
-                System.out.println("onResume");
 
                 firstVisibleItemPosition
                         = ((LinearLayoutManager) main_recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
@@ -314,13 +303,6 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View view) {
 
                     isNavigationButtonTouched = true;
-
-                    if(WORD_MEAN_VISIBLE){
-                        LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
-                    }
-                    else
-                        LoadingActivity.vocaDatabase.makeEmptyMeanList(LoadingActivity.vocaList);
-
                     vocaRecyclerViewAdapter.notifyDataSetChanged();
 
                     // 네비게이션 목차 버튼 색 바꾸기 -----------------------------------------------------
@@ -406,10 +388,7 @@ public class MainActivity extends AppCompatActivity {
                     isFirstTouchedToDrag = true;
                 }
                 else if(newState == recyclerView.SCROLL_STATE_DRAGGING){
-                    if(WORD_MEAN_VISIBLE)
-                        LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
-                    else
-                        LoadingActivity.vocaDatabase.makeEmptyMeanList(LoadingActivity.vocaList);
+                    LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
                     vocaRecyclerViewAdapter.notifyDataSetChanged();
                 }
             }
@@ -418,32 +397,16 @@ public class MainActivity extends AppCompatActivity {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                if (!isNavigationButtonTouched) {
+                if (selectedButtons.size() > 0) {
 
-                    int firstVisibleItemPosition
-                            = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+                    if (!isNavigationButtonTouched) {
 
-                    int lastVisibleItemPosition
-                            = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
+                        int firstVisibleItemPosition
+                                = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
 
-                    System.out.println(firstVisibleItemPosition);
+                        int lastVisibleItemPosition
+                                = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
 
-                    // 이전 선택 버튼 색 바꾸기
-                    selectedButtons.get(selectedNumber)
-                            .setTextColor(mainActivity.getResources().getColor(R.color.backgroundBlack));
-                    selectedButtons.get(selectedNumber)
-                            .getBackground().setColorFilter(mainActivity.getResources().getColor(R.color.white),
-                            PorterDuff.Mode.SRC_IN);
-
-                    selectedNumber = firstVisibleItemPosition / 4;
-
-                    // 선택 버튼 색 바꾸기
-                    selectedButtons.get(selectedNumber).setTextColor(mainActivity.getResources().getColor(R.color.white));
-                    selectedButtons.get(selectedNumber).getBackground().
-                            setColorFilter(mainActivity.getResources().getColor(R.color.mainBlue), PorterDuff.Mode.SRC_IN);
-
-
-                    if (lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1) {
 
                         // 이전 선택 버튼 색 바꾸기
                         selectedButtons.get(selectedNumber)
@@ -452,18 +415,36 @@ public class MainActivity extends AppCompatActivity {
                                 .getBackground().setColorFilter(mainActivity.getResources().getColor(R.color.white),
                                 PorterDuff.Mode.SRC_IN);
 
-                        selectedNumber = ((LinearLayout) navigationScrollView.getChildAt(0)).getChildCount() - 1;
+                        selectedNumber = firstVisibleItemPosition / 4;
 
                         // 선택 버튼 색 바꾸기
                         selectedButtons.get(selectedNumber).setTextColor(mainActivity.getResources().getColor(R.color.white));
                         selectedButtons.get(selectedNumber).getBackground().
                                 setColorFilter(mainActivity.getResources().getColor(R.color.mainBlue), PorterDuff.Mode.SRC_IN);
 
-                    }
 
-                    if (selectedNumber % 5 == 0) {
-                        float position = ((LinearLayout) navigationScrollView.getChildAt(0)).getChildAt(selectedNumber).getX();
-                        navigationScrollView.scrollTo((int) position, 0);
+                        if (lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1) {
+
+                            // 이전 선택 버튼 색 바꾸기
+                            selectedButtons.get(selectedNumber)
+                                    .setTextColor(mainActivity.getResources().getColor(R.color.backgroundBlack));
+                            selectedButtons.get(selectedNumber)
+                                    .getBackground().setColorFilter(mainActivity.getResources().getColor(R.color.white),
+                                    PorterDuff.Mode.SRC_IN);
+
+                            selectedNumber = ((LinearLayout) navigationScrollView.getChildAt(0)).getChildCount() - 1;
+
+                            // 선택 버튼 색 바꾸기
+                            selectedButtons.get(selectedNumber).setTextColor(mainActivity.getResources().getColor(R.color.white));
+                            selectedButtons.get(selectedNumber).getBackground().
+                                    setColorFilter(mainActivity.getResources().getColor(R.color.mainBlue), PorterDuff.Mode.SRC_IN);
+
+                        }
+
+                        if (selectedNumber % 5 == 0) {
+                            float position = ((LinearLayout) navigationScrollView.getChildAt(0)).getChildAt(selectedNumber).getX();
+                            navigationScrollView.scrollTo((int) position, 0);
+                        }
                     }
                 }
             }

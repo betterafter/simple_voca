@@ -43,7 +43,6 @@
             android:fontFamily="@font/nanum_square_bold"
             android:text="apple"
             android:textAlignment="center"
-            android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -56,7 +55,6 @@
             android:fontFamily="@font/nanum_square_light"
             android:text="[apple]"
             android:textAlignment="center"
-            android:textColor="@color/black"
             android:textSize="18sp" />
 
         <TextView
@@ -82,7 +80,6 @@
             android:layout_weight="1"
             android:fontFamily="@font/nanum_square_regular"
             android:text="sdfafsdfdsasdfsafasfs"
-            android:textColor="@color/black"
             android:textSize="18sp" />
 
 

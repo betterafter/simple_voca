@@ -78,6 +78,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:textColor="@color/black"
                 android:text="TextView"
                 android:textSize="40sp" />
 
@@ -85,6 +86,7 @@
                 android:id="@+id/test_test_category_announce"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:gravity="center"
                 android:text="TextView" />
         </LinearLayout>

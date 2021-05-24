@@ -80,7 +80,7 @@
                     android:onClick="category_main_onBackClick"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
-                    android:backgroundTint="@color/white"
+                    android:backgroundTint="@android:color/transparent"
                     android:src="@drawable/baseline_arrow_back_18"
                     android:tint="@color/mainBlue" />
 
@@ -100,7 +100,6 @@
                 android:fontFamily="@font/opensans_extrabold"
                 android:gravity="center"
                 android:text="카테고리"
-                android:textColor="@color/backgroundBlack"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -112,8 +111,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="30dp"
             android:fontFamily="@font/nanum_square_bold"
-            android:text="카테고리 이름을 터치해 현재 카테고리를 변경해주세요."
-            android:textColor="@color/black" />
+            android:text="카테고리 이름을 터치해 현재 카테고리를 변경해주세요." />
 
 
         <FrameLayout

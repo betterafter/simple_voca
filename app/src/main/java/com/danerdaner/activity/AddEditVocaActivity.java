@@ -22,6 +22,7 @@ import com.danerdaner.simple_voca.R;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,11 +42,14 @@ public class AddEditVocaActivity extends AppCompatActivity {
     private Spinner add_select_group_spinner;
     private ImageButton add_voca_word_search_button;
 
+    private ArrayList<String> categoryList;
+
 
 
     private Button add_voca_save_button;
     private String SAVE_STATE = "SAVE";
     private int POSITION = -1;
+    private int SPINNER_SELETED_POSITION;
 
 
     @Override
@@ -56,9 +60,13 @@ public class AddEditVocaActivity extends AppCompatActivity {
         SAVE_STATE = "SAVE";
         POSITION = -1;
 
-        ArrayList<String> categoryList = new ArrayList<>();
+        categoryList = new ArrayList<>();
         for(int i = 0; i < LoadingActivity.categoryList.size(); i++){
             categoryList.add(LoadingActivity.categoryList.get(i).getData()[0]);
+
+            if(LoadingActivity.categoryList.get(i).getData()[0].equals(LoadingActivity.SELECTED_CATEGORY_NAME)){
+                SPINNER_SELETED_POSITION = i;
+            }
         }
 
 
@@ -110,6 +118,13 @@ public class AddEditVocaActivity extends AppCompatActivity {
                 memo = changeChar(memo);
 
                 if(SAVE_STATE.equals("SAVE")) {
+
+                    if(LoadingActivity.vocaDatabase.CheckIfWordInCategory(word, group)){
+                        Toast.makeText(getApplicationContext(),
+                                "해당 카테고리에 이미 같은 단어가 존재합니다.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     // 데이터베이스에 넣기
                     LoadingActivity.vocaDatabase.insert(
                             word,
@@ -121,23 +136,19 @@ public class AddEditVocaActivity extends AppCompatActivity {
                             ImageSerializer.PackImageToSerialized(add_voca_select_picture_imageview),
                             group,
                             "0");
-                    // "전체" 카테고리에도 넣기
-                    if(!group.equals("전체")) {
-                        LoadingActivity.vocaDatabase.insert(
-                                word,
-                                mean,
-                                announce,
-                                example,
-                                example_mean,
-                                memo,
-                                ImageSerializer.PackImageToSerialized(add_voca_select_picture_imageview),
-                                "전체",
-                                "0");
-                    }
 
+                    LoadingActivity.vocaDatabase.makeList( LoadingActivity.vocaShuffleList);
+                    Collections.shuffle(LoadingActivity.vocaShuffleList);
                     LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
                 }
                 else if(SAVE_STATE.equals("EDIT") && POSITION >= 0){
+
+                    if(LoadingActivity.vocaDatabase.CheckIfWordInCategory(word, group)){
+                        Toast.makeText(getApplicationContext(),
+                                "해당 카테고리에 이미 같은 단어가 존재합니다.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     LoadingActivity.vocaDatabase.change(
                             POSITION,
                             word,
@@ -150,19 +161,6 @@ public class AddEditVocaActivity extends AppCompatActivity {
                             group,
                             "0");
                     // 전체 카테고리도 업데이트
-                    if(!group.equals("전체")) {
-                        LoadingActivity.vocaDatabase.change(
-                                POSITION,
-                                word,
-                                mean,
-                                announce,
-                                example,
-                                example_mean,
-                                memo,
-                                ImageSerializer.PackImageToSerialized(add_voca_select_picture_imageview),
-                                "전체",
-                                "0");
-                    }
 
                     LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
                     MainActivity.vocaRecyclerViewAdapter.notifyDataSetChanged();
@@ -186,6 +184,7 @@ public class AddEditVocaActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        add_select_group_spinner.setSelection(SPINNER_SELETED_POSITION);
         Intent intent = getIntent();
         if(intent.getStringExtra("STATE") != null) {
             SAVE_STATE = intent.getStringExtra("STATE");
@@ -193,7 +192,8 @@ public class AddEditVocaActivity extends AppCompatActivity {
         }
 
         if(SAVE_STATE.equals("EDIT")){
-            String[] data = LoadingActivity.vocaList.get(POSITION).getData();
+            System.out.println();
+            String[] data = LoadingActivity.vocaDatabase.findTableData(POSITION);
 
             add_voca_word.setText(data[0]);
             add_voca_mean.setText(data[1]);
@@ -201,9 +201,19 @@ public class AddEditVocaActivity extends AppCompatActivity {
             add_voca_example.setText(data[3]);
             add_voca_example_mean.setText(data[4]);
             add_voca_memo.setText(data[5]);
-            add_voca_select_picture_imageview.setImageDrawable(new BitmapDrawable(
-                    getApplicationContext().getResources(), ImageSerializer.PackSerializedToImage(data[6])));
+            if(data[6] != null && data[6].length() > 10) {
+                add_voca_select_picture_imageview.setImageDrawable(new BitmapDrawable(
+                        getApplicationContext().getResources(), ImageSerializer.PackSerializedToImage(data[6])));
+            }
 
+            // 전체 카테고리에서 단어 수정을 실행할 때는 각 단어가 포함 되어 있는 카테고리 이름을 불러준다.
+            if(LoadingActivity.SELECTED_CATEGORY_NAME.equals("전체")){
+                for(int i = 0; i < categoryList.size(); i++){
+                    if(categoryList.get(i).equals(data[7])){
+                        add_select_group_spinner.setSelection(i); break;
+                    }
+                }
+            }
         }
     }
 
@@ -217,8 +227,6 @@ public class AddEditVocaActivity extends AppCompatActivity {
             picture_text.setText("");
             int width = ((LinearLayout)add_voca_select_picture_imageview.getParent()).getWidth();
             int height = ((LinearLayout)add_voca_select_picture_imageview.getParent()).getHeight();
-            System.out.println(width);
-            System.out.println(height);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     300, 300
             );
@@ -227,9 +235,6 @@ public class AddEditVocaActivity extends AppCompatActivity {
             add_voca_select_picture_imageview.getLayoutParams().height = width / 2;
             //add_voca_select_picture_imageview.setLayoutParams(params);
             add_voca_select_picture_imageview.setImageURI(selectedImageUri);
-
-            System.out.println(add_voca_select_picture_imageview.getWidth());
-            System.out.println(add_voca_select_picture_imageview.getHeight());
         }
     }
 
@@ -265,19 +270,16 @@ public class AddEditVocaActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        finish();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        finish();
     }
 
     public void add_edit_onBackClick(View view){
