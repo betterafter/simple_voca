@@ -161,8 +161,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nanum_square_regular"
                     android:text=" 카테고리 최근 10개 테스트 결과"
-                    android:textAlignment="center"
-                    android:textColor="@color/black" />
+                    android:textAlignment="center" />
             </LinearLayout>
 
             <com.github.mikephil.charting.charts.LineChart
