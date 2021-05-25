@@ -127,6 +127,7 @@ public class Category_MainActivity extends AppCompatActivity {
                         LoadingActivity.SELECTED_CATEGORY_NAME = "전체";
 
                     LoadingActivity.categoryDatabase.delete(categoryName, tempSubtitle);
+                    LoadingActivity.vocaDatabase.deleteAll(categoryName);
                     makeCategoryList();
                 }
             });

@@ -17,12 +17,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.danerdaner.Items.ListItem;
 import com.danerdaner.simple_voca.ImageSerializer;
 import com.danerdaner.simple_voca.R;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,6 +32,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class AddEditVocaActivity extends AppCompatActivity {
 
     private TextView add_voca_select_group;
+    private TextView add_voca_title;
     private TextInputEditText add_voca_word;
     private TextInputEditText add_voca_mean;
     private TextInputEditText add_voca_announce;
@@ -50,6 +51,8 @@ public class AddEditVocaActivity extends AppCompatActivity {
     private String SAVE_STATE = "SAVE";
     private int POSITION = -1;
     private int SPINNER_SELETED_POSITION;
+
+    private String prevWord, prevGroup;
 
 
     @Override
@@ -75,6 +78,7 @@ public class AddEditVocaActivity extends AppCompatActivity {
         add_select_group_spinner = findViewById(R.id.add_voca_select_group_spinner);
         add_select_group_spinner.setAdapter(arrayAdapter);
 
+        add_voca_title = findViewById(R.id.add_voca_title);
         add_voca_word = findViewById(R.id.add_voca_word);
         add_voca_mean = findViewById(R.id.add_voca_mean);
         add_voca_announce = findViewById(R.id.add_voca_announce);
@@ -112,6 +116,17 @@ public class AddEditVocaActivity extends AppCompatActivity {
                 if(!checkString(word, getApplicationContext())) return;
                 if(!checkString(mean, getApplicationContext())) return;
                 if(!checkString(announce, getApplicationContext())) return;
+                if(word.length() <= 0){
+                    Toast.makeText(getApplicationContext(),
+                            "단어를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(mean.length() <= 0){
+                    Toast.makeText(getApplicationContext(),
+                            "단어의 뜻을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
 
                 example = changeChar(example);
                 example_mean = changeChar(example_mean);
@@ -119,7 +134,7 @@ public class AddEditVocaActivity extends AppCompatActivity {
 
                 if(SAVE_STATE.equals("SAVE")) {
 
-                    if(LoadingActivity.vocaDatabase.CheckIfWordInCategory(word, group)){
+                    if(LoadingActivity.vocaDatabase.CheckIfWordInCategory(word, group, POSITION)){
                         Toast.makeText(getApplicationContext(),
                                 "해당 카테고리에 이미 같은 단어가 존재합니다.", Toast.LENGTH_SHORT).show();
                         return;
@@ -137,13 +152,17 @@ public class AddEditVocaActivity extends AppCompatActivity {
                             group,
                             "0");
 
-                    LoadingActivity.vocaDatabase.makeList( LoadingActivity.vocaShuffleList);
-                    Collections.shuffle(LoadingActivity.vocaShuffleList);
+                    String[] data = new String[]{
+                            word, mean, announce, example, example_mean, mean,
+                            ImageSerializer.PackImageToSerialized(add_voca_select_picture_imageview),
+                            group, "0"
+                    };
+                    LoadingActivity.vocaShuffleList.add(new ListItem(data, 0));
                     LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
                 }
                 else if(SAVE_STATE.equals("EDIT") && POSITION >= 0){
 
-                    if(LoadingActivity.vocaDatabase.CheckIfWordInCategory(word, group)){
+                    if(LoadingActivity.vocaDatabase.CheckIfWordInCategory(word, group, POSITION)){
                         Toast.makeText(getApplicationContext(),
                                 "해당 카테고리에 이미 같은 단어가 존재합니다.", Toast.LENGTH_SHORT).show();
                         return;
@@ -160,7 +179,21 @@ public class AddEditVocaActivity extends AppCompatActivity {
                             ImageSerializer.PackImageToSerialized(add_voca_select_picture_imageview),
                             group,
                             "0");
-                    // 전체 카테고리도 업데이트
+
+                    // shuffle에도 수정한 단어 수정하기
+                    for(int i = 0; i < LoadingActivity.vocaShuffleList.size(); i++){
+                        if(LoadingActivity.vocaShuffleList.get(i).getData()[0].equals(prevWord) &&
+                                LoadingActivity.vocaShuffleList.get(i).getData()[7].equals(prevGroup)){
+                            String[] data = new String[]{
+                                    word, mean, announce, example, example_mean, mean,
+                                    ImageSerializer.PackImageToSerialized(add_voca_select_picture_imageview),
+                                    group, "0"
+                            };
+                            LoadingActivity.vocaShuffleList.remove(i);
+                            LoadingActivity.vocaShuffleList.add(i, new ListItem(data, 0));
+                            break;
+                        }
+                    }
 
                     LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
                     MainActivity.vocaRecyclerViewAdapter.notifyDataSetChanged();
@@ -195,6 +228,9 @@ public class AddEditVocaActivity extends AppCompatActivity {
             System.out.println();
             String[] data = LoadingActivity.vocaDatabase.findTableData(POSITION);
 
+            add_voca_title.setText("단어 수정");
+            add_voca_save_button.setText("단어 수정하기");
+
             add_voca_word.setText(data[0]);
             add_voca_mean.setText(data[1]);
             add_voca_announce.setText(data[2]);
@@ -205,6 +241,9 @@ public class AddEditVocaActivity extends AppCompatActivity {
                 add_voca_select_picture_imageview.setImageDrawable(new BitmapDrawable(
                         getApplicationContext().getResources(), ImageSerializer.PackSerializedToImage(data[6])));
             }
+
+            prevGroup = add_select_group_spinner.getSelectedItem().toString();
+            prevWord = add_voca_word.getText().toString();
 
             // 전체 카테고리에서 단어 수정을 실행할 때는 각 단어가 포함 되어 있는 카테고리 이름을 불러준다.
             if(LoadingActivity.SELECTED_CATEGORY_NAME.equals("전체")){
@@ -283,8 +322,6 @@ public class AddEditVocaActivity extends AppCompatActivity {
     }
 
     public void add_edit_onBackClick(View view){
-        Intent intent = new Intent(AddEditVocaActivity.this, MainActivity.class);
-        startActivity(intent);
         finish();
     }
 }

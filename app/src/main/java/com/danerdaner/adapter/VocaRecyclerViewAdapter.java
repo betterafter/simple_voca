@@ -63,6 +63,7 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         private ImageButton add_voca_anounce_button;
         private ImageView add_voca_bookmark;
         private LinearLayout add_voca_category_name;
+        private LinearLayout add_item_editor;
 
         private boolean isExpanded = false;
         private int childPosition = -1;
@@ -83,6 +84,7 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             add_voca_announce = itemView.findViewById(R.id.item_announce);
             add_voca_bookmark = itemView.findViewById(R.id.item_bookmark);
             add_voca_category_name = itemView.findViewById(R.id.item_category_name);
+            add_item_editor = itemView.findViewById(R.id.item_word_editor);
 
             if(LoadingActivity.SELECTED_CATEGORY_NAME.equals("전체"))
                 add_voca_category_name.setVisibility(View.VISIBLE);
@@ -225,13 +227,15 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             int color=viewHolder.add_voca_mean.getCurrentTextColor();
             String hexColor = String.format("#%06X", (0xFFFFFF & color));
-            System.out.println(hexColor);
+
             // 다크모드 아닐 경우
             if(hexColor.equals("#000000")){
                 viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.white));
+                viewHolder.add_item_editor.setBackgroundColor(context.getResources().getColor(R.color.white));
             }
             else{
                 viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.black));
+                viewHolder.add_item_editor.setBackgroundColor(context.getResources().getColor(R.color.black));
             }
 
             int font_size = Integer.parseInt(LoadingActivity.sharedPreferences.getString("font_size", "24"));
@@ -268,7 +272,7 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                     viewHolder.add_voca_editor.setVisibility(View.VISIBLE);
                     // 여기서 delete button과 edit button에 대해 onClickListener 구현
 
-
+                    // 닫기 버튼
                     viewHolder.add_voca_editor_close_button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -278,6 +282,7 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                         }
                     });
 
+                    // 단어 삭제 버튼
                     viewHolder.add_voca_editor_delete_button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -285,6 +290,13 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                             String category = data[7];
                             int index = LoadingActivity.vocaDatabase.findTableIndex(word, category);
                             LoadingActivity.vocaDatabase.delete(index);
+                            for(int i = 0; i < LoadingActivity.vocaShuffleList.size(); i++){
+                                if(LoadingActivity.vocaShuffleList.get(i).getData()[0].equals(word) &&
+                                 LoadingActivity.vocaShuffleList.get(i).getData()[7].equals(category)){
+                                    LoadingActivity.vocaShuffleList.remove(i);
+                                    break;
+                                }
+                            }
                             LoadingActivity.vocaDatabase.makeList(wordDataList);
                             notifyDataSetChanged();
 
@@ -293,10 +305,13 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                             LoadingActivity.vocaDatabase.UnCheckedIfNoWordInTable();
                             context.getApplicationContext().stopService(intent);
 
+                            MainActivity.MakeListPager();
+                            MainActivity.onRecyclerViewScrollListener(MainActivity.main_recyclerView);
                             viewHolder.add_voca_editor.setVisibility(View.GONE);
                         }
                     });
 
+                    // 단어 편집 버튼
                     viewHolder.add_voca_editor_edit_button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {

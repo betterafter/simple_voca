@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton main_add_word_button;
     private ImageButton main_category_button;
     private ImageButton main_setting_button;
-    private HorizontalScrollView navigationScrollView;
+    private static HorizontalScrollView navigationScrollView;
 
     private TextView CategoryTitle;
     private TextView CategorySubTitle;
@@ -373,10 +373,10 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    public void onRecyclerViewScrollListener(RecyclerView recyclerView){
+    public static void onRecyclerViewScrollListener(RecyclerView recyclerView){
 
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        selectedNumber = 0;
+        RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListener() {
 
             boolean isFirstTouchedToDrag = true;
 
@@ -448,7 +448,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-        });
+        };
+        recyclerView.addOnScrollListener(onScrollListener);
     }
 
 

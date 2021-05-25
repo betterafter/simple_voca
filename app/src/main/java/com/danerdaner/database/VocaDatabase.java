@@ -90,7 +90,6 @@ public class VocaDatabase extends SQLiteOpenHelper {
                 + "');";
 
         sqLiteDatabase.execSQL(sql);
-        print();
     }
 
 
@@ -105,8 +104,15 @@ public class VocaDatabase extends SQLiteOpenHelper {
                 " where word = " + "\"" + word + "\"" +
                 " and sort = " + "\"" + category + "\"";
 
+        db.execSQL(sql);
+    }
 
-        print();
+    public void deleteAll(String category){
+
+        SQLiteDatabase db = getWritableDatabase();
+        String sql = "delete from " + tableName +
+                " where sort = " + "\"" + category + "\"";
+
         db.execSQL(sql);
     }
 
@@ -137,7 +143,6 @@ public class VocaDatabase extends SQLiteOpenHelper {
                 " and sort = " + "\"" + prev[7] + "\"";
 
 
-        print();
         db.execSQL(sql);
 
 
@@ -166,6 +171,19 @@ public class VocaDatabase extends SQLiteOpenHelper {
                 cursor.getString(7), cursor.getString(8), cursor.getString(9)};
     }
 
+    public boolean CheckIfWordInCategory(String word, String category, int position){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String sql = "SELECT * FROM " + tableName
+                + " where word = " + "\"" + word + "\"" + " and sort = " + "\"" + category + "\"";
+
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
+        cursor.moveToFirst();
+
+        if(cursor.getCount() == 1 && cursor.getString(0).equals(Integer.toString(position))) return false;
+        if(cursor.getCount() <= 0) return false;
+        else return true;
+    }
+
     public boolean CheckIfWordInCategory(String word, String category){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         String sql = "SELECT * FROM " + tableName
@@ -173,6 +191,7 @@ public class VocaDatabase extends SQLiteOpenHelper {
 
         Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
         cursor.moveToFirst();
+
         if(cursor.getCount() <= 0) return false;
         else return true;
     }
@@ -347,12 +366,18 @@ public class VocaDatabase extends SQLiteOpenHelper {
     }
 
     public void listToDatabase(ArrayList<ListItem> updatedTableColumns){
-        for(int i = 0; i < updatedTableColumns.size(); i ++){
-            insert(updatedTableColumns.get(i).getData()[0], updatedTableColumns.get(i).getData()[1],
-                    updatedTableColumns.get(i).getData()[2],updatedTableColumns.get(i).getData()[3],
-                    updatedTableColumns.get(i).getData()[4],updatedTableColumns.get(i).getData()[5],
-                    updatedTableColumns.get(i).getData()[6],updatedTableColumns.get(i).getData()[7],
-                    updatedTableColumns.get(i).getData()[8]);
+
+        for(int i = 0; i < updatedTableColumns.size(); i++){
+            if(CheckIfWordInCategory(updatedTableColumns.get(i).getData()[0], updatedTableColumns.get(i).getData()[7])){
+                continue;
+            }
+            for(int j = 0; j < updatedTableColumns.size(); j ++){
+                insert(updatedTableColumns.get(j).getData()[0], updatedTableColumns.get(j).getData()[1],
+                        updatedTableColumns.get(j).getData()[2],updatedTableColumns.get(j).getData()[3],
+                        updatedTableColumns.get(j).getData()[4],updatedTableColumns.get(j).getData()[5],
+                        updatedTableColumns.get(j).getData()[6],updatedTableColumns.get(j).getData()[7],
+                        updatedTableColumns.get(j).getData()[8]);
+            }
         }
     }
 
