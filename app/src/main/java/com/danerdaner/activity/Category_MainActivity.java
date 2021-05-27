@@ -16,6 +16,7 @@ import com.danerdaner.Items.ListItem;
 import com.danerdaner.simple_voca.CSVBuilder;
 import com.danerdaner.simple_voca.FileIOManager;
 import com.danerdaner.simple_voca.R;
+import com.danerdaner.simple_voca.TutorialChecker;
 
 import java.io.File;
 import java.io.FileNotFoundException;

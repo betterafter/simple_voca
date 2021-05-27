@@ -2,18 +2,27 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.danerdaner.simple_voca">
-
-
+    <!-- 서비스 권한 설정 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android:requestLegacyExternalStorage=true" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/icon_main_2"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/icon_main_2_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Simple_voca"
-        android:requestLegacyExternalStorage="true"
-        >
+        android:theme="@style/Theme.Simple_voca">
+        <activity android:name="com.danerdaner.activity.TutorialViewPagerActivity"></activity>
         <activity android:name="com.danerdaner.activity.LoadingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,42 +39,31 @@
         <activity android:name="com.danerdaner.activity.Test_TestActivity" />
         <activity android:name="com.danerdaner.activity.Test_ResultActivity" />
         <activity android:name="com.danerdaner.activity.Test_ResultDetailActivity" />
-        <activity android:name="com.danerdaner.activity.SettingActivity"></activity>
-        <activity android:name="com.danerdaner.activity.Setting_Developer_Info_Activity"></activity>
+        <activity android:name="com.danerdaner.activity.SettingActivity" />
+        <activity android:name="com.danerdaner.activity.Setting_Developer_Info_Activity" />
 
         <receiver android:name=".wordChangeBroadcastReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.SCREEN_ON"></action>
-                <action android:name="android.intent.action.SCREEN_OFF"></action>
+                <action android:name="android.intent.action.SCREEN_ON" />
+                <action android:name="android.intent.action.SCREEN_OFF" />
             </intent-filter>
         </receiver>
 
-        <service android:name=".VocaForegroundService"
+        <service
+            android:name=".VocaForegroundService"
             android:enabled="true"
-            android:permission="android.permission.SYSTEM_ALERT_WINDOW"
-            android:exported="false"/>
+            android:exported="false"
+            android:permission="android.permission.SYSTEM_ALERT_WINDOW" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
-
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_provider" />
         </provider>
-    </application> <!-- 서비스 권한 설정 -->
-
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android:requestLegacyExternalStorage=true"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-    <uses-permission
-        android:name="android.permission.PACKAGE_USAGE_STATS"
-        tools:ignore="ProtectedPermissions" />
+    </application>
 
 </manifest>
