@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
 
         // 리사이클러뷰 어뎁터 생성
         main_recyclerView = findViewById(R.id.main_recyclerview);
-        vocaRecyclerViewAdapter = new VocaRecyclerViewAdapter(LoadingActivity.vocaList, getApplicationContext());
+        vocaRecyclerViewAdapter = new VocaRecyclerViewAdapter(LoadingActivity.vocaList, getApplicationContext(), MainActivity.this);
         main_recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         main_recyclerView.setAdapter(vocaRecyclerViewAdapter);
 
