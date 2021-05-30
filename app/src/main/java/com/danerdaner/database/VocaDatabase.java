@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.danerdaner.Items.ListItem;
 import com.danerdaner.activity.LoadingActivity;
 import com.danerdaner.activity.MainActivity;
-import com.danerdaner.activity.SettingFragment;
+import com.danerdaner.fragment.SettingFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;

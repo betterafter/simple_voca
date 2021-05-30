@@ -5,10 +5,53 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.danerdaner.activity.TutorialViewPagerActivity">
-    <androidx.viewpager.widget.ViewPager
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/pager"
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom"
+            android:orientation="horizontal"
+            android:paddingVertical="20dp">
+
+            <TextView
+                android:id="@+id/tutorial_next_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="30dp"
+                android:fontFamily="@font/opensans_bold"
+                android:onClick="onTutorialClick"
+                android:text="NEXT"
+                android:textColor="@color/mainBlue"
+                android:textSize="14sp" />
+
+            <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+                android:id="@+id/dots_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:dotsColor="@color/mainGray2"
+                app:dotsCornerRadius="8dp"
+                app:dotsSize="8dp"
+                app:dotsSpacing="4dp"
+                app:dotsWidthFactor="2.5"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:progressMode="true"
+                app:selectedDotColor="@color/mainBlue" />
+
+        </FrameLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="60dp"/>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

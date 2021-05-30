@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 
@@ -42,7 +43,7 @@ public class LoadingActivity extends AppCompatActivity {
     public static String SELECTED_CATEGORY_NAME = "전체";
     public static String SELECTED_CATEGORY_SUBTITLE;
 
-    private static final int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 1;
+    private static final int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 1111;
     private static final int ACTION_MANAGE_READ_REQUEST_CODE = 2;
 
     public static SharedPreferences sharedPreferences;
@@ -83,35 +84,32 @@ public class LoadingActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        // 튜토리얼이 끝나면 권한을 획득하고, 획득하면 스플래쉬 아트 보여주고 앱 실행
         getPermission();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public void getPermission(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {   // 마시멜로우 이상일 경우
 
             int permission_read = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
             int permission_write = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-            if(permission_read == PackageManager.PERMISSION_DENIED || permission_write == PackageManager.PERMISSION_DENIED){
+            if(permission_read == PackageManager.PERMISSION_DENIED ||
+                    permission_write == PackageManager.PERMISSION_DENIED){
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE}, ACTION_MANAGE_READ_REQUEST_CODE);
             }
 
-            if (!Settings.canDrawOverlays(this)) {// 체크
+            else {
+                if (!Settings.canDrawOverlays(this)) {// 체크
 
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
-            }
-            else{
-                if(sharedPreferences.getBoolean("service", false)){
-                    Intent serviceIntent = new Intent(LoadingActivity.this, VocaForegroundService.class);
-                    startForegroundService(serviceIntent);
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:" + getPackageName()));
+                    startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
+                } else {
+                    GoToNextActivity();
                 }
-
-                Intent intent = new Intent(LoadingActivity.this, MainActivity.class);
-                startActivity(intent);
             }
         }
     }
@@ -122,29 +120,43 @@ public class LoadingActivity extends AppCompatActivity {
         if (requestCode == ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
             if (!Settings.canDrawOverlays(this)) {
                 // TODO 동의를 얻지 못했을 경우의 처리
-
+                finish();
             } else {
+                GoToNextActivity();
+            }
+        }
+    }
+
+    private void GoToNextActivity(){
+        new Handler().postDelayed(new Runnable() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void run() {
+
                 // 서비스 인텐트 생성 후 서비스 실행. 이 때 오레오 이전 버전과 이후 버전에서 서비스를 시작하는 방식이 조금 다르다.
                 if(sharedPreferences.getBoolean("service", false)){
                     Intent serviceIntent = new Intent(LoadingActivity.this, VocaForegroundService.class);
                     startForegroundService(serviceIntent);
                 }
+
                 Intent intent = new Intent(LoadingActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
-        }
+        }, 1500);
     }
+
 
     @Override
     protected void onPause() {
         super.onPause();
-        finish();
+        //finish();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
+        //finish();
     }
 
     @Override
@@ -152,4 +164,5 @@ public class LoadingActivity extends AppCompatActivity {
         super.onDestroy();
         finish();
     }
+
 }

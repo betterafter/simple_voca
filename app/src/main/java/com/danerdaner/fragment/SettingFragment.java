@@ -1,4 +1,4 @@
-package com.danerdaner.activity;
+package com.danerdaner.fragment;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +12,9 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.widget.Toast;
 
+import com.danerdaner.activity.LoadingActivity;
+import com.danerdaner.activity.MainActivity;
+import com.danerdaner.activity.Setting_Developer_Info_Activity;
 import com.danerdaner.simple_voca.R;
 import com.danerdaner.simple_voca.VocaForegroundService;
 

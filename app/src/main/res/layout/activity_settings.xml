@@ -43,7 +43,7 @@
 
         <fragment
             android:id="@+id/fragment"
-            android:name="com.danerdaner.activity.SettingFragment"
+            android:name="com.danerdaner.fragment.SettingFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="9"/>
