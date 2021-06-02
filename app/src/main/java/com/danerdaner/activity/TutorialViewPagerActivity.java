@@ -57,6 +57,9 @@ public class TutorialViewPagerActivity extends AppCompatActivity {
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
+        if(TutorialChecker.checkUserUseTutorial(getApplicationContext())){
+            mPager.setVisibility(View.GONE);
+        }
         pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(pagerAdapter);
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -76,6 +79,8 @@ public class TutorialViewPagerActivity extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {
             }
         });
+
+
 
         dotsIndicator = findViewById(R.id.dots_indicator);
         dotsIndicator.setViewPager(mPager);

@@ -113,6 +113,10 @@ public class AddEditVocaActivity extends AppCompatActivity {
                 String memo = add_voca_memo.getText().toString();
                 String group = add_select_group_spinner.getSelectedItem().toString();
 
+                System.out.println(example);
+                System.out.println(example_mean);
+                System.out.println(memo);
+
                 if(!checkString(word, getApplicationContext())) return;
                 if(!checkString(mean, getApplicationContext())) return;
                 if(!checkString(announce, getApplicationContext())) return;
