@@ -50,7 +50,7 @@ public class VocaForegroundService extends Service {
         // 오래오 윗버젼일 때는 아래와 같이 채널을 만들어 Notification과 연결해야 한다.
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("channel", "voca",
-                    NotificationManager.IMPORTANCE_DEFAULT);
+                    NotificationManager.IMPORTANCE_LOW);
 
             // Notification과 채널 연걸
             mNotificationManager = ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
@@ -69,10 +69,11 @@ public class VocaForegroundService extends Service {
             // Notification 세팅
             notification
                     = new NotificationCompat.Builder(getApplicationContext(), "channel")
-                    .setSmallIcon(R.mipmap.icon_service_black)
-                    .setLargeIcon(bitmap)
+                    .setSmallIcon(R.mipmap.icon_main_3)
                     .setContentTitle(data[0] + "  [" + data[2] + "]")
                     .setContentIntent(pendingIntent)
+                    .setColor(getResources().getColor(R.color.mainBlue))
+                    .setColorized(true)
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                     .setContentText(data[1]);
 

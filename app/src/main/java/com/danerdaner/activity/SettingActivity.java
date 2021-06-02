@@ -44,7 +44,6 @@ public class SettingActivity extends AppCompatActivity {
             byte[] buffer = new byte[inputStream.available() + 2];
             inputStream.read(buffer);
             file = new String(buffer);
-            System.out.println(file);
             csvBuilder.StringToDatabase(file);
 
             Toast.makeText(getApplicationContext(),

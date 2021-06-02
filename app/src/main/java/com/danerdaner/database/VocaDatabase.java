@@ -215,7 +215,7 @@ public class VocaDatabase extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         String sql = "SELECT * FROM " + tableName;
         Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
-        if(cursor.getCount() <= 0){
+        if(cursor.getCount() <= 0 && SettingFragment.service != null){
             SettingFragment.service.setChecked(false);
         }
     }

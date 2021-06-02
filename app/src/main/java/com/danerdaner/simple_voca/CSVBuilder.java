@@ -32,21 +32,20 @@ public class CSVBuilder {
         ArrayList<ListItem> dataBase = new ArrayList<ListItem>();
         valid = getWordsFromCSVString(file, dataBase);
 
-        System.out.println(valid);
-
         if(valid == null){
+            System.out.println(valid);
             return;
         }
+
         if(!LoadingActivity.categoryDatabase.contains(valid)){
             LoadingActivity.categoryDatabase.insert(valid , "");
         }
-        System.out.println(valid);
-        System.out.println(dataBase);
         LoadingActivity.vocaDatabase.listToDatabase(dataBase);
         MainActivity.vocaRecyclerViewAdapter.notifyDataSetChanged();
     }
 
     public String getWordsFromCSVString(String data, ArrayList<ListItem> ret){
+
         String[] line = data.split("\n");
         String category = "";
         for(int i = 0 ; i < line.length; i ++){
@@ -58,11 +57,10 @@ public class CSVBuilder {
                 i --;
             }
         }
-        System.out.println(data);
-        for(int i = 0; i < ret.size(); i++) System.out.println(ret.get(i));
         if(ret.size() <= 0){
             return null;
         }
+
         category = ret.get(0).data[7];
         return category;
     }

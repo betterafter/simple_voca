@@ -251,15 +251,6 @@ public class Category_MainActivity extends AppCompatActivity {
         FileIOManager fileIOManager = new FileIOManager();
         ArrayList<ListItem> list = new ArrayList<ListItem>();
         LoadingActivity.vocaDatabase.makeCategoryList(list, category);
-        for(int i = 0; i < list.size(); i++){
-            System.out.println(list.get(i).getData()[0]);
-            System.out.println(list.get(i).getData()[1]);
-            System.out.println(list.get(i).getData()[2]);
-            System.out.println(list.get(i).getData()[3]);
-            System.out.println(list.get(i).getData()[4]);
-            System.out.println(list.get(i).getData()[5]);
-        }
-
 
         File xlsFile = fileIOManager.writeCategoryFile(category,csvBuilder.getCSVString(list));;
         Intent shareIntent = new Intent(Intent.ACTION_SEND);

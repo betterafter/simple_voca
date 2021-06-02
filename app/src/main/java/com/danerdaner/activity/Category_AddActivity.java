@@ -26,6 +26,7 @@ public class Category_AddActivity extends AppCompatActivity {
     private String category_name_str;
     private String category_content_str;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,23 +49,6 @@ public class Category_AddActivity extends AppCompatActivity {
             category_add_content.setText(category_content_str);
 
         category_add_add_button = findViewById(R.id.category_add_add_button);
-        category_add_add_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String name = category_add_name.getText().toString();
-                String content = category_add_content.getText().toString();
-
-                if(!checkString(name, getApplicationContext())) return;
-                content = changeChar(content);
-
-                //진짜로 저장할 것인지 물어보는 다이얼로그 추가할 것
-                LoadingActivity.categoryDatabase.insert(name, content);
-                LoadingActivity.categoryDatabase.makeList(LoadingActivity.categoryList);
-
-                Intent intent = new Intent(Category_AddActivity.this, Category_MainActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -83,6 +67,36 @@ public class Category_AddActivity extends AppCompatActivity {
         if(category_content_str != null && !category_content_str.equals(""))
             category_add_content.setText(category_content_str);
 
+        category_add_add_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String name = category_add_name.getText().toString();
+                String content = category_add_content.getText().toString();
+
+                if(name.length() <= 0){
+                    Toast.makeText(getApplicationContext(),
+                            "카테고리 이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(!checkString(name, getApplicationContext())) return;
+                content = changeChar(content);
+
+                if(intent != null && intent.getStringExtra("type") != null && intent.getStringExtra("type").equals("edit")){{
+                    LoadingActivity.categoryDatabase.update(name, content,
+                            category_name_str, category_content_str);
+                    LoadingActivity.categoryDatabase.makeList(LoadingActivity.categoryList);
+                }}
+
+                else {
+                    //진짜로 저장할 것인지 물어보는 다이얼로그 추가할 것
+                    LoadingActivity.categoryDatabase.insert(name, content);
+                    LoadingActivity.categoryDatabase.makeList(LoadingActivity.categoryList);
+                }
+
+                Intent intent = new Intent(Category_AddActivity.this, Category_MainActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private boolean checkString(String str, Context context){
@@ -94,7 +108,7 @@ public class Category_AddActivity extends AppCompatActivity {
             return true;
         }
         else{
-            Toast.makeText(context, "카테고리 입력에 특수문자 및 공백을 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "카테고리 이름 입력에 특수문자 및 공백을 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
             return false;
         }
     }
@@ -111,6 +125,10 @@ public class Category_AddActivity extends AppCompatActivity {
 
         return res;
     }
+
+    
+
+
 
 
     @Override

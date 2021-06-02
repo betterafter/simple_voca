@@ -203,15 +203,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-    }
-
-
-
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
         vocaRecyclerViewAdapter.notifyDataSetChanged();
 
@@ -221,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
         CategorySubTitle.setText(LoadingActivity.SELECTED_CATEGORY_SUBTITLE);
 
         // 각 아이템 메뉴 옵션들 보이는거 전부 없애기
-        if(ItemTouchHelperCallback.viewHolders.size() > 0) {
+        if (ItemTouchHelperCallback.viewHolders.size() > 0) {
             vocaRecyclerViewAdapter.
                     notifyItemChanged(ItemTouchHelperCallback.viewHolders.get(0).getViewHolder().getAdapterPosition());
             ItemTouchHelperCallback.viewHolders.remove(0);
@@ -232,10 +223,10 @@ public class MainActivity extends AppCompatActivity {
             public void onGlobalLayout() {
 
                 firstVisibleItemPosition
-                        = ((LinearLayoutManager) main_recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+                        = ((LinearLayoutManager) main_recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
 
                 lastVisibleItemPosition
-                        = ((LinearLayoutManager) main_recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
+                        = ((LinearLayoutManager) main_recyclerView.getLayoutManager()).findLastVisibleItemPosition();
 
                 MakeListPager();
                 onRecyclerViewScrollListener(main_recyclerView);
@@ -273,7 +264,17 @@ public class MainActivity extends AppCompatActivity {
         int width = size.x;
         int height = size.y;
 
-        for(int i = 0; i < (double)LoadingActivity.vocaList.size() / (lastVisibleItemPosition - firstVisibleItemPosition + 1); i++){
+        int listSize = lastVisibleItemPosition - firstVisibleItemPosition;
+
+        int len = 0;
+        if(LoadingActivity.vocaList.size() % (listSize + 1) == 0){
+            len = LoadingActivity.vocaList.size() / (listSize + 1);
+        }
+        else{
+            len = LoadingActivity.vocaList.size() / (listSize + 1) + 1;
+        }
+
+        for(int i = 0; i < len; i++){
 
             final int temp = i;
             Button button = new Button(mainActivity.getApplicationContext());
@@ -333,12 +334,12 @@ public class MainActivity extends AppCompatActivity {
 
                     // 이렇게 하면 smoothScrollToPosition 써서 인덱싱이 제대로 안되는 문제를 신경 안쓰고도 스무스하게 움직이게 할 수 있음
                     if(Math.abs(prevSelectedNumber - selectedNumber) <= 5) {
-                        smoothScroller.setTargetPosition(temp * 4);
+                        smoothScroller.setTargetPosition(temp * (listSize + 1));
                         ((LinearLayoutManager) main_recyclerView.getLayoutManager()).startSmoothScroll(smoothScroller);
                     }
                     else
                         ((LinearLayoutManager)main_recyclerView.getLayoutManager()).
-                                scrollToPositionWithOffset(temp * 4, 0);
+                                scrollToPositionWithOffset(temp * (listSize + 1), 0);
                 }
             });
 
@@ -386,6 +387,57 @@ public class MainActivity extends AppCompatActivity {
                 if(newState == recyclerView.SCROLL_STATE_IDLE){
                     isNavigationButtonTouched = false;
                     isFirstTouchedToDrag = true;
+
+//                    if (selectedButtons.size() > 0) {
+//
+//                        if (!isNavigationButtonTouched) {
+//
+//                            int firstVisibleItemPosition
+//                                    = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+//
+//                            int lastVisibleItemPosition
+//                                    = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
+//
+//
+//                            // 이전 선택 버튼 색 바꾸기
+//                            selectedButtons.get(selectedNumber)
+//                                    .setTextColor(mainActivity.getResources().getColor(R.color.backgroundBlack));
+//                            selectedButtons.get(selectedNumber)
+//                                    .getBackground().setColorFilter(mainActivity.getResources().getColor(R.color.white),
+//                                    PorterDuff.Mode.SRC_IN);
+//
+//                            selectedNumber = firstVisibleItemPosition / 4;
+//
+//                            // 선택 버튼 색 바꾸기
+//                            selectedButtons.get(selectedNumber).setTextColor(mainActivity.getResources().getColor(R.color.white));
+//                            selectedButtons.get(selectedNumber).getBackground().
+//                                    setColorFilter(mainActivity.getResources().getColor(R.color.mainBlue), PorterDuff.Mode.SRC_IN);
+//
+//
+//                            if (lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1) {
+//
+//                                // 이전 선택 버튼 색 바꾸기
+//                                selectedButtons.get(selectedNumber)
+//                                        .setTextColor(mainActivity.getResources().getColor(R.color.backgroundBlack));
+//                                selectedButtons.get(selectedNumber)
+//                                        .getBackground().setColorFilter(mainActivity.getResources().getColor(R.color.white),
+//                                        PorterDuff.Mode.SRC_IN);
+//
+//                                selectedNumber = ((LinearLayout) navigationScrollView.getChildAt(0)).getChildCount() - 1;
+//
+//                                // 선택 버튼 색 바꾸기
+//                                selectedButtons.get(selectedNumber).setTextColor(mainActivity.getResources().getColor(R.color.white));
+//                                selectedButtons.get(selectedNumber).getBackground().
+//                                        setColorFilter(mainActivity.getResources().getColor(R.color.mainBlue), PorterDuff.Mode.SRC_IN);
+//
+//                            }
+//
+//                            if (selectedNumber % 5 == 0) {
+//                                float position = ((LinearLayout) navigationScrollView.getChildAt(0)).getChildAt(selectedNumber).getX();
+//                                navigationScrollView.scrollTo((int) position, 0);
+//                            }
+//                        }
+//                    }
                 }
                 else if(newState == recyclerView.SCROLL_STATE_DRAGGING){
                     LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
@@ -447,6 +499,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
+
+
             }
         };
         recyclerView.addOnScrollListener(onScrollListener);

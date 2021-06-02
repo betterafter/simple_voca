@@ -100,6 +100,21 @@ public class categoryDatabase extends SQLiteOpenHelper {
 
     }
 
+    public void update(String category, String content, String prevName, String prevContent){
+
+
+        SQLiteDatabase db = getWritableDatabase();
+        String sql
+                = "update " + tableName +
+                " set name = " + "\"" + category + "\"" + "," +
+                " content = " + "\"" + content + "\"" +
+                " where name = " + "\"" + prevName + "\"" +
+                " and content = " + "\"" + prevContent + "\"";
+
+
+        db.execSQL(sql);
+    }
+
     public void change(int index, String name, String content){
         SQLiteDatabase db = getWritableDatabase();
         String[] colmn = new String[2];

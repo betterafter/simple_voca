@@ -107,8 +107,8 @@ public class ScreenOnActivity extends AppCompatActivity {
         String[] data = LoadingActivity.vocaDatabase.getWordChangerString(RandomIdx, LoadingActivity.vocaList);
         word.setText(data[0]);
         mean.setText(data[1]);
-        announce.setText(data[2]);
-        example.setText(data[3]);
+        announce.setText("[" + data[2] + "]");
+        example.setText("[예문] " + data[3]);
         example_mean.setText(data[4]);
         memo.setText(data[5]);
         imageView.setImageDrawable(new BitmapDrawable(

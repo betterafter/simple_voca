@@ -268,14 +268,14 @@ public class AddEditVocaActivity extends AppCompatActivity {
             Uri selectedImageUri = data.getData();
             TextView picture_text = findViewById(R.id.picture_text);
             picture_text.setText("");
-            int width = ((LinearLayout)add_voca_select_picture_imageview.getParent()).getWidth();
+            int width = ((LinearLayout)add_voca_select_picture_imageview.getParent().getParent()).getWidth();
             int height = ((LinearLayout)add_voca_select_picture_imageview.getParent()).getHeight();
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     300, 300
             );
             params.gravity = Gravity.CENTER;
-            add_voca_select_picture_imageview.getLayoutParams().width = width / 2;
-            add_voca_select_picture_imageview.getLayoutParams().height = width / 2;
+            add_voca_select_picture_imageview.getLayoutParams().width = width / 4;
+            add_voca_select_picture_imageview.getLayoutParams().height = width / 4;
             //add_voca_select_picture_imageview.setLayoutParams(params);
             add_voca_select_picture_imageview.setImageURI(selectedImageUri);
         }
