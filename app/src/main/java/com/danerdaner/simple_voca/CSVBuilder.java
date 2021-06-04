@@ -9,6 +9,9 @@ import java.util.ArrayList;
 
 public class CSVBuilder {
 
+    private final String INLINE = ",";
+    private final String LINER = "@";
+
     public String getCSVString(ArrayList<ListItem> list){
         String ret = "";
         for (ListItem line:list) {
@@ -21,9 +24,9 @@ public class CSVBuilder {
         String ret = "";
         for(int i = 0 ; i < line.data.length; i ++){
             ret += line.data[i];
-            ret += ',';
+            ret += INLINE;
         }
-        ret += '\n';
+        ret += LINER;
         return ret;
     }
 
@@ -47,7 +50,7 @@ public class CSVBuilder {
     }
 
     public String getWordsFromCSVString(String data, ArrayList<ListItem> ret){
-        String[] line = data.split("\n");
+        String[] line = data.split(LINER);
         String category = "";
         for(int i = 0 ; i < line.length; i ++){
             ret.add(getLineFromString(line[i]));
@@ -68,7 +71,7 @@ public class CSVBuilder {
     }
 
     public ListItem getLineFromString(String line){
-        String[] elements = line.split(",");
+        String[] elements = line.split(INLINE);
         ListItem item = new ListItem(elements, 0);
         return item;
     }
