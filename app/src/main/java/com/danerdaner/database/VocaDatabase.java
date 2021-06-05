@@ -225,10 +225,8 @@ public class VocaDatabase extends SQLiteOpenHelper {
 
         vocaList.clear();
         if(LoadingActivity.sharedPreferences.getString("word_order", "알파벳 순서").equals("무작위로")){
-            if(LoadingActivity.vocaShuffleList.size() > 0) {
-                vocaList.addAll(LoadingActivity.vocaShuffleList);
-                return;
-            }
+            vocaList.addAll((LoadingActivity.vocaShuffleLists.get(LoadingActivity.SELECTED_CATEGORY_NAME)));
+            return;
         }
 
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
@@ -249,8 +247,6 @@ public class VocaDatabase extends SQLiteOpenHelper {
             do {
                 String[] data = new String[]{
                         cursor.getString(1), cursor.getString(2), cursor.getString(3),
-//                makeRealString(cursor.getString(4)), makeRealString(cursor.getString(5)),
-//                makeRealString(cursor.getString(6)),
                         cursor.getString(4), cursor.getString(5), cursor.getString(6),
                         cursor.getString(7), cursor.getString(8), cursor.getString(9)
                 };
@@ -266,6 +262,46 @@ public class VocaDatabase extends SQLiteOpenHelper {
 
     }
 
+    // 무작위 단어 순서 만들 때
+    // 맨 처음에 미리 만들어서 가지고 있다가
+    // 단어 추가하면 만든 리스트 바로 뒤에 추가만 하고
+    // 설정창에서 무작위로 바꿀 때마다 불러서 순서 다시 셔플함
+    public void makeShuffleList(String category_name){
+
+        ArrayList<ListItem> arrayList = new ArrayList<>();
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+
+        String sql;
+        if(category_name.equals("전체")){
+            sql = "SELECT * FROM " + tableName;
+        }
+        else{
+            sql = "SELECT * FROM " + tableName
+                    + " where sort = " + "\"" + category_name + "\"";
+        }
+
+
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
+        cursor.moveToFirst();
+
+
+        if(cursor.getCount() > 0){
+            do {
+                String[] data = new String[]{
+                        cursor.getString(1), cursor.getString(2), cursor.getString(3),
+                        cursor.getString(4), cursor.getString(5), cursor.getString(6),
+                        cursor.getString(7), cursor.getString(8), cursor.getString(9)
+                };
+                arrayList.add(new ListItem(data, PARENT_VIEW));
+            }
+            while(cursor.moveToNext());
+        }
+        Collections.shuffle(arrayList);
+        LoadingActivity.vocaShuffleLists.put(category_name, arrayList);
+    }
+
+
+    // 카테고리 공유하기 기능 사용할 때 이걸로 뽑아서 보내줌
     public void makeList(ArrayList<ListItem> vocaList, String category_name){
 
         vocaList.clear();
@@ -282,21 +318,12 @@ public class VocaDatabase extends SQLiteOpenHelper {
             do {
                 String[] data = new String[]{
                         cursor.getString(1), cursor.getString(2), cursor.getString(3),
-//                makeRealString(cursor.getString(4)), makeRealString(cursor.getString(5)),
-//                makeRealString(cursor.getString(6)),
                         cursor.getString(4), cursor.getString(5), cursor.getString(6),
                         cursor.getString(7), cursor.getString(8), cursor.getString(9)
                 };
                 vocaList.add(new ListItem(data, PARENT_VIEW));
             }
             while(cursor.moveToNext());
-        }
-
-        if(LoadingActivity.sharedPreferences.getString("word_order", "알파벳 순서").equals("알파벳 순서")){
-            Collections.sort(vocaList);
-        }
-        else{
-            Collections.shuffle(vocaList);
         }
     }
 
@@ -395,20 +422,21 @@ public class VocaDatabase extends SQLiteOpenHelper {
     public void listToDatabase(ArrayList<ListItem> updatedTableColumns){
 
         for(int i = 0; i < updatedTableColumns.size(); i++){
+            if(updatedTableColumns.get(i).getData().length < 2) continue;
             if(CheckIfWordInCategory(updatedTableColumns.get(i).getData()[0], updatedTableColumns.get(i).getData()[7])){
                 continue;
             }
-            for(int j = 0; j < updatedTableColumns.size(); j ++){
-                insert(updatedTableColumns.get(j).getData()[0], updatedTableColumns.get(j).getData()[1],
-                        updatedTableColumns.get(j).getData()[2],
 
-                        updatedTableColumns.get(j).getData()[3].replaceAll(code, ","),
-                        updatedTableColumns.get(j).getData()[4].replaceAll(code, ","),
-                        updatedTableColumns.get(j).getData()[5].replaceAll(code, ","),
+            insert(updatedTableColumns.get(i).getData()[0], updatedTableColumns.get(i).getData()[1],
+                    updatedTableColumns.get(i).getData()[2],
 
-                        updatedTableColumns.get(j).getData()[6],updatedTableColumns.get(j).getData()[7],
-                        updatedTableColumns.get(j).getData()[8]);
-            }
+                    updatedTableColumns.get(i).getData()[3].replaceAll(code, ","),
+                    updatedTableColumns.get(i).getData()[4].replaceAll(code, ","),
+                    updatedTableColumns.get(i).getData()[5].replaceAll(code, ","),
+
+                    updatedTableColumns.get(i).getData()[6],updatedTableColumns.get(i).getData()[7],
+                    updatedTableColumns.get(i).getData()[8]);
+
         }
     }
 
@@ -450,7 +478,16 @@ public class VocaDatabase extends SQLiteOpenHelper {
     }
 
 
+    public int getAllWordSize(String categoryName){
 
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String sql =
+                "select * " +
+                        "from " + tableName;
+
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
+        return cursor.getCount();
+    }
 
 
 

@@ -7,6 +7,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
+import com.danerdaner.Items.ListItem;
 import com.danerdaner.activity.LoadingActivity;
 import com.danerdaner.adapter.VocaRecyclerViewAdapter;
 import com.danerdaner.database.VocaDatabase;
@@ -122,6 +123,8 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
                 if(dX == 0){
                     // 외운단어 표시일 때
                     if(swipeState == 1){
+
+                        ListItem item;
                         ((VocaRecyclerViewAdapter)recyclerView.getAdapter()).removeAllChildView();
 
                         if(viewHolder.getAdapterPosition() != RecyclerView.NO_POSITION){
@@ -130,30 +133,73 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
                             String category = data[7];
                             int index = LoadingActivity.vocaDatabase.findTableIndex(word, category);
 
+                            // 플래그 세우기
                             if(!data[8].equals(VocaDatabase.remindFlag)) {
                                 LoadingActivity.vocaDatabase.change(
                                         index,
                                         data[0], data[1], data[2], data[3], data[4], data[5],
                                         data[6], data[7], VocaDatabase.remindFlag);
 
+                                item = new ListItem(new String[]{
+                                        data[0], data[1], data[2], data[3], data[4], data[5],
+                                        data[6], data[7], VocaDatabase.remindFlag
+                                }, 0);
 
-                                LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
+                                //LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
                             }
+                            // 플래그 지우기
                             else {
                                 LoadingActivity.vocaDatabase.change(
                                         index,
                                         data[0], data[1], data[2], data[3], data[4], data[5],
                                         data[6], data[7], VocaDatabase.nullFlag);
 
-                                LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
+                                item = new ListItem(new String[]{
+                                        data[0], data[1], data[2], data[3], data[4], data[5],
+                                        data[6], data[7], VocaDatabase.nullFlag
+                                }, 0);
+
+                                //LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
                             }
+
+                            // 전체 셔플에도 북마크 반영한 결과로 수정하기
+                            ArrayList<ListItem> allArrayList = new ArrayList<>();
+                            allArrayList.addAll(LoadingActivity.vocaShuffleLists.get("전체"));
+                            for(int i = 0; i < allArrayList.size(); i++){
+                                if(allArrayList.get(i).getData()[0].equals(data[0]) &&
+                                        allArrayList.get(i).getData()[7].equals(data[7])){
+                                    allArrayList.remove(i);
+                                    allArrayList.add(i, item);
+
+                                    LoadingActivity.vocaShuffleLists.put("전체", allArrayList);
+                                    break;
+                                }
+                            }
+
+                            // shuffle에도 북마크 반영한 결과 수정하기
+                            ArrayList<ListItem> specArrayList = new ArrayList<>();
+                            specArrayList.addAll(LoadingActivity.vocaShuffleLists.get(data[7]));
+                            for(int i = 0; i < specArrayList.size(); i++){
+                                if(specArrayList.get(i).getData()[0].equals(data[0]) &&
+                                        specArrayList.get(i).getData()[7].equals(data[7])){
+                                    specArrayList.remove(i);
+                                    specArrayList.add(i, item);
+
+                                    LoadingActivity.vocaShuffleLists.put(data[7], specArrayList);
+                                    break;
+                                }
+                            }
+
+
                         }
+                        LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
                         recyclerView.getAdapter().notifyDataSetChanged();
                         swipeState = 0;
                     }
                     // 북마크 표시일 때
                     else if(swipeState == 2){
                         ((VocaRecyclerViewAdapter)recyclerView.getAdapter()).removeAllChildView();
+                        ListItem item;
 
                         if(viewHolder.getAdapterPosition() != RecyclerView.NO_POSITION){
                             String data[] = LoadingActivity.vocaList.get(viewHolder.getAdapterPosition()).getData();
@@ -167,8 +213,13 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
                                         data[0], data[1], data[2], data[3], data[4], data[5],
                                         data[6], data[7], VocaDatabase.importantFlag);
 
+                                item = new ListItem(new String[]{
+                                        data[0], data[1], data[2], data[3], data[4], data[5],
+                                        data[6], data[7], VocaDatabase.importantFlag
+                                }, 0);
 
-                                LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
+
+                                //LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
                             }
                             else {
                                 LoadingActivity.vocaDatabase.change(
@@ -176,9 +227,43 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
                                         data[0], data[1], data[2], data[3], data[4], data[5],
                                         data[6], data[7], VocaDatabase.nullFlag);
 
-                                LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
+                                item = new ListItem(new String[]{
+                                        data[0], data[1], data[2], data[3], data[4], data[5],
+                                        data[6], data[7], VocaDatabase.nullFlag
+                                }, 0);
+
+                               //LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
+                            }
+
+                            // 전체 셔플에도 북마크 반영한 결과로 수정하기
+                            ArrayList<ListItem> allArrayList = new ArrayList<>();
+                            allArrayList.addAll(LoadingActivity.vocaShuffleLists.get("전체"));
+                            for(int i = 0; i < allArrayList.size(); i++){
+                                if(allArrayList.get(i).getData()[0].equals(data[0]) &&
+                                        allArrayList.get(i).getData()[7].equals(data[7])){
+                                    allArrayList.remove(i);
+                                    allArrayList.add(i, item);
+
+                                    LoadingActivity.vocaShuffleLists.put("전체", allArrayList);
+                                    break;
+                                }
+                            }
+
+                            // shuffle에도 북마크 반영한 결과 수정하기
+                            ArrayList<ListItem> specArrayList = new ArrayList<>();
+                            specArrayList.addAll(LoadingActivity.vocaShuffleLists.get(data[7]));
+                            for(int i = 0; i < specArrayList.size(); i++){
+                                if(specArrayList.get(i).getData()[0].equals(data[0]) &&
+                                        specArrayList.get(i).getData()[7].equals(data[7])){
+                                    specArrayList.remove(i);
+                                    specArrayList.add(i, item);
+
+                                    LoadingActivity.vocaShuffleLists.put(data[7], specArrayList);
+                                    break;
+                                }
                             }
                         }
+                        LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
                         recyclerView.getAdapter().notifyDataSetChanged();
                         swipeState = 0;
                     }

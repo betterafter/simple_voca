@@ -36,13 +36,14 @@ public class CSVBuilder {
         valid = getWordsFromCSVString(file, dataBase);
 
         if(valid == null){
-            System.out.println(valid);
             return;
         }
 
         if(!LoadingActivity.categoryDatabase.contains(valid)){
             LoadingActivity.categoryDatabase.insert(valid , "");
         }
+        LoadingActivity.vocaDatabase.makeShuffleList(valid);
+
         LoadingActivity.vocaDatabase.listToDatabase(dataBase);
         MainActivity.vocaRecyclerViewAdapter.notifyDataSetChanged();
     }
@@ -55,12 +56,7 @@ public class CSVBuilder {
         for(int i = 0 ; i < line.length; i ++){
             ret.add(getLineFromString(line[i]));
         }
-        for(int i = 0 ; i < ret.size(); i ++){
-            if(ret.get(i).data.length != 9){
-                ret.remove(i);
-                i --;
-            }
-        }
+
         if(ret.size() <= 0){
             return null;
         }

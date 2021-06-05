@@ -18,8 +18,6 @@ import com.danerdaner.activity.Setting_Developer_Info_Activity;
 import com.danerdaner.simple_voca.R;
 import com.danerdaner.simple_voca.VocaForegroundService;
 
-import java.util.Collections;
-
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
@@ -72,7 +70,7 @@ public class SettingFragment extends PreferenceFragment {
         category_select.setEntryValues(category_values);
         category_select.setSummary(category_names[0]);
 
-        font_size.setSummary(sharedPreferences.getString("font_size", "24"));
+        font_size.setSummary(sharedPreferences.getString("font_size", "보통"));
         word_order.setSummary(sharedPreferences.getString("word_order", "알파벳 순서"));
         category_select.setSummary(sharedPreferences.getString("category", "전체"));
 
@@ -84,7 +82,7 @@ public class SettingFragment extends PreferenceFragment {
         @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-            font_size.setSummary(sharedPreferences.getString("font_size", "24"));
+            font_size.setSummary(sharedPreferences.getString("font_size", "보통"));
             word_order.setSummary(sharedPreferences.getString("word_order", "알파벳 순서"));
             category_select.setSummary(sharedPreferences.getString("category", "전체"));
 
@@ -95,10 +93,13 @@ public class SettingFragment extends PreferenceFragment {
             MainActivity.vocaRecyclerViewAdapter.notifyDataSetChanged();
             MainActivity.vocaRecyclerViewAdapter.notifyItemRangeChanged(0, LoadingActivity.vocaList.size());
 
+            // 무작위로 로 바꿀 때마다 셔플 다시 해서 만듬
             if (s.equals("word_order")){
                 if(sharedPreferences.getString("word_order", "알파벳 순서").equals("무작위로")){
-                    LoadingActivity.vocaDatabase.makeList( LoadingActivity.vocaShuffleList);
-                    Collections.shuffle(LoadingActivity.vocaShuffleList);
+                    for(int i = 0; i < LoadingActivity.categoryList.size(); i++){
+                        LoadingActivity.vocaDatabase.makeShuffleList(
+                                LoadingActivity.categoryList.get(i).getData()[0]);
+                    }
                 }
             }
 

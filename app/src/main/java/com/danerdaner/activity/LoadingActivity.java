@@ -21,7 +21,8 @@ import com.danerdaner.simple_voca.R;
 import com.danerdaner.simple_voca.VocaForegroundService;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,6 +39,9 @@ public class LoadingActivity extends AppCompatActivity {
     public static ArrayList<categoryListItem> categoryList = new ArrayList<>();
     public static ArrayList<ScoreListItem> categoryTestResultList = new ArrayList<>();
     public static ArrayList<ListItem> lockVocaList = new ArrayList<>();
+
+    public static HashMap<String, ArrayList<ListItem> > vocaShuffleLists = new HashMap<>();
+
     public static ArrayList<ListItem> vocaShuffleList = new ArrayList<>();
 
     public static String SELECTED_CATEGORY_NAME = "전체";
@@ -49,6 +53,8 @@ public class LoadingActivity extends AppCompatActivity {
     public static SharedPreferences sharedPreferences;
     public static boolean WordShuffleCheck = false;
 
+    public boolean isFirstStart;
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
    // @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -57,17 +63,15 @@ public class LoadingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load);
 
+        Intent TutorialIntent = getIntent();
+        isFirstStart = TutorialIntent.getBooleanExtra("isFirstStart", false);
+
         WordShuffleCheck = false;
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String lock_category_name = sharedPreferences.getString("category", "전체");
 
         vocaDatabase = new VocaDatabase(getApplicationContext(), "voca", null, 2);
         vocaDatabase.makeList(lockVocaList, lock_category_name);
-
-        vocaDatabase.makeList(vocaShuffleList);
-        Collections.shuffle(vocaShuffleList);
-        vocaDatabase.makeList(vocaList);
-
 
         categoryDatabase = new categoryDatabase(getApplicationContext(), "category", null, 2);
         if(categoryDatabase.getSize() == 0){
@@ -77,6 +81,27 @@ public class LoadingActivity extends AppCompatActivity {
         SELECTED_CATEGORY_SUBTITLE = categoryDatabase.getCategorySubTitle(SELECTED_CATEGORY_NAME);
 
         ScoreDatabase = new ScoreDatabase(getApplicationContext(), "Score", null, 3);
+
+        for(int i = 0; i < categoryList.size(); i++){
+            vocaDatabase.makeShuffleList(categoryList.get(i).getData()[0]);
+        }
+
+        makeTutorialItems();
+        vocaDatabase.makeList(vocaList);
+
+
+
+
+        Iterator<String> keys = vocaShuffleLists.keySet().iterator();
+        while(keys.hasNext()){
+            String key = keys.next();
+            System.out.println(key);
+            for(int i = 0; i < vocaShuffleLists.get(key).size(); i++){
+                System.out.println(vocaShuffleLists.get(key).get(i).getData()[0]);
+            }
+            System.out.println("----------------------");
+        }
+
 
     }
 
@@ -145,6 +170,53 @@ public class LoadingActivity extends AppCompatActivity {
             }
         }, 1500);
     }
+
+
+
+    private void makeTutorialItems(){
+
+        if(isFirstStart){
+
+            LoadingActivity.vocaDatabase.insert(
+                    "단어를 꾹 눌러보세요.",  "단어를 편집 또는 삭제할 수 있어요.", "",
+                    "", "", "", "", "전체", "0"
+            );
+
+            LoadingActivity.vocaDatabase.insert(
+                    "북마크 기능을 사용해 보세요.",
+                    "단어를 왼쪽에서 오른쪽으로 끌어다가 놓으면 북마크 설정을 할 수 있습니다.", "",
+                    "", "", "", "", "전체", "0"
+            );
+
+            LoadingActivity.vocaDatabase.insert(
+                    "외움 표시를 해보세요.",
+                    "단어를 오른쪽에서 왼쪽으로 끌어다가 놓으면 외움 표시를 할 수 있습니다.", "",
+                    "", "", "", "", "전체", "0"
+            );
+
+            LoadingActivity.vocaDatabase.insert(
+                    "단어를 추가 해보세요.",
+                    "아래 메뉴에서 단어를 추가할 수 있습니다.", "",
+                    "", "", "", "", "전체", "0"
+            );
+
+            LoadingActivity.vocaDatabase.insert(
+                    "카테고리로 단어장을 관리 해보세요.",
+                    "자신의 학습 목표에 맞게 카테고리를 만들고 그 안에 단어를 저장해서 외워보세요.", "",
+                    "", "", "", "", "전체", "0"
+            );
+
+            LoadingActivity.vocaDatabase.insert(
+                    "카테고리 별로 테스트를 진행 해보세요.",
+                    "카테고리 목록의 퀴즈 버튼을 눌러 자신의 학습을 점검해보세요.", "",
+                    "", "", "", "", "전체", "0"
+            );
+        }
+
+
+    }
+
+
 
 
     @Override

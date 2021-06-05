@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -23,6 +24,7 @@ import com.danerdaner.adapter.VocaGridViewAdapter;
 import com.danerdaner.adapter.VocaRecyclerViewAdapter;
 import com.danerdaner.simple_voca.ItemTouchHelperCallback;
 import com.danerdaner.simple_voca.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -47,11 +49,6 @@ public class MainActivity extends AppCompatActivity {
     private static boolean isNavigationButtonTouched = false;
 
     public static RecyclerView.SmoothScroller smoothScroller;
-
-
-    private ImageButton main_add_word_button;
-    private ImageButton main_category_button;
-    private ImageButton main_setting_button;
     private static HorizontalScrollView navigationScrollView;
 
     private TextView CategoryTitle;
@@ -77,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     private static int lastVisibleItemPosition;
 
 
-
+    private BottomNavigationView bottomNavigationView;
 
 
 
@@ -86,6 +83,34 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        // 바텀 네비게이션 바 기능
+        bottomNavigationView = findViewById(R.id.main_voca_menu);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                switch (item.getItemId()){
+                    case R.id.action_category:
+                        Intent intent1 = new Intent(MainActivity.this, Category_MainActivity.class);
+                        startActivity(intent1);
+                        break;
+                    case R.id.action_add:
+                        Intent intent = new Intent(MainActivity.this, AddEditVocaActivity.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.action_setting:
+                        Intent intent2 = new Intent(MainActivity.this, SettingActivity.class);
+                        startActivity(intent2);
+                        break;
+                }
+
+                return false;
+            }
+        });
+
+
 
 
         isNavigationButtonTouched = false;
@@ -109,26 +134,6 @@ public class MainActivity extends AppCompatActivity {
         CategoryTitle = findViewById(R.id.main_category_name);
         CategorySubTitle = findViewById(R.id.main_category_subtitle);
 
-        main_category_button = findViewById(R.id.main_category_button);
-        main_category_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Category_MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-        // 단어 추가 버튼 기능
-        main_add_word_button = findViewById(R.id.main_add_word_button);
-        main_add_word_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AddEditVocaActivity.class);
-                startActivity(intent);
-            }
-        });
-
 
         // 리사이클러뷰 어뎁터 생성
         main_recyclerView = findViewById(R.id.main_recyclerview);
@@ -148,17 +153,6 @@ public class MainActivity extends AppCompatActivity {
 
         // 그리드뷰 생성
         player = new MediaPlayer();
-
-
-        main_setting_button = findViewById(R.id.main_setting_button);
-        main_setting_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-                startActivity(intent);
-            }
-        });
-
 
 
         // 단어 뜻 가리기 버튼 기능 구현 ..................................................................
@@ -196,20 +190,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+        System.out.println(LoadingActivity.SELECTED_CATEGORY_NAME);
+        LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
+        vocaRecyclerViewAdapter.notifyDataSetChanged();
 
-
+        CategoryTitle.setText(LoadingActivity.SELECTED_CATEGORY_NAME);
+        CategorySubTitle.setText(LoadingActivity.SELECTED_CATEGORY_SUBTITLE);
+    }
 
     @Override
     protected void onStart() {
         super.onStart();
-        LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
-        vocaRecyclerViewAdapter.notifyDataSetChanged();
-
 
         selectedNumber = 0;
-        CategoryTitle.setText(LoadingActivity.SELECTED_CATEGORY_NAME);
-        CategorySubTitle.setText(LoadingActivity.SELECTED_CATEGORY_SUBTITLE);
 
         // 각 아이템 메뉴 옵션들 보이는거 전부 없애기
         if (ItemTouchHelperCallback.viewHolders.size() > 0) {
@@ -348,16 +345,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                (width / 7) * 5, ViewGroup.LayoutParams.MATCH_PARENT
+                (width / 7) * 4, ViewGroup.LayoutParams.WRAP_CONTENT
         );
         main_voca_page_list_layout.setLayoutParams(params);
-
+//
         LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(
-                (width / 7) * 5, 0
+                (width / 7) * 4, (width / 7)
         );
         //params2.gravity = Gravity.CENTER;
-        params2.gravity = Gravity.CENTER_HORIZONTAL;
-        params2.weight = 1;
+        //main_voca_page_list.getParent().
+        params2.gravity = Gravity.BOTTOM;
         main_voca_page_list.setLayoutParams(params2);
     }
 
@@ -460,23 +457,7 @@ public class MainActivity extends AppCompatActivity {
                                 = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
 
 
-                        // 이전 선택 버튼 색 바꾸기
-                        selectedButtons.get(selectedNumber)
-                                .setTextColor(mainActivity.getResources().getColor(R.color.backgroundBlack));
-                        selectedButtons.get(selectedNumber)
-                                .getBackground().setColorFilter(mainActivity.getResources().getColor(R.color.white),
-                                PorterDuff.Mode.SRC_IN);
-
-                        selectedNumber = firstVisibleItemPosition / 4;
-
-                        // 선택 버튼 색 바꾸기
-                        selectedButtons.get(selectedNumber).setTextColor(mainActivity.getResources().getColor(R.color.white));
-                        selectedButtons.get(selectedNumber).getBackground().
-                                setColorFilter(mainActivity.getResources().getColor(R.color.mainBlue), PorterDuff.Mode.SRC_IN);
-
-
-                        if (lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1) {
-
+                        try {
                             // 이전 선택 버튼 색 바꾸기
                             selectedButtons.get(selectedNumber)
                                     .setTextColor(mainActivity.getResources().getColor(R.color.backgroundBlack));
@@ -484,18 +465,39 @@ public class MainActivity extends AppCompatActivity {
                                     .getBackground().setColorFilter(mainActivity.getResources().getColor(R.color.white),
                                     PorterDuff.Mode.SRC_IN);
 
-                            selectedNumber = ((LinearLayout) navigationScrollView.getChildAt(0)).getChildCount() - 1;
+                            selectedNumber = firstVisibleItemPosition / 4;
 
                             // 선택 버튼 색 바꾸기
                             selectedButtons.get(selectedNumber).setTextColor(mainActivity.getResources().getColor(R.color.white));
                             selectedButtons.get(selectedNumber).getBackground().
                                     setColorFilter(mainActivity.getResources().getColor(R.color.mainBlue), PorterDuff.Mode.SRC_IN);
 
-                        }
 
-                        if (selectedNumber % 5 == 0) {
-                            float position = ((LinearLayout) navigationScrollView.getChildAt(0)).getChildAt(selectedNumber).getX();
-                            navigationScrollView.scrollTo((int) position, 0);
+                            if (lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1) {
+
+                                // 이전 선택 버튼 색 바꾸기
+                                selectedButtons.get(selectedNumber)
+                                        .setTextColor(mainActivity.getResources().getColor(R.color.backgroundBlack));
+                                selectedButtons.get(selectedNumber)
+                                        .getBackground().setColorFilter(mainActivity.getResources().getColor(R.color.white),
+                                        PorterDuff.Mode.SRC_IN);
+
+                                selectedNumber = ((LinearLayout) navigationScrollView.getChildAt(0)).getChildCount() - 1;
+
+                                // 선택 버튼 색 바꾸기
+                                selectedButtons.get(selectedNumber).setTextColor(mainActivity.getResources().getColor(R.color.white));
+                                selectedButtons.get(selectedNumber).getBackground().
+                                        setColorFilter(mainActivity.getResources().getColor(R.color.mainBlue), PorterDuff.Mode.SRC_IN);
+
+                            }
+
+                            if (selectedNumber % 5 == 0) {
+                                float position = ((LinearLayout) navigationScrollView.getChildAt(0)).getChildAt(selectedNumber).getX();
+                                navigationScrollView.scrollTo((int) position, 0);
+                            }
+                        }
+                        catch(Exception e){
+                            e.printStackTrace();
                         }
                     }
                 }

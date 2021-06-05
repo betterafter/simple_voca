@@ -28,6 +28,7 @@ import com.danerdaner.simple_voca.R;
 import com.danerdaner.simple_voca.VocaForegroundService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -243,8 +244,18 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 viewHolder.add_item_editor.setBackgroundColor(context.getResources().getColor(R.color.black));
             }
 
-            int font_size = Integer.parseInt(LoadingActivity.sharedPreferences.getString("font_size", "24"));
-            viewHolder.add_voca_word.setTextSize(font_size);
+            String type = LoadingActivity.sharedPreferences.getString("font_size", "보통");
+            HashMap<String, Integer> textSizeMap = new HashMap<String, Integer>();
+            textSizeMap.put("매우 작게", 12);
+            textSizeMap.put("작게", 18);
+            textSizeMap.put("보통", 24);
+            textSizeMap.put("크게", 36);
+            textSizeMap.put("매우 크게", 48);
+
+            if(type.equals("매우 작게"))
+                viewHolder.add_voca_mean.setTextSize(12);
+
+            viewHolder.add_voca_word.setTextSize(textSizeMap.get(type));
 
             if(wordDataList.size() > position + 1 && wordDataList.get(position + 1).getType() == CHILD_VIEW) {
                 viewHolder.itemView.findViewById(R.id.item).setBackground(null);
@@ -312,10 +323,22 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     int index = LoadingActivity.vocaDatabase.findTableIndex(word, category);
                                     LoadingActivity.vocaDatabase.delete(index);
-                                    for(int ii = 0; ii < LoadingActivity.vocaShuffleList.size(); ii++){
-                                        if(LoadingActivity.vocaShuffleList.get(ii).getData()[0].equals(word) &&
-                                                LoadingActivity.vocaShuffleList.get(ii).getData()[7].equals(category)){
-                                            LoadingActivity.vocaShuffleList.remove(ii);
+
+
+                                    // 자신의 셔플에서 제거
+                                    for(int ii = 0; ii < LoadingActivity.vocaShuffleLists.get("전체").size(); ii++){
+                                        if(LoadingActivity.vocaShuffleLists.get("전체").get(ii).getData()[0].equals(word) &&
+                                                LoadingActivity.vocaShuffleLists.get("전체").get(ii).getData()[7].equals(category)){
+                                            LoadingActivity.vocaShuffleLists.get("전체").remove(ii);
+                                            break;
+                                        }
+                                    }
+
+                                    // 자신의 셔플에서 제거
+                                    for(int ii = 0; ii < LoadingActivity.vocaShuffleLists.get(category).size(); ii++){
+                                        if(LoadingActivity.vocaShuffleLists.get(category).get(ii).getData()[0].equals(word) &&
+                                                LoadingActivity.vocaShuffleLists.get(category).get(ii).getData()[7].equals(category)){
+                                            LoadingActivity.vocaShuffleLists.get(category).remove(ii);
                                             break;
                                         }
                                     }

@@ -65,7 +65,7 @@ public class Category_MainActivity extends AppCompatActivity {
 
 
 
-        makeCategoryList();
+//        makeCategoryList();
     }
 
     /////////////////////////////////////// 공유 기능과 테스트 기능 구현하시는 분들은 이쪽으로 //////////////////////////////////////////
@@ -75,6 +75,12 @@ public class Category_MainActivity extends AppCompatActivity {
     // 4. 궁금한게 있다면 바로 문의해주세요.
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        makeCategoryList();
+    }
 
     public void makeCategoryList(){
 
@@ -198,6 +204,8 @@ public class Category_MainActivity extends AppCompatActivity {
             });
             category_subtitle.setText(LoadingActivity.categoryDatabase.getCategorySubTitle(i));
             category_all_word.setText(Integer.toString(LoadingActivity.vocaDatabase.getCategoryAllWordSize(categoryName)) + "개");
+            if(categoryName.equals("전체"))
+                category_all_word.setText(Integer.toString(LoadingActivity.vocaDatabase.getAllWordSize(categoryName)) + "개");
             category_remind_word.setText(Integer.toString(LoadingActivity.vocaDatabase.getCategoryRemindedWordSize(categoryName)) + "개");
             category_important_word.setText(Integer.toString(LoadingActivity.vocaDatabase.getCategoryImportantWordSize(categoryName)) + "개");
 
@@ -284,15 +292,11 @@ public class Category_MainActivity extends AppCompatActivity {
     }
 
     public void category_main_onBackClick(View view){
-        Intent intent = new Intent(Category_MainActivity.this, MainActivity.class);
-        startActivity(intent);
         finish();
     }
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(Category_MainActivity.this, MainActivity.class);
-        startActivity(intent);
         finish();
     }
 }

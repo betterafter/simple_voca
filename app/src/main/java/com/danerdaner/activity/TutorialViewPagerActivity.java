@@ -104,6 +104,7 @@ public class TutorialViewPagerActivity extends AppCompatActivity {
                 if(TutorialChecker.checkUserUseTutorial(getApplicationContext())){
                     mPager.setVisibility(View.GONE);
                     Intent intent = new Intent(TutorialViewPagerActivity.this, LoadingActivity.class);
+                    intent.putExtra("isFirstStart", false);
                     startActivity(intent);
                     finish();
                 }
@@ -194,6 +195,7 @@ public class TutorialViewPagerActivity extends AppCompatActivity {
             mPager.setVisibility(View.GONE);
             TutorialChecker.processUserUseTutorial(getApplicationContext());
             Intent intent = new Intent(TutorialViewPagerActivity.this, LoadingActivity.class);
+            intent.putExtra("isFirstStart", true);
             startActivity(intent);
             finish();
         }

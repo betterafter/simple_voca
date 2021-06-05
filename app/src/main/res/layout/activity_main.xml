@@ -27,56 +27,34 @@
                 android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="14">
+                    android:layout_marginRight="20dp"
+                    android:gravity="center"
+                    android:layout_gravity="right"
+                    android:orientation="vertical"
+                    android:weightSum="0">
 
-                    <ImageButton
-                        android:id="@+id/main_setting_button"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1.5"
-                        android:background="@color/mainBlue"
-                        android:src="@drawable/outline_settings_24"
-                        android:tint="@color/white" />
-
-                    <ImageButton
-                        android:id="@+id/main_category_button"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1.5"
-                        android:background="@color/mainBlue"
-                        android:src="@drawable/outline_folder_24"
-                        android:tint="@color/white" />
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="8" />
 
                     <ImageButton
                         android:id="@+id/main_mean_visible_button"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1.5"
+                        android:layout_gravity="center"
                         android:background="@color/mainBlue"
                         android:src="@drawable/outline_visibility_24"
                         android:tint="@color/white" />
 
-
-                    <ImageButton
-                        android:id="@+id/main_add_word_button"
-                        android:layout_width="0dp"
+                    <TextView
+                        android:id="@+id/textView26"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:layout_weight="1.5"
-                        android:background="@android:color/transparent"
-                        android:src="@drawable/baseline_add_24"
-                        android:text="Button"
-                        android:tint="@color/white" />
+                        android:layout_weight="0"
+                        android:fontFamily="@font/nanum_square_regular"
+                        android:text="단어 뜻 가리기"
+                        android:textColor="@color/blueGradient1"
+                        android:textSize="8sp"
+                        android:textStyle="bold" />
 
 
                 </LinearLayout>
@@ -90,8 +68,8 @@
                 android:fontFamily="@font/nanum_square_bold"
                 android:text="우선순위 영단어"
                 android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="24sp"
+                android:textColor="@color/blueGradient1"
+                android:textSize="28sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -103,50 +81,55 @@
                 android:text="TextView"
                 android:textAlignment="center" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-            </LinearLayout>
         </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="6.5">
+            android:layout_weight="7">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/main_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"/>
-
-        </FrameLayout>
-
-        <HorizontalScrollView
-            android:id="@+id/main_voca_page_list"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_gravity="center"
-            android:backgroundTint="@android:color/transparent"
-            android:layout_weight="0.5">
+                android:layout_gravity="center_horizontal" />
 
             <LinearLayout
-                android:id="@+id/main_voca_page_list_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|bottom"
-                android:backgroundTint="@android:color/transparent"
-                android:gravity="center|bottom"
-                android:orientation="horizontal" />
-        </HorizontalScrollView>
+                android:gravity="center"
+                android:background="#808ab4f8"
+                android:orientation="horizontal">
 
-        <!--        <androidx.viewpager2.widget.ViewPager2-->
-        <!--            android:id="@+id/main_index_viewpager"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_gravity="center" />-->
+                <HorizontalScrollView
+                    android:id="@+id/main_voca_page_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center|bottom">
+
+                    <LinearLayout
+                        android:id="@+id/main_voca_page_list_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|bottom"
+                        android:backgroundTint="@android:color/transparent"
+                        android:gravity="center|bottom"
+                        android:orientation="horizontal" />
+                </HorizontalScrollView>
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/main_voca_menu"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:itemIconTint="@color/mainBlue"
+            app:itemTextColor="@color/mainBlue"
+            app:menu="@menu/bottom_navigation"/>
+
 
     </LinearLayout>
 

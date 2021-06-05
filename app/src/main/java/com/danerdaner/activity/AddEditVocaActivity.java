@@ -6,6 +6,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -21,6 +23,7 @@ import com.danerdaner.Items.ListItem;
 import com.danerdaner.simple_voca.ImageSerializer;
 import com.danerdaner.simple_voca.R;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -42,6 +45,7 @@ public class AddEditVocaActivity extends AppCompatActivity {
     private ImageView add_voca_select_picture_imageview;
     private Spinner add_select_group_spinner;
     private ImageButton add_voca_word_search_button;
+    private TextInputLayout err1, err2;
 
     private ArrayList<String> categoryList;
 
@@ -87,6 +91,9 @@ public class AddEditVocaActivity extends AppCompatActivity {
         add_voca_memo = findViewById(R.id.add_voca_memo);
         add_voca_select_picture_imageview = findViewById(R.id.add_voca_select_picture_imageview);
         add_voca_word_search_button = findViewById(R.id.add_voca_word_search_button);
+
+        err1 = findViewById(R.id.add_voca_word_layout);
+        err2 = findViewById(R.id.add_voca_mean_layout);
 
 
 
@@ -161,8 +168,14 @@ public class AddEditVocaActivity extends AppCompatActivity {
                             ImageSerializer.PackImageToSerialized(add_voca_select_picture_imageview),
                             group, "0"
                     };
-                    LoadingActivity.vocaShuffleList.add(new ListItem(data, 0));
+
+                    // 자신의 셔플 맨 뒤에 단어 추가하기
+                    LoadingActivity.vocaShuffleLists.get(group).add(new ListItem(data, 0));
+
+                    // 전체 셔플 맨 뒤에도 단어 추가하기
+                    LoadingActivity.vocaShuffleLists.get("전체").add(new ListItem(data, 0));
                     LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
+
                 }
                 else if(SAVE_STATE.equals("EDIT") && POSITION >= 0){
 
@@ -184,17 +197,38 @@ public class AddEditVocaActivity extends AppCompatActivity {
                             group,
                             "0");
 
-                    // shuffle에도 수정한 단어 수정하기
-                    for(int i = 0; i < LoadingActivity.vocaShuffleList.size(); i++){
-                        if(LoadingActivity.vocaShuffleList.get(i).getData()[0].equals(prevWord) &&
-                                LoadingActivity.vocaShuffleList.get(i).getData()[7].equals(prevGroup)){
+                    // 전체 shuffle에도 수정한 단어 수정하기
+                    ArrayList<ListItem> allArrayList = new ArrayList<>();
+                    allArrayList.addAll(LoadingActivity.vocaShuffleLists.get("전체"));
+                    for(int i = 0; i < allArrayList.size(); i++){
+                        if(allArrayList.get(i).getData()[0].equals(prevWord) &&
+                                allArrayList.get(i).getData()[7].equals(prevGroup)){
                             String[] data = new String[]{
                                     word, mean, announce, example, example_mean, mean,
                                     ImageSerializer.PackImageToSerialized(add_voca_select_picture_imageview),
                                     group, "0"
                             };
-                            LoadingActivity.vocaShuffleList.remove(i);
-                            LoadingActivity.vocaShuffleList.add(i, new ListItem(data, 0));
+                            allArrayList.remove(i);
+                            allArrayList.add(i, new ListItem(data, 0));
+
+                            LoadingActivity.vocaShuffleLists.put("전체", allArrayList);
+                            break;
+                        }
+                    }
+
+                    // shuffle에도 수정한 단어 수정하기
+                    ArrayList<ListItem> specArrayList = new ArrayList<>();
+                    specArrayList.addAll(LoadingActivity.vocaShuffleLists.get(group));
+                    for(int i = 0; i < specArrayList.size(); i++){
+                        if(specArrayList.get(i).getData()[0].equals(prevWord) &&
+                                specArrayList.get(i).getData()[7].equals(prevGroup)){
+                            String[] data = new String[]{
+                                    word, mean, announce, example, example_mean, mean,
+                                    ImageSerializer.PackImageToSerialized(add_voca_select_picture_imageview),
+                                    group, "0"
+                            };
+                            specArrayList.remove(i);
+                            specArrayList.add(i, new ListItem(data, 0));
                             break;
                         }
                     }
@@ -258,6 +292,56 @@ public class AddEditVocaActivity extends AppCompatActivity {
                 }
             }
         }
+
+        //onTextWatcherLister();
+    }
+
+    public void onTextWatcherLister(){
+
+        add_voca_word.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                //checkString(editable.toString(), getApplicationContext());
+                if(!checkString(editable.toString())){
+                    err1.setError("특수 문자 및 공백은 사용할 수 없습니다.");
+                    add_voca_word_search_button.setVisibility(View.GONE);
+                }
+                else {
+                    err1.setError(null);
+                    add_voca_word_search_button.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        add_voca_mean.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(!checkString(editable.toString())){
+                    err2.setError("특수 문자 및 공백은 사용할 수 없습니다.");
+                }
+                else err2.setError(null);
+            }
+        });
     }
 
     @Override
@@ -281,6 +365,16 @@ public class AddEditVocaActivity extends AppCompatActivity {
         }
     }
 
+    private boolean checkString(String str){
+
+        Pattern pattern = Pattern.compile("[ \n!@#$%^&*(),.?\"\':{}|<>]");
+        Matcher matcher = pattern.matcher(str);
+
+        if(!matcher.find()) {
+            return true;
+        }
+        else return false;
+    }
 
 
     private boolean checkString(String str, Context context){
