@@ -39,10 +39,11 @@ public class VocaForegroundServiceUpdater {
         // Notification 세팅
         notification
                 = new NotificationCompat.Builder(context, "channel")
-                .setSmallIcon(R.mipmap.icon_service_black)
-                .setLargeIcon(bitmap)
+                .setSmallIcon(R.mipmap.icon_main_3)
                 .setContentTitle(data[0] + "  [" + data[2] + "]")
                 .setContentIntent(pendingIntent)
+                .setColor(context.getResources().getColor(R.color.mainBlue))
+                .setColorized(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentText(data[1]);
 

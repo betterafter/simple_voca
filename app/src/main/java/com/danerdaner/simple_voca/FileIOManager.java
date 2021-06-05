@@ -88,9 +88,6 @@ public class FileIOManager {
                 Log.i( TAG , "file.exists" );
             }
         }
-        else{
-            System.out.println("dir is not directory");
-        }
         return file;
     }
 

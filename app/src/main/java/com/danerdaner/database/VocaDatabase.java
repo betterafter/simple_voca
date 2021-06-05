@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.danerdaner.Items.ListItem;
 import com.danerdaner.activity.LoadingActivity;
 import com.danerdaner.activity.MainActivity;
-import com.danerdaner.activity.SettingFragment;
+import com.danerdaner.fragment.SettingFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,6 +27,8 @@ public class VocaDatabase extends SQLiteOpenHelper {
     public static String remindFlag = "REMIND";
     public static String importantFlag = "IMPORTANT";
     public static String nullFlag = "0";
+
+    public String code = "0x002C";
 
     public VocaDatabase(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -77,6 +79,11 @@ public class VocaDatabase extends SQLiteOpenHelper {
     public void insert(String word, String mean, String announce, String example, String example_mean,
                        String memo, String image, String sort, String flags){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+
+//        example = makeRealString(example);
+//        example_mean = makeRealString(example_mean);
+//        memo = makeRealString(memo);
+
         String sql = "INSERT INTO " + tableName + " VALUES(null, '"
                 + word +  "', '"
                 + mean +  "', '"
@@ -127,6 +134,10 @@ public class VocaDatabase extends SQLiteOpenHelper {
 
         String[] prev = findTableData(index);
 
+//        example = makeRealString(example);
+//        example_mean = makeRealString(example_mean);
+//        memo = makeRealString(memo);
+
         SQLiteDatabase db = getWritableDatabase();
         String sql
                 = "update " + tableName +
@@ -166,7 +177,11 @@ public class VocaDatabase extends SQLiteOpenHelper {
                 +" where id = " + "\"" + position + "\"";
         Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
         cursor.moveToFirst();
+
+        // 단어, 단어 뜻, 발음, 예문, 예문 뜻, 메모, 이미지, 그룹, 플래그
         return new String[]{cursor.getString(1), cursor.getString(2), cursor.getString(3),
+//                makeRealString(cursor.getString(4)), makeRealString(cursor.getString(5)),
+//                makeRealString(cursor.getString(6)),
                 cursor.getString(4), cursor.getString(5), cursor.getString(6),
                 cursor.getString(7), cursor.getString(8), cursor.getString(9)};
     }
@@ -200,7 +215,7 @@ public class VocaDatabase extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         String sql = "SELECT * FROM " + tableName;
         Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
-        if(cursor.getCount() <= 0){
+        if(cursor.getCount() <= 0 && SettingFragment.service != null){
             SettingFragment.service.setChecked(false);
         }
     }
@@ -234,8 +249,10 @@ public class VocaDatabase extends SQLiteOpenHelper {
             do {
                 String[] data = new String[]{
                         cursor.getString(1), cursor.getString(2), cursor.getString(3),
+//                makeRealString(cursor.getString(4)), makeRealString(cursor.getString(5)),
+//                makeRealString(cursor.getString(6)),
                         cursor.getString(4), cursor.getString(5), cursor.getString(6),
-                        cursor.getString(7), cursor.getString(8), cursor.getString(9),
+                        cursor.getString(7), cursor.getString(8), cursor.getString(9)
                 };
                 vocaList.add(new ListItem(data, PARENT_VIEW));
             }
@@ -265,8 +282,10 @@ public class VocaDatabase extends SQLiteOpenHelper {
             do {
                 String[] data = new String[]{
                         cursor.getString(1), cursor.getString(2), cursor.getString(3),
+//                makeRealString(cursor.getString(4)), makeRealString(cursor.getString(5)),
+//                makeRealString(cursor.getString(6)),
                         cursor.getString(4), cursor.getString(5), cursor.getString(6),
-                        cursor.getString(7), cursor.getString(8), cursor.getString(9),
+                        cursor.getString(7), cursor.getString(8), cursor.getString(9)
                 };
                 vocaList.add(new ListItem(data, PARENT_VIEW));
             }
@@ -281,6 +300,7 @@ public class VocaDatabase extends SQLiteOpenHelper {
         }
     }
 
+    // 공유를 위해 카테고리에 있는 단어 리스트를 만듬 -> csv로 공유하기 때문에 code 형식으로 보내야 함.
     public void makeCategoryList(ArrayList<ListItem> vocaList, String category){
         int cnt = 0;
         vocaList.clear();
@@ -298,8 +318,14 @@ public class VocaDatabase extends SQLiteOpenHelper {
                 if(cursor.getString(8).equals(category)) {
                     String[] data = new String[]{
                             cursor.getString(1), cursor.getString(2), cursor.getString(3),
-                            cursor.getString(4), cursor.getString(5), cursor.getString(6),
-                            cursor.getString(7), cursor.getString(8), cursor.getString(9),
+                            makeNoneCSVString(cursor.getString(4)),
+                            makeNoneCSVString(cursor.getString(5)),
+                            makeNoneCSVString(cursor.getString(6)),
+//                            cursor.getString(5), cursor.getString(6),
+//                            "\"" +cursor.getString(4) + "\"",
+//                            "\"" + cursor.getString(5) + "\"",
+//                            "\"" + cursor.getString(6) + "\"",
+                            cursor.getString(7), cursor.getString(8), cursor.getString(9)
                     };
                     vocaList.add(new ListItem(data, PARENT_VIEW));
 
@@ -365,6 +391,7 @@ public class VocaDatabase extends SQLiteOpenHelper {
         return res;
     }
 
+    // ',' 에 대한 코드가 있으면 쉼표로 변환해주는 작업이 필요함
     public void listToDatabase(ArrayList<ListItem> updatedTableColumns){
 
         for(int i = 0; i < updatedTableColumns.size(); i++){
@@ -373,8 +400,12 @@ public class VocaDatabase extends SQLiteOpenHelper {
             }
             for(int j = 0; j < updatedTableColumns.size(); j ++){
                 insert(updatedTableColumns.get(j).getData()[0], updatedTableColumns.get(j).getData()[1],
-                        updatedTableColumns.get(j).getData()[2],updatedTableColumns.get(j).getData()[3],
-                        updatedTableColumns.get(j).getData()[4],updatedTableColumns.get(j).getData()[5],
+                        updatedTableColumns.get(j).getData()[2],
+
+                        updatedTableColumns.get(j).getData()[3].replaceAll(code, ","),
+                        updatedTableColumns.get(j).getData()[4].replaceAll(code, ","),
+                        updatedTableColumns.get(j).getData()[5].replaceAll(code, ","),
+
                         updatedTableColumns.get(j).getData()[6],updatedTableColumns.get(j).getData()[7],
                         updatedTableColumns.get(j).getData()[8]);
             }
@@ -505,6 +536,19 @@ public class VocaDatabase extends SQLiteOpenHelper {
             }
             while(cursor.moveToNext());
         }
+    }
+
+    public String makeNoneCSVString(String str){
+
+
+        String res = "";
+        for(int i = 0; i < str.length(); i++){
+            if(str.charAt(i) == ','){
+                res += code;
+            }
+            else res += str.charAt(i);
+        }
+        return res;
     }
 }
 

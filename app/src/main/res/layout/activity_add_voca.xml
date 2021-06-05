@@ -165,7 +165,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="20dp"
                     android:backgroundTint="@android:color/transparent"
-                    android:hint="발음을 입력해주세요" />
+                    android:hint="발음을 입력해주세요 (선택)" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -179,7 +179,7 @@
                     android:layout_height="match_parent"
                     android:backgroundTint="@android:color/transparent"
                     android:layout_marginHorizontal="20dp"
-                    android:hint="예문을 적어주세요" />
+                    android:hint="예문을 적어주세요 (선택)" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -193,7 +193,7 @@
                     android:layout_height="match_parent"
                     android:backgroundTint="@android:color/transparent"
                     android:layout_marginHorizontal="20dp"
-                    android:hint="예문의 해석을 적어주세요" />
+                    android:hint="예문의 해석을 적어주세요 (선택)" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -208,7 +208,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="20dp"
                     android:backgroundTint="@android:color/transparent"
-                    android:hint="메모" />
+                    android:hint="메모 (선택)" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button

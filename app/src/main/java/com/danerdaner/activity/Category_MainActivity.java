@@ -1,6 +1,8 @@
 package com.danerdaner.activity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -16,7 +18,6 @@ import com.danerdaner.Items.ListItem;
 import com.danerdaner.simple_voca.CSVBuilder;
 import com.danerdaner.simple_voca.FileIOManager;
 import com.danerdaner.simple_voca.R;
-import com.danerdaner.simple_voca.TutorialChecker;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -124,12 +125,32 @@ public class Category_MainActivity extends AppCompatActivity {
             category_delete_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(LoadingActivity.SELECTED_CATEGORY_NAME.equals(categoryName))
-                        LoadingActivity.SELECTED_CATEGORY_NAME = "전체";
 
-                    LoadingActivity.categoryDatabase.delete(categoryName, tempSubtitle);
-                    LoadingActivity.vocaDatabase.deleteAll(categoryName);
-                    makeCategoryList();
+                    AlertDialog.Builder dlg
+                            = new AlertDialog.Builder(Category_MainActivity.this);
+                    dlg.setTitle("카테고리 삭제"); //제목
+                    dlg.setMessage(categoryName + "를 삭제하시겠습니까?"); // 메시지
+
+                    dlg.setPositiveButton("예", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if(LoadingActivity.SELECTED_CATEGORY_NAME.equals(categoryName))
+                                LoadingActivity.SELECTED_CATEGORY_NAME = "전체";
+
+                            LoadingActivity.categoryDatabase.delete(categoryName, tempSubtitle);
+                            LoadingActivity.vocaDatabase.deleteAll(categoryName);
+                            makeCategoryList();
+                        }
+                    });
+                    dlg.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    });
+
+                    AlertDialog alertDialog = dlg.create();
+                    alertDialog.show();
                 }
             });
 
@@ -230,7 +251,6 @@ public class Category_MainActivity extends AppCompatActivity {
         FileIOManager fileIOManager = new FileIOManager();
         ArrayList<ListItem> list = new ArrayList<ListItem>();
         LoadingActivity.vocaDatabase.makeCategoryList(list, category);
-
 
         File xlsFile = fileIOManager.writeCategoryFile(category,csvBuilder.getCSVString(list));;
         Intent shareIntent = new Intent(Intent.ACTION_SEND);

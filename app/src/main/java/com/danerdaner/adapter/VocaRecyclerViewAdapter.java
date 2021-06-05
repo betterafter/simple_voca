@@ -1,6 +1,9 @@
 package com.danerdaner.adapter;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
@@ -36,15 +39,17 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     private final int CHILD_VIEW = 1;
 
     private Context context;
+    private Activity activity;
 
     private Drawable drawable;
 
 
     public ArrayList<ListItem> wordDataList;
 
-    public VocaRecyclerViewAdapter(ArrayList<ListItem> wordDataList,  Context context){
+    public VocaRecyclerViewAdapter(ArrayList<ListItem> wordDataList, Context context, Activity activity){
         this.wordDataList = wordDataList;
         this.context = context;
+        this.activity = activity;
     }
 
 
@@ -286,28 +291,50 @@ public class VocaRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                     viewHolder.add_voca_editor_delete_button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+
                             String word = viewHolder.add_voca_word.getText().toString();
                             String category = data[7];
-                            int index = LoadingActivity.vocaDatabase.findTableIndex(word, category);
-                            LoadingActivity.vocaDatabase.delete(index);
-                            for(int i = 0; i < LoadingActivity.vocaShuffleList.size(); i++){
-                                if(LoadingActivity.vocaShuffleList.get(i).getData()[0].equals(word) &&
-                                 LoadingActivity.vocaShuffleList.get(i).getData()[7].equals(category)){
-                                    LoadingActivity.vocaShuffleList.remove(i);
-                                    break;
+
+                            AlertDialog.Builder dlg
+                                    = new AlertDialog.Builder(activity);
+                            dlg.setTitle("단어 삭제"); //제목
+                            dlg.setMessage(word + "를 삭제하시겠습니까?"); // 메시지
+
+                            dlg.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
                                 }
-                            }
-                            LoadingActivity.vocaDatabase.makeList(wordDataList);
-                            notifyDataSetChanged();
+                            });
 
-                            // 단어를 삭제했을 때 단어의 개수가 0개라면 서비스도 종료하고 서비스활성화도 체크 해제해야 한다.
-                            Intent intent = new Intent(context, VocaForegroundService.class);
-                            LoadingActivity.vocaDatabase.UnCheckedIfNoWordInTable();
-                            context.getApplicationContext().stopService(intent);
+                            dlg.setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    int index = LoadingActivity.vocaDatabase.findTableIndex(word, category);
+                                    LoadingActivity.vocaDatabase.delete(index);
+                                    for(int ii = 0; ii < LoadingActivity.vocaShuffleList.size(); ii++){
+                                        if(LoadingActivity.vocaShuffleList.get(ii).getData()[0].equals(word) &&
+                                                LoadingActivity.vocaShuffleList.get(ii).getData()[7].equals(category)){
+                                            LoadingActivity.vocaShuffleList.remove(ii);
+                                            break;
+                                        }
+                                    }
+                                    LoadingActivity.vocaDatabase.makeList(wordDataList);
+                                    notifyDataSetChanged();
 
-                            MainActivity.MakeListPager();
-                            MainActivity.onRecyclerViewScrollListener(MainActivity.main_recyclerView);
-                            viewHolder.add_voca_editor.setVisibility(View.GONE);
+                                    // 단어를 삭제했을 때 단어의 개수가 0개라면 서비스도 종료하고 서비스활성화도 체크 해제해야 한다.
+                                    Intent intent = new Intent(context, VocaForegroundService.class);
+                                    LoadingActivity.vocaDatabase.UnCheckedIfNoWordInTable();
+                                    context.getApplicationContext().stopService(intent);
+
+                                    MainActivity.MakeListPager();
+                                    MainActivity.onRecyclerViewScrollListener(MainActivity.main_recyclerView);
+                                    viewHolder.add_voca_editor.setVisibility(View.GONE);
+                                }
+                            });
+
+                            AlertDialog alertDialog = dlg.create();
+                            alertDialog.show();
                         }
                     });
 
