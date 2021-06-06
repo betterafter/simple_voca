@@ -95,12 +95,15 @@
                 android:layout_gravity="center_horizontal" />
 
             <LinearLayout
+                android:id="@+id/main_voca_page_parent_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|bottom"
-                android:gravity="center"
                 android:background="#808ab4f8"
-                android:orientation="horizontal">
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
 
                 <HorizontalScrollView
                     android:id="@+id/main_voca_page_list"
@@ -119,6 +122,19 @@
                 </HorizontalScrollView>
             </LinearLayout>
 
+            <ImageButton
+                android:id="@+id/indexer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_margin="10dp"
+                android:layout_gravity="bottom|left"
+                android:layout_weight="0"
+                android:background="@drawable/shape_circle"
+                android:backgroundTint="@color/mainYellow"
+                android:tint="@color/white"
+                android:src="@drawable/baseline_view_list_32"/>
+
         </FrameLayout>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -128,7 +144,7 @@
             android:layout_weight="1"
             app:itemIconTint="@color/mainBlue"
             app:itemTextColor="@color/mainBlue"
-            app:menu="@menu/bottom_navigation"/>
+            app:menu="@menu/bottom_navigation" />
 
 
     </LinearLayout>

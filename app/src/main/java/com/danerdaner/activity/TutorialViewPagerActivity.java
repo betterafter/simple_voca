@@ -192,7 +192,8 @@ public class TutorialViewPagerActivity extends AppCompatActivity {
     public void onTutorialClick(View view){
 
         if(mPager.getCurrentItem() == pagerAdapter.getCount() - 1){
-            mPager.setVisibility(View.GONE);
+            //mPager.setVisibility(View.GONE);
+
             TutorialChecker.processUserUseTutorial(getApplicationContext());
             Intent intent = new Intent(TutorialViewPagerActivity.this, LoadingActivity.class);
             intent.putExtra("isFirstStart", true);

@@ -78,7 +78,6 @@ public class Category_AddActivity extends AppCompatActivity {
                             "카테고리 이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(!checkString(name, getApplicationContext())) return;
                 content = changeChar(content);
 
                 if(intent != null && intent.getStringExtra("type") != null && intent.getStringExtra("type").equals("edit")){{

@@ -1,6 +1,8 @@
 package com.danerdaner.activity;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -10,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.view.View;
 
 import com.danerdaner.Items.ListItem;
 import com.danerdaner.Items.ScoreListItem;
@@ -129,9 +132,23 @@ public class LoadingActivity extends AppCompatActivity {
             else {
                 if (!Settings.canDrawOverlays(this)) {// 체크
 
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            Uri.parse("package:" + getPackageName()));
-                    startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
+                    AlertDialog.Builder dlg
+                            = new AlertDialog.Builder(LoadingActivity.this);
+
+                    View view = getLayoutInflater().inflate(R.layout.alert_view, null);
+
+                    dlg.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                    Uri.parse("package:" + getPackageName()));
+                            startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
+                        }
+                    });
+                    dlg.setView(view);
+
+                    AlertDialog alertDialog = dlg.create();
+                    alertDialog.show();
                 } else {
                     GoToNextActivity();
                 }

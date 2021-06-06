@@ -28,6 +28,10 @@ public class VocaDatabase extends SQLiteOpenHelper {
     public static String importantFlag = "IMPORTANT";
     public static String nullFlag = "0";
 
+    private final String INLINE = ",";
+    private final String LINER = "%%@@%@@%%@@%";
+    private final String SMALL_QUOTATION_MARK = "@@@!!!###%%%";
+    private final String BIG_QUOTATION_MARK = "%%%##@#@@#@!!!";
     public String code = "0x002C";
 
     public VocaDatabase(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
@@ -76,13 +80,25 @@ public class VocaDatabase extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
+    /*
+
+    db 밖에서 오는 작은 따옴표는 모두 코드 형태로 바꿔줘야 하며,
+    db에서 앱으로 가는 작은 따옴표 코드는 모두 작은 따옴표 자체로 바꿔줘야 함.
+
+     */
+
+    // 디비로 들어오는 형태로 코드로 바꿔야함.
     public void insert(String word, String mean, String announce, String example, String example_mean,
                        String memo, String image, String sort, String flags){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
-//        example = makeRealString(example);
-//        example_mean = makeRealString(example_mean);
-//        memo = makeRealString(memo);
+        word = change_small_quotation_mark_to_code(word);
+        mean = change_small_quotation_mark_to_code(mean);
+        announce = change_small_quotation_mark_to_code(announce);
+
+        example = change_small_quotation_mark_to_code(example);
+        example_mean = change_small_quotation_mark_to_code(example_mean);
+        memo = change_small_quotation_mark_to_code(memo);
 
         String sql = "INSERT INTO " + tableName + " VALUES(null, '"
                 + word +  "', '"
@@ -91,6 +107,7 @@ public class VocaDatabase extends SQLiteOpenHelper {
                 + example + "', '"
                 + example_mean + "', '"
                 + memo + "', '"
+
                 + image + "', '"
                 + sort + "', '"
                 + flags
@@ -100,6 +117,7 @@ public class VocaDatabase extends SQLiteOpenHelper {
     }
 
 
+    // 앱에서 문자열을 찾아서 디비에 있는 걸 지워줘야 하므로 앱 -> 디비 형태
     public void delete(int index){
 
         String[] prev = findTableData(index);
@@ -134,9 +152,13 @@ public class VocaDatabase extends SQLiteOpenHelper {
 
         String[] prev = findTableData(index);
 
-//        example = makeRealString(example);
-//        example_mean = makeRealString(example_mean);
-//        memo = makeRealString(memo);
+        word = change_small_quotation_mark_to_code(word);
+        mean = change_small_quotation_mark_to_code(mean);
+        announce = change_small_quotation_mark_to_code(announce);
+
+        example = change_small_quotation_mark_to_code(example);
+        example_mean = change_small_quotation_mark_to_code(example_mean);
+        memo = change_small_quotation_mark_to_code(memo);
 
         SQLiteDatabase db = getWritableDatabase();
         String sql
@@ -155,13 +177,18 @@ public class VocaDatabase extends SQLiteOpenHelper {
 
 
         db.execSQL(sql);
-
-
-
         MainActivity.vocaRecyclerViewAdapter.notifyDataSetChanged();
     }
 
+
+
+
+
     public int findTableIndex(String word, String category){
+
+        word = change_small_quotation_mark_to_code(word);
+        System.out.println(word);
+
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         String sql = "SELECT * FROM " + tableName
                 + " where word = " + "\"" + word + "\"" + " and sort = " + "\"" + category + "\"";
@@ -171,6 +198,11 @@ public class VocaDatabase extends SQLiteOpenHelper {
         return Integer.parseInt(cursor.getString(0));
     }
 
+
+
+
+
+    // 디비 -> 디비
     public String[] findTableData(int position){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         String sql = "SELECT * FROM " + tableName
@@ -179,14 +211,29 @@ public class VocaDatabase extends SQLiteOpenHelper {
         cursor.moveToFirst();
 
         // 단어, 단어 뜻, 발음, 예문, 예문 뜻, 메모, 이미지, 그룹, 플래그
-        return new String[]{cursor.getString(1), cursor.getString(2), cursor.getString(3),
-//                makeRealString(cursor.getString(4)), makeRealString(cursor.getString(5)),
-//                makeRealString(cursor.getString(6)),
-                cursor.getString(4), cursor.getString(5), cursor.getString(6),
-                cursor.getString(7), cursor.getString(8), cursor.getString(9)};
+        return new String[]{
+                cursor.getString(1),
+                cursor.getString(2),
+                cursor.getString(3),
+
+                cursor.getString(4),
+                cursor.getString(5),
+                cursor.getString(6),
+
+                cursor.getString(7),
+                cursor.getString(8),
+                cursor.getString(9)};
     }
 
+
+
+
+
+
     public boolean CheckIfWordInCategory(String word, String category, int position){
+
+        word = change_small_quotation_mark_to_code(word);
+
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         String sql = "SELECT * FROM " + tableName
                 + " where word = " + "\"" + word + "\"" + " and sort = " + "\"" + category + "\"";
@@ -199,7 +246,13 @@ public class VocaDatabase extends SQLiteOpenHelper {
         else return true;
     }
 
+
+
+
     public boolean CheckIfWordInCategory(String word, String category){
+
+        word = change_small_quotation_mark_to_code(word);
+
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         String sql = "SELECT * FROM " + tableName
                 + " where word = " + "\"" + word + "\"" + " and sort = " + "\"" + category + "\"";
@@ -211,6 +264,9 @@ public class VocaDatabase extends SQLiteOpenHelper {
         else return true;
     }
 
+
+
+
     public void UnCheckedIfNoWordInTable(){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         String sql = "SELECT * FROM " + tableName;
@@ -219,6 +275,9 @@ public class VocaDatabase extends SQLiteOpenHelper {
             SettingFragment.service.setChecked(false);
         }
     }
+
+
+
 
 
     public void makeList(ArrayList<ListItem> vocaList){
@@ -243,12 +302,20 @@ public class VocaDatabase extends SQLiteOpenHelper {
         cursor.moveToFirst();
 
 
+
         if(cursor.getCount() > 0){
             do {
                 String[] data = new String[]{
-                        cursor.getString(1), cursor.getString(2), cursor.getString(3),
-                        cursor.getString(4), cursor.getString(5), cursor.getString(6),
-                        cursor.getString(7), cursor.getString(8), cursor.getString(9)
+                        change_code_to_small_quotation_mark(cursor.getString(1)),
+                        change_code_to_small_quotation_mark(cursor.getString(2)),
+                        change_code_to_small_quotation_mark(cursor.getString(3)),
+                        change_code_to_small_quotation_mark(cursor.getString(4)),
+                        change_code_to_small_quotation_mark(cursor.getString(5)),
+                        change_code_to_small_quotation_mark(cursor.getString(6)),
+
+                        cursor.getString(7),
+                        cursor.getString(8),
+                        cursor.getString(9)
                 };
                 vocaList.add(new ListItem(data, PARENT_VIEW));
             }
@@ -288,8 +355,13 @@ public class VocaDatabase extends SQLiteOpenHelper {
         if(cursor.getCount() > 0){
             do {
                 String[] data = new String[]{
-                        cursor.getString(1), cursor.getString(2), cursor.getString(3),
-                        cursor.getString(4), cursor.getString(5), cursor.getString(6),
+                        change_code_to_small_quotation_mark(cursor.getString(1)),
+                        change_code_to_small_quotation_mark(cursor.getString(2)),
+                        change_code_to_small_quotation_mark(cursor.getString(3)),
+                        change_code_to_small_quotation_mark(cursor.getString(4)),
+                        change_code_to_small_quotation_mark(cursor.getString(5)),
+                        change_code_to_small_quotation_mark(cursor.getString(6)),
+
                         cursor.getString(7), cursor.getString(8), cursor.getString(9)
                 };
                 arrayList.add(new ListItem(data, PARENT_VIEW));
@@ -317,8 +389,13 @@ public class VocaDatabase extends SQLiteOpenHelper {
         if(cursor.getCount() > 0){
             do {
                 String[] data = new String[]{
-                        cursor.getString(1), cursor.getString(2), cursor.getString(3),
-                        cursor.getString(4), cursor.getString(5), cursor.getString(6),
+                        change_code_to_small_quotation_mark(cursor.getString(1)),
+                        change_code_to_small_quotation_mark(cursor.getString(2)),
+                        change_code_to_small_quotation_mark(cursor.getString(3)),
+                        change_code_to_small_quotation_mark(cursor.getString(4)),
+                        change_code_to_small_quotation_mark(cursor.getString(5)),
+                        change_code_to_small_quotation_mark(cursor.getString(6)),
+
                         cursor.getString(7), cursor.getString(8), cursor.getString(9)
                 };
                 vocaList.add(new ListItem(data, PARENT_VIEW));
@@ -344,15 +421,17 @@ public class VocaDatabase extends SQLiteOpenHelper {
                 cnt ++;
                 if(cursor.getString(8).equals(category)) {
                     String[] data = new String[]{
-                            cursor.getString(1), cursor.getString(2), cursor.getString(3),
+                            makeNoneCSVString(cursor.getString(1)),
+                            makeNoneCSVString(cursor.getString(2)),
+                            makeNoneCSVString(cursor.getString(3)),
+
                             makeNoneCSVString(cursor.getString(4)),
                             makeNoneCSVString(cursor.getString(5)),
                             makeNoneCSVString(cursor.getString(6)),
-//                            cursor.getString(5), cursor.getString(6),
-//                            "\"" +cursor.getString(4) + "\"",
-//                            "\"" + cursor.getString(5) + "\"",
-//                            "\"" + cursor.getString(6) + "\"",
-                            cursor.getString(7), cursor.getString(8), cursor.getString(9)
+
+                            cursor.getString(7),
+                            cursor.getString(8),
+                            cursor.getString(9)
                     };
                     vocaList.add(new ListItem(data, PARENT_VIEW));
 
@@ -381,7 +460,9 @@ public class VocaDatabase extends SQLiteOpenHelper {
             cursor.moveToPosition(idx);
 
             String[] temp = new String[]{
-                    cursor.getString(0), cursor.getString(1), cursor.getString(2)
+                    change_code_to_small_quotation_mark(cursor.getString(0)),
+                    change_code_to_small_quotation_mark(cursor.getString(1)),
+                    change_code_to_small_quotation_mark(cursor.getString(2))
             };
             res.add(temp);
         }
@@ -409,7 +490,9 @@ public class VocaDatabase extends SQLiteOpenHelper {
             cursor.moveToPosition(idx);
 
             String[] temp = new String[]{
-                    cursor.getString(0), cursor.getString(1), cursor.getString(2)
+                    change_code_to_small_quotation_mark(cursor.getString(0)),
+                    change_code_to_small_quotation_mark(cursor.getString(1)),
+                    change_code_to_small_quotation_mark(cursor.getString(2))
             };
             res.add(temp);
         }
@@ -427,18 +510,24 @@ public class VocaDatabase extends SQLiteOpenHelper {
                 continue;
             }
 
-            insert(updatedTableColumns.get(i).getData()[0], updatedTableColumns.get(i).getData()[1],
-                    updatedTableColumns.get(i).getData()[2],
+            insert(
+                    updatedTableColumns.get(i).getData()[0].replaceAll(code, ","),
+                    updatedTableColumns.get(i).getData()[1].replaceAll(code, ","),
+                    updatedTableColumns.get(i).getData()[2].replaceAll(code, ","),
 
                     updatedTableColumns.get(i).getData()[3].replaceAll(code, ","),
                     updatedTableColumns.get(i).getData()[4].replaceAll(code, ","),
                     updatedTableColumns.get(i).getData()[5].replaceAll(code, ","),
 
-                    updatedTableColumns.get(i).getData()[6],updatedTableColumns.get(i).getData()[7],
-                    updatedTableColumns.get(i).getData()[8]);
+                    updatedTableColumns.get(i).getData()[6].replaceAll(code, ","),
+                    updatedTableColumns.get(i).getData()[7].replaceAll(code, ","),
+                    updatedTableColumns.get(i).getData()[8].replaceAll(code, ","));
 
         }
     }
+
+
+
 
     public String[] getWordChangerString(int i, ArrayList<ListItem> vocaList){
         return vocaList.get(i).getData();
@@ -478,6 +567,10 @@ public class VocaDatabase extends SQLiteOpenHelper {
     }
 
 
+
+
+
+
     public int getAllWordSize(String categoryName){
 
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
@@ -488,6 +581,8 @@ public class VocaDatabase extends SQLiteOpenHelper {
         Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
         return cursor.getCount();
     }
+
+
 
 
 
@@ -545,6 +640,9 @@ public class VocaDatabase extends SQLiteOpenHelper {
 
 
     public void changeBookmarkState(String word, String category, String type){
+
+        word = change_small_quotation_mark_to_code(word);
+
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         String sql
                 = "update " + tableName +
@@ -556,36 +654,29 @@ public class VocaDatabase extends SQLiteOpenHelper {
     }
 
 
-    public void print(){
-        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        String sql =
-                "select * " +
-                        "from " + tableName;
 
-        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
-        cursor.moveToFirst();
-        if(cursor.getCount() > 0){
-            do {
-                System.out.println(cursor.getString(0) + " , "+
-                        cursor.getString(1) + " , " + cursor.getString(2) + " , " + " , " + cursor.getString(3)
-                        + " , " + cursor.getString(4) + " , "  + cursor.getString(5) + " , " + cursor.getString(6) + " , " +
-                        cursor.getString(7) + " , " + cursor.getString(8) + " , " + cursor.getString(9));
-            }
-            while(cursor.moveToNext());
-        }
-    }
+
+
+
 
     public String makeNoneCSVString(String str){
-
-
-        String res = "";
-        for(int i = 0; i < str.length(); i++){
-            if(str.charAt(i) == ','){
-                res += code;
-            }
-            else res += str.charAt(i);
-        }
-        return res;
+        str = str.replaceAll(",", code);
+        return str;
     }
+
+    private String change_small_quotation_mark_to_code(String str){
+        str = str.replaceAll("'", SMALL_QUOTATION_MARK);
+        str = str.replaceAll("\"", BIG_QUOTATION_MARK);
+        return str;
+    }
+
+    private String change_code_to_small_quotation_mark(String str){
+        str = str.replaceAll(SMALL_QUOTATION_MARK, "'");
+        str = str.replaceAll(BIG_QUOTATION_MARK, "\"");
+        return str;
+    }
+
+
+
 }
 

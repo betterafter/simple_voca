@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class CSVBuilder {
 
     private final String INLINE = ",";
-    private final String LINER = "@";
+    private final String LINER = "%%@@%@@%%@@%";
 
     public String getCSVString(ArrayList<ListItem> list){
         String ret = "";
@@ -57,6 +57,14 @@ public class CSVBuilder {
             ret.add(getLineFromString(line[i]));
         }
 
+        for(int i = 0 ; i < ret.size(); i ++){
+            System.out.println("length : " + ret.get(i).data.length);
+            if(ret.get(i).data.length != 9){
+                ret.remove(i);
+                i --;
+            }
+        }
+
         if(ret.size() <= 0){
             return null;
         }
@@ -67,6 +75,13 @@ public class CSVBuilder {
 
     public ListItem getLineFromString(String line){
         String[] elements = line.split(INLINE);
+
+        System.out.println("단어 -------------------------------------------------------------------------------------");
+        for(int i = 0; i < elements.length; i++){
+            //System.out.println(elements[i]);
+        }
+       System.out.println("단어 -------------------------------------------------------------------------------------");
+
         ListItem item = new ListItem(elements, 0);
         return item;
     }

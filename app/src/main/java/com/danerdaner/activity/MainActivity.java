@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
@@ -55,8 +57,11 @@ public class MainActivity extends AppCompatActivity {
     private TextView CategorySubTitle;
 
 
+    public LinearLayout main_voca_parent_page_list;
     public static HorizontalScrollView main_voca_page_list;
     public static LinearLayout main_voca_page_list_layout;
+    public boolean isIndexerAppear;
+
     public static RecyclerView main_recyclerView;
     private GridView main_gridView;
 
@@ -112,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
         isNavigationButtonTouched = false;
 
 
@@ -149,7 +153,29 @@ public class MainActivity extends AppCompatActivity {
         // 리스트 페이지가 몇개인지 만들기
         main_voca_page_list = findViewById(R.id.main_voca_page_list);
         main_voca_page_list_layout = findViewById(R.id.main_voca_page_list_layout);
+        main_voca_parent_page_list = findViewById(R.id.main_voca_page_parent_list);
 
+        isIndexerAppear = false;
+        main_voca_parent_page_list.setVisibility(View.GONE);
+
+        ImageButton indexer = findViewById(R.id.indexer);
+        indexer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!isIndexerAppear) {
+                    main_voca_parent_page_list.setVisibility(View.VISIBLE);
+                    Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.indexer_move_appear);
+                    main_voca_parent_page_list.startAnimation(animation);
+                    isIndexerAppear = true;
+                }
+                else{
+                    Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.indexer_move_disappear);
+                    main_voca_parent_page_list.startAnimation(animation);
+                    main_voca_parent_page_list.setVisibility(View.GONE);
+                    isIndexerAppear = false;
+                }
+            }
+        });
 
         // 그리드뷰 생성
         player = new MediaPlayer();
@@ -200,6 +226,9 @@ public class MainActivity extends AppCompatActivity {
 
         CategoryTitle.setText(LoadingActivity.SELECTED_CATEGORY_NAME);
         CategorySubTitle.setText(LoadingActivity.SELECTED_CATEGORY_SUBTITLE);
+
+        isIndexerAppear = false;
+        main_voca_parent_page_list.setVisibility(View.GONE);
     }
 
     @Override
@@ -226,6 +255,7 @@ public class MainActivity extends AppCompatActivity {
                         = ((LinearLayoutManager) main_recyclerView.getLayoutManager()).findLastVisibleItemPosition();
 
                 MakeListPager();
+
                 onRecyclerViewScrollListener(main_recyclerView);
                 main_recyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
@@ -356,10 +386,8 @@ public class MainActivity extends AppCompatActivity {
         //main_voca_page_list.getParent().
         params2.gravity = Gravity.BOTTOM;
         main_voca_page_list.setLayoutParams(params2);
+
     }
-
-
-
 
 
 

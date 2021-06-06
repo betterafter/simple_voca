@@ -6,8 +6,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -26,8 +24,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,6 +44,11 @@ public class AddEditVocaActivity extends AppCompatActivity {
     private TextInputLayout err1, err2;
 
     private ArrayList<String> categoryList;
+
+    private final String INLINE = ",";
+    private final String LINER = "%%@@%@@%%@@%";
+    private final String SMALL_QUOTATION_MARK = "@@@!!!###%%%";
+    private final String BIG_QUOTATION_MARK = "%%%##@#@@#@!!!";
 
 
 
@@ -120,13 +121,7 @@ public class AddEditVocaActivity extends AppCompatActivity {
                 String memo = add_voca_memo.getText().toString();
                 String group = add_select_group_spinner.getSelectedItem().toString();
 
-                System.out.println(example);
-                System.out.println(example_mean);
-                System.out.println(memo);
 
-                if(!checkString(word, getApplicationContext())) return;
-                if(!checkString(mean, getApplicationContext())) return;
-                if(!checkString(announce, getApplicationContext())) return;
                 if(word.length() <= 0){
                     Toast.makeText(getApplicationContext(),
                             "단어를 입력해주세요.", Toast.LENGTH_SHORT).show();
@@ -138,10 +133,13 @@ public class AddEditVocaActivity extends AppCompatActivity {
                     return;
                 }
 
-
-                example = changeChar(example);
-                example_mean = changeChar(example_mean);
-                memo = changeChar(memo);
+                if(!checkString(word, getApplicationContext())) return;
+                if(!checkString(mean, getApplicationContext())) return;
+                if(!checkString(announce, getApplicationContext())) return;
+                if(!checkString(example, getApplicationContext())) return;
+                if(!checkString(example_mean, getApplicationContext())) return;
+                if(!checkString(memo, getApplicationContext())) return;
+                if(!checkString(group, getApplicationContext())) return;
 
                 if(SAVE_STATE.equals("SAVE")) {
 
@@ -263,11 +261,20 @@ public class AddEditVocaActivity extends AppCompatActivity {
         }
 
         if(SAVE_STATE.equals("EDIT")){
-            System.out.println();
             String[] data = LoadingActivity.vocaDatabase.findTableData(POSITION);
+
 
             add_voca_title.setText("단어 수정");
             add_voca_save_button.setText("단어 수정하기");
+
+            data[0] = change_code_to_small_quotation_mark(data[0]);
+            data[1] = change_code_to_small_quotation_mark(data[1]);
+            data[2] = change_code_to_small_quotation_mark(data[2]);
+
+            data[3] = change_code_to_small_quotation_mark(data[3]);
+            data[4] = change_code_to_small_quotation_mark(data[4]);
+            data[5] = change_code_to_small_quotation_mark(data[5]);
+
 
             add_voca_word.setText(data[0]);
             add_voca_mean.setText(data[1]);
@@ -292,57 +299,8 @@ public class AddEditVocaActivity extends AppCompatActivity {
                 }
             }
         }
-
-        //onTextWatcherLister();
     }
 
-    public void onTextWatcherLister(){
-
-        add_voca_word.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                //checkString(editable.toString(), getApplicationContext());
-                if(!checkString(editable.toString())){
-                    err1.setError("특수 문자 및 공백은 사용할 수 없습니다.");
-                    add_voca_word_search_button.setVisibility(View.GONE);
-                }
-                else {
-                    err1.setError(null);
-                    add_voca_word_search_button.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
-        add_voca_mean.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if(!checkString(editable.toString())){
-                    err2.setError("특수 문자 및 공백은 사용할 수 없습니다.");
-                }
-                else err2.setError(null);
-            }
-        });
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -365,44 +323,29 @@ public class AddEditVocaActivity extends AppCompatActivity {
         }
     }
 
-    private boolean checkString(String str){
 
-        Pattern pattern = Pattern.compile("[ \n!@#$%^&*(),.?\"\':{}|<>]");
-        Matcher matcher = pattern.matcher(str);
-
-        if(!matcher.find()) {
-            return true;
-        }
-        else return false;
-    }
 
 
     private boolean checkString(String str, Context context){
 
-        Pattern pattern = Pattern.compile("[ \n!@#$%^&*(),.?\"\':{}|<>]");
-        Matcher matcher = pattern.matcher(str);
 
-        if(!matcher.find()) {
+        if(!str.contains(LINER)) {
             return true;
         }
         else{
-            Toast.makeText(context, "단어, 단어의 뜻, 단어의 발음 입력에 특수문자 및 공백을 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "적절하지 않은 형식입니다.", Toast.LENGTH_SHORT).show();
             return false;
         }
     }
 
-    private String changeChar(String str){
 
-        String res = "";
-        for(int i = 0; i < str.length(); i++){
-            if(str.charAt(i) == '\''){
-                res = res + "\"";
-            }
-            else res += str.charAt(i);
-        }
-
-        return res;
+    private String change_code_to_small_quotation_mark(String str){
+        str = str.replaceAll(SMALL_QUOTATION_MARK, "'");
+        str = str.replaceAll(BIG_QUOTATION_MARK, "\"");
+        return str;
     }
+
+
 
     @Override
     protected void onPause() {
