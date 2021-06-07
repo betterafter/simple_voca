@@ -349,6 +349,8 @@ public class MainActivity extends AppCompatActivity {
                             selectedNumber = i; break;
                         }
                     }
+                    if(selectedNumber >= selectedButtons.size())
+                        selectedNumber = selectedButtons.size() - 1;
 
                     // 선택 버튼 색 바꾸기
                     selectedButtons.get(selectedNumber).setTextColor(mainActivity.getResources().getColor(R.color.white));
@@ -412,57 +414,6 @@ public class MainActivity extends AppCompatActivity {
                 if(newState == recyclerView.SCROLL_STATE_IDLE){
                     isNavigationButtonTouched = false;
                     isFirstTouchedToDrag = true;
-
-//                    if (selectedButtons.size() > 0) {
-//
-//                        if (!isNavigationButtonTouched) {
-//
-//                            int firstVisibleItemPosition
-//                                    = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
-//
-//                            int lastVisibleItemPosition
-//                                    = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
-//
-//
-//                            // 이전 선택 버튼 색 바꾸기
-//                            selectedButtons.get(selectedNumber)
-//                                    .setTextColor(mainActivity.getResources().getColor(R.color.backgroundBlack));
-//                            selectedButtons.get(selectedNumber)
-//                                    .getBackground().setColorFilter(mainActivity.getResources().getColor(R.color.white),
-//                                    PorterDuff.Mode.SRC_IN);
-//
-//                            selectedNumber = firstVisibleItemPosition / 4;
-//
-//                            // 선택 버튼 색 바꾸기
-//                            selectedButtons.get(selectedNumber).setTextColor(mainActivity.getResources().getColor(R.color.white));
-//                            selectedButtons.get(selectedNumber).getBackground().
-//                                    setColorFilter(mainActivity.getResources().getColor(R.color.mainBlue), PorterDuff.Mode.SRC_IN);
-//
-//
-//                            if (lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1) {
-//
-//                                // 이전 선택 버튼 색 바꾸기
-//                                selectedButtons.get(selectedNumber)
-//                                        .setTextColor(mainActivity.getResources().getColor(R.color.backgroundBlack));
-//                                selectedButtons.get(selectedNumber)
-//                                        .getBackground().setColorFilter(mainActivity.getResources().getColor(R.color.white),
-//                                        PorterDuff.Mode.SRC_IN);
-//
-//                                selectedNumber = ((LinearLayout) navigationScrollView.getChildAt(0)).getChildCount() - 1;
-//
-//                                // 선택 버튼 색 바꾸기
-//                                selectedButtons.get(selectedNumber).setTextColor(mainActivity.getResources().getColor(R.color.white));
-//                                selectedButtons.get(selectedNumber).getBackground().
-//                                        setColorFilter(mainActivity.getResources().getColor(R.color.mainBlue), PorterDuff.Mode.SRC_IN);
-//
-//                            }
-//
-//                            if (selectedNumber % 5 == 0) {
-//                                float position = ((LinearLayout) navigationScrollView.getChildAt(0)).getChildAt(selectedNumber).getX();
-//                                navigationScrollView.scrollTo((int) position, 0);
-//                            }
-//                        }
-//                    }
                 }
                 else if(newState == recyclerView.SCROLL_STATE_DRAGGING){
                     LoadingActivity.vocaDatabase.makeList(LoadingActivity.vocaList);
@@ -494,6 +445,8 @@ public class MainActivity extends AppCompatActivity {
                                     PorterDuff.Mode.SRC_IN);
 
                             selectedNumber = firstVisibleItemPosition / 4;
+                            if(selectedNumber >= selectedButtons.size())
+                                selectedNumber = selectedButtons.size() - 1;
 
                             // 선택 버튼 색 바꾸기
                             selectedButtons.get(selectedNumber).setTextColor(mainActivity.getResources().getColor(R.color.white));
