@@ -167,6 +167,9 @@ public class AddEditVocaActivity extends AppCompatActivity {
                             group, "0"
                     };
 
+                    if(!LoadingActivity.vocaShuffleLists.containsKey(group)){
+                        LoadingActivity.vocaDatabase.makeShuffleList(group);
+                    }
                     // 자신의 셔플 맨 뒤에 단어 추가하기
                     LoadingActivity.vocaShuffleLists.get(group).add(new ListItem(data, 0));
 
@@ -194,6 +197,7 @@ public class AddEditVocaActivity extends AppCompatActivity {
                             ImageSerializer.PackImageToSerialized(add_voca_select_picture_imageview),
                             group,
                             "0");
+
 
                     // 전체 shuffle에도 수정한 단어 수정하기
                     ArrayList<ListItem> allArrayList = new ArrayList<>();
