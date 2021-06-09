@@ -256,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
 
                 MakeListPager();
 
+
                 onRecyclerViewScrollListener(main_recyclerView);
                 main_recyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
@@ -403,6 +404,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static void onRecyclerViewScrollListener(RecyclerView recyclerView){
 
+        recyclerView.clearOnScrollListeners();
         selectedNumber = 0;
         RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListener() {
 
